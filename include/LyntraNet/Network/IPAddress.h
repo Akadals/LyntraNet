@@ -6,7 +6,14 @@
 #include <string>
 #include <sal.h>
 
-namespace LyntraNet::Network
+#ifdef ADDRESS_IPV6_BASED
+#define DEFAULT_LOOPBACK "::1"
+#else
+#define DEFAULT_LOOPBACK "127.0.0.1"
+#endif 
+
+
+namespace LT
 {
 	class IPAddress
 	{
@@ -14,13 +21,11 @@ namespace LyntraNet::Network
 		sockaddr_storage m_storage = {};
 		socklen_t m_length = {};
 	public:
-		IPAddress() = default;
-
-		explicit IPAddress(std::string_view _ip) { Parse(_ip); }
+		explicit IPAddress(std::string_view = DEFAULT_LOOPBACK);
 
 		void SetAddress(
 			_In_reads_to_ptr_(_len) const sockaddr* _addr,
-			_In_ socklen_t _len);
+			_In_					socklen_t _len);
 
 		ADDRESS_FAMILY Family() const;
 
@@ -47,12 +52,12 @@ namespace LyntraNet::Network
 		static IPAddress AnyIPv4();
 		static IPAddress AnyIPv6();
 
-		static uint16_t AnyPort() { return 0; }
+		static uint16_t AnyPort();
 
 		static IPAddress LoopbackIPv4();
 		static IPAddress LoopbackIPv6();
 
-		static IPAddress Parse(std::string_view _ip);
+		static IPAddress Parse(std::string_view);
 	};
 }
 #endif

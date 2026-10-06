@@ -3,7 +3,7 @@
 
 #include "NetworkConnection.h"
 
-namespace LyntraNet::Game
+namespace LT::Game
 {
 	typedef class Session
 		SESSION, * PSESSION;

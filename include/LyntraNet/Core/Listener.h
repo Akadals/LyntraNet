@@ -9,52 +9,72 @@
 #include <LyntraNet/Network/IOContext.h>
 #include <LyntraNet/Network/IPEndPoint.h>
 #include <LyntraNet/Network/Protocol.h>
+#include <LyntraNet/Utility/LTReturnObject.h>
+#include <LyntraNet/Network/Socket/LTSocket.h>
+#include <sal.h>
 
-namespace LyntraNet
+namespace LT
 {
-	class ListenerBase
+	class IListener
 	{
 	protected:
-		SOCKET m_listenSock = { INVALID_SOCKET };
-		Network::IPEndPoint m_localEndpoint = {};
+		IPEndPoint m_localEndpoint;
+		int m_backlog;
+	protected:
+		LTSOCKET m_listenSock;
 	public:
-		ListenerBase(const Network::IPEndPoint _endpoint)
-		{ m_localEndpoint = _endpoint; }
-		virtual bool Start() = 0;
+		explicit IListener(
+			_In_		const IPEndPoint& _endpoint,
+			_In_		int _backlog) :
+			m_localEndpoint(_endpoint),
+			m_listenSock(INVALID_SOCKET),
+			m_backlog(_backlog) {}
+
+		virtual LTReturnObject Bind() = 0;
+		virtual LTReturnObject Listen() = 0;
+		virtual LTReturnObject Close() = 0;
+
+		virtual LTSOCKET Accept() = 0;
 	};
 
 	template<TProtocol>
 	class Listener;
 
 	template<>
-	class Listener<TCP> : public ListenerBase
+	class Listener<TCP> : public IListener
 	{
 	private:
-		LPFN_ACCEPTEX m_lpAcceptEx = {};
-		LPFN_GETACCEPTEXSOCKADDRS m_lpGetAcceptExSockaddrs = {};
+		LPFN_ACCEPTEX m_lpAcceptEx;
+		LPFN_GETACCEPTEXSOCKADDRS m_lpGetAcceptExSockaddrs;
 	public:
-		Listener<TCP>(const Network::IPEndPoint _endpoint) :
-			ListenerBase(_endpoint) {}
+		explicit Listener<TCP>(
+			_In_		const IPEndPoint& _endpoint, 
+			_In_opt_	int _backlog = 0) :
+			IListener(_endpoint, _backlog) {}
 
-		void Listen(size_t _size);
-	private:
-		void LoadAcceptEx();
-		void PostAccept();
+		LTReturnObject Bind() override;
+		LTReturnObject Listen() override;
+		LTReturnObject Close() override;
+
+		LTSOCKET Accept() override;
 	};
+
 	template<>
-	class Listener<UDP> : public ListenerBase
+	class Listener<UDP> : public IListener
 	{
 
 	};
 	template<>
-	class Listener<QUIC> : public ListenerBase
+	class Listener<QUIC> : public IListener
 	{
 
 	};
 	template<>
-	class Listener<KCP> : public ListenerBase
+	class Listener<KCP> : public IListener
 	{
 
 	};
 }
+
+#include "Listener/TCPListener.inl"
 #endif

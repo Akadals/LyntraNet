@@ -1,5 +1,5 @@
 #include <LyntraNet/Core/LyntraIOCPCore.h>
-using namespace LyntraNet;
+using namespace LT;
 //Core::Core(std::unique_ptr<Listener> _listener)
 //{
 //	

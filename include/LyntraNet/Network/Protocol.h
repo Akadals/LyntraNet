@@ -7,11 +7,9 @@ struct UDP {};
 struct KCP {};
 struct QUIC {};
 
-template<typename T>
+template<typename Protocol>
 concept TProtocol =
-std::same_as<T, TCP> ||
-std::same_as<T, UDP> ||
-std::same_as<T, QUIC> ||
-std::same_as<T, KCP>;
+std::same_as<Protocol, TCP> || std::same_as<Protocol, UDP> ||
+std::same_as<Protocol, QUIC> || std::same_as<Protocol, KCP>;
 
 #endif

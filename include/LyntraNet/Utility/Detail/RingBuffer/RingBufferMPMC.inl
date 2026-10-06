@@ -1,4 +1,4 @@
-using namespace LyntraNet::Utility;
+using namespace LT;
 
 RingBuffer<MPMC>::RingBuffer<MPMC>(size_t _size)
 {

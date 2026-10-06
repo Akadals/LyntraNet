@@ -7,30 +7,33 @@
 #include <LyntraNet/Network/IPEndPoint.h>
 #include <LyntraNet/Network/Protocol.h>
 #include <LyntraNEt/Core/Listener.h>
-#include <LyntraNet/Utility/LyntraErrorObject.h>
+#include <LyntraNet/Utility/LTReturnObject.h>
 
-namespace LyntraNet
+#include <LyntraNet/Preset/ServerPreset.h>
+
+namespace LT
 {
 	class LyntraServer
 	{
 	public:
 		static const size_t MAX_LISTENER_SIZE = 10;
 	private:
-		std::vector<std::unique_ptr<ListenerBase>> m_listeners;
+		std::vector<std::unique_ptr<IListener>> m_listeners;
 		std::atomic<bool> m_isRunning = false;
 	public:
 		LyntraServer() = default;
+		LyntraServer(Preset _preset);
 
-		Utility::LyntraErrorObject Start();
-		Utility::LyntraErrorObject Stop();
+		LTReturnObject Start();
+		LTReturnObject Stop();
 		void Wait();
 
 		template<TProtocol T> 
-		Utility::LyntraErrorObject AddListener(const Network::IPEndPoint& _endpoint);
+		LTReturnObject AddListener(const IPEndPoint& _endpoint);
 		template<TProtocol T> 
-		Utility::LyntraErrorObject AddListener(const Network::IPAddress& _address, uint16_t _port);
+		LTReturnObject AddListener(const IPAddress& _address, uint16_t _port);
 		template<TProtocol T> 
-		Utility::LyntraErrorObject AddListener(uint16_t _port);
+		LTReturnObject AddListener(uint16_t _port);
 	};
 }
 

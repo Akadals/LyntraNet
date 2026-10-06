@@ -1,4 +1,4 @@
-using namespace LyntraNet::Utility;
+using namespace LT;
 
 RingBuffer<SPSC>::RingBuffer<SPSC>(size_t _size)
 {
@@ -10,6 +10,7 @@ RingBuffer<SPSC>::RingBuffer<SPSC>(size_t _size)
 	m_mask = (m_capacity = cap) - 1;
 	m_buffer = std::make_unique<std::byte[]>(m_capacity);
 }
+RingBuffer<SPSC>::~RingBuffer() {}
 
 template<size_t ByteSize>
 bool RingBuffer<SPSC>::TryWrite(const std::byte* __restrict _src)

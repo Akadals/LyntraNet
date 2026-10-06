@@ -11,7 +11,7 @@
 #define U_PTR std::unique_ptr
 #define S_PTR std::shared_ptr
 
-namespace LyntraNet::Network
+namespace LT
 {
 	class ConnectionManager
 	{

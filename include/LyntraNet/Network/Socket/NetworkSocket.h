@@ -13,7 +13,7 @@
 #include <LyntraNet/Network/IOContext.h>
 
 
-namespace LyntraNet::Network::Socket
+namespace LT::Socket
 {
 	typedef class NetworkSocket
 		NET_SOCK, * PNET_SOCK;

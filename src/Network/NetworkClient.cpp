@@ -1,6 +1,6 @@
 #include "LyntraNet/Network/NetworkConnection.h"
 
-using namespace LyntraNet::Network;
+using namespace LT;
 
 DWORD NetworkConnection::Read()
 {

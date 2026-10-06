@@ -1,4 +1,4 @@
-using namespace LyntraNet::Utility;
+using namespace LT;
 
 template<typename T>
 ConcurrentQueue<T, SPSC>::ConcurrentQueue(size_t _size)

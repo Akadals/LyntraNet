@@ -3,18 +3,18 @@
 
 #include <LyntraNet/Network/Socket/NetworkSocket.h>
 
-namespace LyntraNet::Network::Transport
+namespace LT::Transport
 {
 	class ITransport
 	{
 	private:
-		std::unique_ptr<Socket::NetworkSocket> m_sock;
+		std::unique_ptr<SocketSocket> m_sock;
 	public:
 		void SetSocket(
-			_In_ std::unique_ptr<Socket::NetworkSocket> _socket
+			_In_ std::unique_ptr<SocketSocket> _socket
 		);
-		Socket::NetworkSocket& GetSocket() { return *m_sock; }
-		const Socket::NetworkSocket& GetSocket() const { return *m_sock; }
+		SocketSocket& GetSocket() { return *m_sock; }
+		const SocketSocket& GetSocket() const { return *m_sock; }
 	};
 }
 #endif

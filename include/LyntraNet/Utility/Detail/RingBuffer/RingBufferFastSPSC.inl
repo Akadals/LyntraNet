@@ -1,4 +1,4 @@
-using namespace LyntraNet::Utility;
+using namespace LT;
 
 RingBuffer<FastSPSC>::RingBuffer(size_t _size)
 {

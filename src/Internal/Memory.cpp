@@ -3,7 +3,7 @@
 #define COPY_CASE(N) case N: Copy<N>(_dest, _src); break;
 
 template<size_t Size>
-void LyntraNet::Memory::Copy(
+void LT::Memory::Copy(
     _Out_writes_bytes_all_(Size)    void* _dest,
     _In_                            const void* _src
 )
@@ -68,7 +68,7 @@ void LyntraNet::Memory::Copy(
         s += 64;
     }
 
-    if constexpr ((Size & 32) != 0)
+    if constexpr (Size & 32)
     {
         __m256i v = _mm256_loadu_si256(s256);
 
@@ -78,7 +78,7 @@ void LyntraNet::Memory::Copy(
         s += 32;
     }
 
-    if constexpr ((Size & 16) != 0)
+    if constexpr (Size & 16)
     {
         __m128i v = _mm_loadu_si128(
             reinterpret_cast<const __m128i*>(s));
@@ -90,7 +90,7 @@ void LyntraNet::Memory::Copy(
         s += 16;
     }
 
-    if constexpr ((Size & 8) != 0)
+    if constexpr (Size & 8)
     {
         *reinterpret_cast<uint64_t*>(d) =
             *reinterpret_cast<const uint64_t*>(s);
@@ -99,7 +99,7 @@ void LyntraNet::Memory::Copy(
         s += 8;
     }
 
-    if constexpr ((Size & 4) != 0)
+    if constexpr (Size & 4)
     {
         *reinterpret_cast<uint32_t*>(d) =
             *reinterpret_cast<const uint32_t*>(s);
@@ -108,7 +108,7 @@ void LyntraNet::Memory::Copy(
         s += 4;
     }
 
-    if constexpr ((Size & 2) != 0)
+    if constexpr (Size & 2)
     {
         *reinterpret_cast<uint16_t*>(d) =
             *reinterpret_cast<const uint16_t*>(s);
@@ -117,12 +117,12 @@ void LyntraNet::Memory::Copy(
         s += 2;
     }
 
-    if constexpr ((Size & 1) != 0)
+    if constexpr (Size & 1)
     {
         *d = *s;
     }
 }
-void LyntraNet::Memory::Copy(
+void LT::Memory::Copy(
     _Out_writes_bytes_all_(_size)   void* _dest,
     _In_                            const void* _src,
     _In_                            size_t _size

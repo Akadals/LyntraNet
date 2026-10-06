@@ -1,6 +1,7 @@
 #include <LyntraNet/Network/Session.h>
 
-using namespace LyntraNet::Network;
+using namespace LT
+;
 
 //Session::Session(SOCKET socket, SOCKADDR_IN addr)
 //	:NetworkClient(socket, addr)

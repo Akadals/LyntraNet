@@ -1,6 +1,6 @@
 #include "LyntraNet/Network/Socket/NetworkSocket.h"
 
-using namespace LyntraNet::Network::Socket;
+using namespace LyntraNet::Socket;
 
 void NetworkSocket::Bind(
 	SOCKET _socket,

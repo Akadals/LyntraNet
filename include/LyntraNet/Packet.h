@@ -6,7 +6,9 @@
 #include <atomic>
 #include <vector>
 
-namespace LyntraNet::Packet
+#define	LT_PKT_BASE 0x00010000
+
+namespace LT::Packet
 {
 
 	typedef struct Header

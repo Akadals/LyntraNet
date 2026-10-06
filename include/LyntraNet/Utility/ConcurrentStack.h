@@ -5,7 +5,7 @@
 #include <atomic>
 #include <memory>
 
-namespace LyntraNet::Utility
+namespace LT
 {
 	template<typename T, ConcurrentPolicy Policy>
 	class ConcurrentStack;

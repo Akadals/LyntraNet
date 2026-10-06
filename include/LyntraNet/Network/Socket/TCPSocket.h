@@ -3,7 +3,7 @@
 
 #include "NetworkSocket.h"
 
-namespace LyntraNet::Network::Socket
+namespace LT::Socket
 {
 	typedef class TCPSocket
 		TCP_SOCK, * PTCP_SOCK;

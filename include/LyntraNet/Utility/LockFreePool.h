@@ -3,7 +3,7 @@
 
 #include "ConcurrentStack.h"
 
-namespace LyntraNet::Utility
+namespace LT
 {
 	template<typename T, size_t Size = 0>
 	class LockFreePool;

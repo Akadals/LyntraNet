@@ -1,4 +1,4 @@
-using namespace LyntraNet::Utility;
+using namespace LT;
 
 template<typename T, size_t Size>
 T LockFreePool<T, Size>::Acquire()

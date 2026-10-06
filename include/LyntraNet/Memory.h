@@ -5,7 +5,7 @@
 #include <cstring>
 #include <immintrin.h>
 
-namespace LyntraNet::Memory
+namespace LT::Memory
 {
 	template<size_t Size>
     __forceinline void Copy(

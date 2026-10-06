@@ -3,7 +3,7 @@
 
 #include "ITransport.h"
 
-namespace LyntraNet::Network::Transport
+namespace LT::Transport
 {
 	class TCPTransport : public ITransport
 	{

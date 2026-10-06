@@ -3,13 +3,27 @@
 
 #include <winsock2.h>
 
-namespace LyntraNet::Network
+namespace LT
 {
 	typedef enum class IOType : uint8_t
-	{ READING, WRITING, ACCEPT } IOTYPE;
+	{ READING, WRITING } IOTYPE;
+
+	typedef class AcceptContext
+		ACCEPTCONTEXT, * PACCEPTCONTEXT;
 
 	typedef class IOContext
 		IOCONTEXT, * PIOCONTEXT;
+
+	class alignas(64) AcceptContext
+	{
+	public:
+		OVERLAPPED m_overlapped = {};
+		WSABUF m_wsaBuf = {};
+		SOCKET m_ownerSock = { INVALID_SOCKET };
+	public:
+		AcceptContext();
+		void Init();
+	};
 
 	class alignas(64) IOContext
 	{
@@ -17,7 +31,7 @@ namespace LyntraNet::Network
 		OVERLAPPED m_overlapped = {};
 		WSABUF m_wsaBuf[2] = {};
 		IOTYPE m_ioType = {};
-		SOCKET m_ownerFd = { INVALID_SOCKET };
+		SOCKET m_ownerSock = { INVALID_SOCKET };
 	public:
 		IOContext();
 		void Init();

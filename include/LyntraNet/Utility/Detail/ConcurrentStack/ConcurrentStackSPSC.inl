@@ -1,4 +1,4 @@
-using namespace LyntraNet::Utility;
+using namespace LT;
 
 template<typename T>
 ConcurrentStack<T, SPSC>::ConcurrentStack(size_t _size)

@@ -2,12 +2,12 @@
 #define __INCL_LYNTRA_RING_BUFFER_H__
 
 #include "ConcurrentPolicy.h"
-#include "../Memory.h"
+#include <LyntraNet/Memory.h>
 #include <atomic>
 #include <memory>
 #include <span>
 
-namespace LyntraNet::Utility
+namespace LT
 {
 	template<ConcurrentPolicy>
 	class RingBuffer;
@@ -25,6 +25,7 @@ namespace LyntraNet::Utility
 		mutable CacheLineAtomic m_tail;
 	public:
 		RingBuffer<SPSC>(size_t _size);
+		~RingBuffer();
 
 		template<size_t ByteSize>
 		bool TryWrite(
@@ -283,7 +284,8 @@ namespace LyntraNet::Utility
 			_In_ size_t _size
 		);
 	};
-} //namespace LyntraNet::Utility
+} //namespace LyntraNet
+
 
 #include "Detail/RingBuffer/RingBufferSPSC.inl"
 #include "Detail/RingBuffer/RingBufferMPSC.inl"

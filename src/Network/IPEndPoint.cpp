@@ -1,6 +1,7 @@
 #include <LyntraNet/Network/IPEndPoint.h>
 
-using namespace LyntraNet::Network;
+using namespace LT
+;
 
 IPEndPoint::IPEndPoint(const IPAddress& _address, uint16_t _port)
 {}

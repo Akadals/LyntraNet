@@ -9,7 +9,7 @@
 #include <WS2tcpip.h>
 #include <atomic>
 
-namespace LyntraNet::Network
+namespace LT
 {
 	typedef class NetworkConnection
 		NET_CONNECTION, * PNET_CONNECTION;

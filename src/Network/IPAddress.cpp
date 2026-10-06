@@ -1,6 +1,9 @@
 #include "LyntraNet/Network/IPAddress.h"
 
-using namespace LyntraNet::Network;
+using namespace LT;
+
+IPAddress::IPAddress(std::string_view)
+{}
 
 void IPAddress::SetAddress(const sockaddr * _addr, socklen_t _len)
 {
@@ -153,6 +156,11 @@ IPAddress IPAddress::AnyIPv4()
 IPAddress IPAddress::AnyIPv6()
 {
 	return IPAddress();
+}
+
+uint16_t IPAddress::AnyPort()
+{
+	return 0;
 }
 
 IPAddress IPAddress::LoopbackIPv4()

@@ -6,7 +6,7 @@
 #include <memory>
 
 
-namespace LyntraNet::Utility
+namespace LT
 {
 	template<typename T, ConcurrentPolicy Policy>
 	class ConcurrentQueue;
@@ -57,7 +57,7 @@ namespace LyntraNet::Utility
 		mutable CacheLineAtomic m_head;
 		mutable CacheLineAtomic m_tail;
 	public:
-		ConcurrentQueue(size_t _size);
+		ConcurrentQueue<T, MPMC>(size_t _size);
 		bool Enqueue(const T* __restrict _src);
 		bool Dequeue(T* __restrict _dest);
 		bool TryDequeue(T* __restrict _dest);

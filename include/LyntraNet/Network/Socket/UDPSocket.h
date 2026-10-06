@@ -4,7 +4,7 @@
 
 #include "NetworkSocket.h"
 
-namespace LyntraNet::Network::Socket
+namespace LT::Socket
 {
 	typedef class UDPSocket
 		UDP_SOCK, * PUDP_SOCK;
