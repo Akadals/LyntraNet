@@ -16,8 +16,8 @@ namespace LT::Socket
 		std::atomic<bool> m_isUseTLS = false;
 	public:
 		TCPSocket();
-		DWORD Recv(_In_ IOCONTEXT& _context) override;
-		DWORD Send(_In_ IOCONTEXT& _context) override;
+		DWORD Recv(_In_ IOCTX& _context) override;
+		DWORD Send(_In_ IOCTX& _context) override;
 	};
 }
 #endif

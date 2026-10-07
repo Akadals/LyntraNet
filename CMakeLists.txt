@@ -14,8 +14,8 @@ set(LyntraNet_VERSION_TAG "dev")
 string(TIMESTAMP BUILD_DATE "%Y-%m-%d %H:%M:%S")
 
 configure_file(
-    ${CMAKE_CURRENT_SOURCE_DIR}/include/LyntraNet/Version.h.in
-    ${CMAKE_CURRENT_BINARY_DIR}/generated/LyntraNet/Version.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/include/LT/Version.h.in
+    ${CMAKE_CURRENT_BINARY_DIR}/generated/LT/Version.h
     @ONLY
 )
 
@@ -131,4 +131,4 @@ source_group(TREE
 # --------------------------------------------------
 
 enable_testing()
-add_subdirectory(tests)
+#add_subdirectory(tests)

@@ -1,5 +1,5 @@
 #include <iostream>
-#include <LyntraNet/LyntraNet.h>
+#include <LT/LyntraNet.h>
 
 using namespace LT;
 

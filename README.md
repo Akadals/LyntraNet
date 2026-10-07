@@ -23,19 +23,19 @@ Socket management, asynchronous I/O, connection handling, packet processing, thr
 LyntraNet is being designed to provide these components as a single, layered networking framework.
 
 ```text
-â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
-â”‚              Game / Application             â”‚
-â”œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¤
-â”‚               High-Level API                â”‚
-â”œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¤
-â”‚                   Preset                    â”‚
-â”œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¤
-â”‚                 Framework                   â”‚
-â”œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¤
-â”‚                    Core                     â”‚
-â”œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¤
-â”‚          Platform / OS Networking           â”‚
-â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
+?Œâ??€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€??
+??             Game / Application             ??
+?œâ??€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€??
+??              High-Level API                ??
+?œâ??€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€??
+??                  Preset                    ??
+?œâ??€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€??
+??                Framework                   ??
+?œâ??€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€??
+??                   Core                     ??
+?œâ??€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€??
+??         Platform / OS Networking           ??
+?”â??€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€??
 ```
 
 The goal is to provide:
@@ -77,17 +77,17 @@ LyntraNet aims to provide multiple levels of abstraction.
 
 ```text
 Simple
-  â”‚
-  â–¼
+  ??
+  ??
 High-Level API
-  â”‚
+  ??
 Preset
-  â”‚
+  ??
 Framework
-  â”‚
+  ??
 Core
-  â”‚
-  â–¼
+  ??
+  ??
 Low-Level
 ```
 
@@ -103,13 +103,13 @@ The major architecture is:
 
 ```text
 Core
-  â†“
+  ??
 Framework
-  â†“
+  ??
 Preset
-  â†“
+  ??
 High-Level
-  â†“
+  ??
 SDK / Deployment / Cloud
 ```
 
@@ -125,12 +125,12 @@ Core provides the low-level infrastructure required by the rest of LyntraNet.
 
 ```text
 Core
-â”œâ”€â”€ Platform
-â”œâ”€â”€ Network
-â”œâ”€â”€ I/O
-â”œâ”€â”€ Memory
-â”œâ”€â”€ Concurrency
-â””â”€â”€ Utility
+?œâ??€ Platform
+?œâ??€ Network
+?œâ??€ I/O
+?œâ??€ Memory
+?œâ??€ Concurrency
+?”â??€ Utility
 ```
 
 Potential responsibilities include:
@@ -167,12 +167,12 @@ Framework provides reusable networking components built on top of Core.
 
 ```text
 Framework
-â”œâ”€â”€ Connection
-â”œâ”€â”€ Listener
-â”œâ”€â”€ Packet
-â”œâ”€â”€ Execution
-â”œâ”€â”€ Gameplay Networking
-â””â”€â”€ Server
+?œâ??€ Connection
+?œâ??€ Listener
+?œâ??€ Packet
+?œâ??€ Execution
+?œâ??€ Gameplay Networking
+?”â??€ Server
 ```
 
 The Framework layer is intended to provide building blocks such as:
@@ -219,23 +219,23 @@ For example:
 
 ```text
 FPS
-â””â”€â”€ MatchServer
-    â”œâ”€â”€ UDP
-    â”œâ”€â”€ Fixed Tick
-    â”œâ”€â”€ Snapshot
-    â””â”€â”€ Interest Management
+?”â??€ MatchServer
+    ?œâ??€ UDP
+    ?œâ??€ Fixed Tick
+    ?œâ??€ Snapshot
+    ?”â??€ Interest Management
 ```
 
 A larger persistent world could instead be composed from several different server roles:
 
 ```text
 GatewayServer
-      â”‚
-      â”œâ”€â”€ WorldServer
-      â”‚
-      â”œâ”€â”€ ZoneServer
-      â”‚
-      â””â”€â”€ ServiceServer
+      ??
+      ?œâ??€ WorldServer
+      ??
+      ?œâ??€ ZoneServer
+      ??
+      ?”â??€ ServiceServer
 ```
 
 The preset system is still being designed and may change substantially during development.
@@ -250,19 +250,19 @@ Potential areas include:
 
 ```text
 Client
-â”œâ”€â”€ Connection
-â”œâ”€â”€ Authentication
-â”œâ”€â”€ Room
-â”œâ”€â”€ Matchmaking
-â””â”€â”€ Session
+?œâ??€ Connection
+?œâ??€ Authentication
+?œâ??€ Room
+?œâ??€ Matchmaking
+?”â??€ Session
 
 Backend
-â”œâ”€â”€ Player Data
-â”œâ”€â”€ Friends
-â”œâ”€â”€ Guild
-â”œâ”€â”€ Chat
-â”œâ”€â”€ Ranking
-â””â”€â”€ Notification
+?œâ??€ Player Data
+?œâ??€ Friends
+?œâ??€ Guild
+?œâ??€ Chat
+?œâ??€ Ranking
+?”â??€ Notification
 ```
 
 These APIs are currently in the **design phase**.
@@ -277,9 +277,9 @@ LyntraNet is designed around a platform abstraction layer so that platform-speci
 
 | Platform | Backend |       Status      |
 | :------- | :------ | :---------------: |
-| Windows  | IOCP    | ğŸš§ In Development |
-| Linux    | epoll   |     ğŸ“‹ Planned    |
-| macOS    | TBD     |     ğŸ“‹ Planned    |
+| Windows  | IOCP    | ?š§ In Development |
+| Linux    | epoll   |     ?“‹ Planned    |
+| macOS    | TBD     |     ?“‹ Planned    |
 
 The first implementation target is Windows.
 
@@ -291,11 +291,11 @@ Linux support will follow once the core architecture has stabilized.
 
 | Protocol |       Status      |
 | :------- | :---------------: |
-| TCP      | ğŸš§ In Development |
-| UDP      |     ğŸ“‹ Planned    |
-| TLS      |     ğŸ“‹ Planned    |
-| RUDP     |     ğŸ“‹ Planned    |
-| QUIC     |     ğŸ“‹ Planned    |
+| TCP      | ?š§ In Development |
+| UDP      |     ?“‹ Planned    |
+| TLS      |     ?“‹ Planned    |
+| RUDP     |     ?“‹ Planned    |
+| QUIC     |     ?“‹ Planned    |
 
 Protocol implementations are intended to remain as independent as practical from higher-level gameplay systems.
 
@@ -331,23 +331,23 @@ The project is being developed from the lowest-level networking infrastructure u
 
 ```text
 Current
-   â”‚
-   â–¼
+   ??
+   ??
 Core
-   â”‚
-   â–¼
+   ??
+   ??
 Framework
-   â”‚
-   â–¼
+   ??
+   ??
 Presets
-   â”‚
-   â–¼
+   ??
+   ??
 High-Level API
-   â”‚
-   â–¼
+   ??
+   ??
 Client SDK / Deployment
-   â”‚
-   â–¼
+   ??
+   ??
 Cloud Services
 ```
 
@@ -378,14 +378,14 @@ The roadmap is expected to change as implementation and benchmarking provide new
 The project is organized around the networking architecture rather than individual game genres.
 
 ```text
-LyntraNet/
-â”œâ”€â”€ include/
-â”‚   â””â”€â”€ LyntraNet/
-â”œâ”€â”€ src/
-â”œâ”€â”€ tests/
-â”œâ”€â”€ examples/
-â”œâ”€â”€ docs/
-â””â”€â”€ CMakeLists.txt
+LT/
+?œâ??€ include/
+??  ?”â??€ LT/
+?œâ??€ src/
+?œâ??€ tests/
+?œâ??€ examples/
+?œâ??€ docs/
+?”â??€ CMakeLists.txt
 ```
 
 The internal directory structure is still evolving alongside the architecture.
@@ -407,13 +407,13 @@ The underlying networking library remains independent from any particular game e
 
 ```text
              LyntraNet
-                 â”‚
-       â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”¼â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
-       â”‚         â”‚         â”‚
+                 ??
+       ?Œâ??€?€?€?€?€?€?€?€?¼â??€?€?€?€?€?€?€?€??
+       ??        ??        ??
      Unity    Unreal     Godot
-       â”‚         â”‚         â”‚
-       â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¼â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
-                 â”‚
+       ??        ??        ??
+       ?”â??€?€?€?€?€?€?€?€?¼â??€?€?€?€?€?€?€?€??
+                 ??
           Game Application
 ```
 
@@ -427,18 +427,18 @@ SDK and engine integration are planned for later development.
 
 ```text
           LyntraNet
-              â”‚
+              ??
        Networking Library
-              â”‚
-              â–¼
+              ??
+              ??
            Blockia
-              â”‚
+              ??
        Real Integration
-              â”‚
-              â–¼
+              ??
+              ??
       Problems / Testing
-              â”‚
-              â–¼
+              ??
+              ??
        LyntraNet ê°œì„ 
 ```
 
@@ -453,57 +453,57 @@ Blockia is therefore treated primarily as an integration and validation project.
 ```text
 Phase 1
 Core Networking
-â”œâ”€â”€ Socket
-â”œâ”€â”€ TCP
-â”œâ”€â”€ IOCP
-â”œâ”€â”€ Buffer
-â”œâ”€â”€ Memory
-â””â”€â”€ Concurrency
+?œâ??€ Socket
+?œâ??€ TCP
+?œâ??€ IOCP
+?œâ??€ Buffer
+?œâ??€ Memory
+?”â??€ Concurrency
 
 Phase 2
 Framework
-â”œâ”€â”€ Connection
-â”œâ”€â”€ Session
-â”œâ”€â”€ Packet
-â”œâ”€â”€ EventLoop
-â”œâ”€â”€ Worker
-â””â”€â”€ Server
+?œâ??€ Connection
+?œâ??€ Session
+?œâ??€ Packet
+?œâ??€ EventLoop
+?œâ??€ Worker
+?”â??€ Server
 
 Phase 3
 Presets
-â”œâ”€â”€ BasicServer
-â”œâ”€â”€ RoomServer
-â”œâ”€â”€ MatchServer
-â””â”€â”€ RealtimeServer
+?œâ??€ BasicServer
+?œâ??€ RoomServer
+?œâ??€ MatchServer
+?”â??€ RealtimeServer
 
 Phase 4
 High-Level API
-â”œâ”€â”€ Client
-â”œâ”€â”€ Authentication
-â”œâ”€â”€ Room
-â”œâ”€â”€ Matchmaking
-â””â”€â”€ Backend Services
+?œâ??€ Client
+?œâ??€ Authentication
+?œâ??€ Room
+?œâ??€ Matchmaking
+?”â??€ Backend Services
 
 Phase 5
 Cross-Platform
-â”œâ”€â”€ Linux
-â””â”€â”€ epoll
+?œâ??€ Linux
+?”â??€ epoll
 
 Phase 6
 SDK / Deployment
-â”œâ”€â”€ Unity
-â”œâ”€â”€ Unreal
-â”œâ”€â”€ Godot
-â”œâ”€â”€ Docker
-â””â”€â”€ Server Management
+?œâ??€ Unity
+?œâ??€ Unreal
+?œâ??€ Godot
+?œâ??€ Docker
+?”â??€ Server Management
 
 Phase 7
 Cloud
-â”œâ”€â”€ Server Allocation
-â”œâ”€â”€ Region / Zone
-â”œâ”€â”€ Instance Lifecycle
-â”œâ”€â”€ Monitoring
-â””â”€â”€ Cloud Management
+?œâ??€ Server Allocation
+?œâ??€ Region / Zone
+?œâ??€ Instance Lifecycle
+?œâ??€ Monitoring
+?”â??€ Cloud Management
 ```
 
 ---

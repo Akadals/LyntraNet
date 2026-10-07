@@ -1,4 +1,4 @@
-#include "LyntraNet/Network/NetworkConnection.h"
+#include "LT/Network/NetworkConnection.h"
 
 using namespace LT;
 
@@ -8,7 +8,7 @@ DWORD NetworkConnection::Read()
 		m_recvBuf.AcquireWriteRegion();
 	if (region.Empty()) return 0;
 
-	PIOCONTEXT ctx = 
+	PPIOCTX ctx = 
 		m_transport->GetSocket().AcquireContext();
 
 	memset(&ctx->m_overlapped, 0, sizeof(OVERLAPPED));

@@ -4,12 +4,12 @@
 #include <memory>
 #include <vector>
 #include <atomic>
-#include <LyntraNet/Network/IPEndPoint.h>
-#include <LyntraNet/Network/Protocol.h>
-#include <LyntraNEt/Core/Listener.h>
-#include <LyntraNet/Utility/LTReturnObject.h>
+#include <LT/Network/IPEndPoint.h>
+#include <LT/Network/Protocol.h>
+#include <LT/Core/Listener.h>
+#include <LT/Utility/LTReturnObject.h>
 
-#include <LyntraNet/Preset/ServerPreset.h>
+#include <LT/Preset/ServerPreset.h>
 
 namespace LT
 {

@@ -1,9 +1,9 @@
 #ifndef __INCL_LYNTRA_NETWORK_CONNECTION_H__
 #define __INCL_LYNTRA_NETWORK_CONNECTION_H__
 
-#include <LyntraNet/Utility.h>
-#include <LyntraNet/Network/Transport/ITransport.h>
-#include <LyntraNet/Network/Transport/TCPTransport.h>
+#include <LT/Utility.h>
+#include <LT/Network/Transport/ITransport.h>
+#include <LT/Network/Transport/TCPTransport.h>
 
 #include <WinSock2.h>
 #include <WS2tcpip.h>

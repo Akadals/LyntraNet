@@ -7,10 +7,10 @@
 #include <mstcpip.h>
 #include <sal.h>
 
-#include <LyntraNet/Network/IPAddress.h>
-#include <LyntraNet/Utility.h>
-#include <LyntraNet/Packet.h>
-#include <LyntraNet/Network/IOContext.h>
+#include <LT/Network/IPAddress.h>
+#include <LT/Utility.h>
+#include <LT/Packet.h>
+#include <LT/Network/IOContext.h>
 
 
 namespace LT::Socket
@@ -47,7 +47,7 @@ namespace LT::Socket
 		IPAddress m_local;
 		IPAddress m_remote;
 	protected:
-		LockFreePool<PIOCONTEXT,
+		LockFreePool<PPIOCTX,
 			IO_CONTEXT_POOL_SIZE> m_ioContextPool;
 	private:
 		SocketOption m_sockOpt = {};
@@ -75,18 +75,18 @@ namespace LT::Socket
 		const IPAddress& GetLocal() const { return m_local; }
 		const IPAddress& GetRemote() const { return m_remote; }
 
-		IOCONTEXT* AcquireContext() 
+		IOCTX* AcquireContext() 
 		{ return m_ioContextPool.Acquire(); }
 
 		void ReleaseContext(
-			_In_ IOCONTEXT* _context
+			_In_ IOCTX* _context
 		) { m_ioContextPool.Release(std::move(_context)); }
 
 		virtual DWORD Recv(
-			_In_ IOCONTEXT& _context
+			_In_ IOCTX& _context
 		) = 0;
 		virtual DWORD Send(
-			_In_ IOCONTEXT& _context
+			_In_ IOCTX& _context
 		) = 0;
 		virtual void Close() noexcept = 0;
 	};

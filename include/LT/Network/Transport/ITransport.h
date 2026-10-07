@@ -1,7 +1,7 @@
 #ifndef __INCL_LYNTRA_ITRANSPORT_H__
 #define __INCL_LYNTRA_ITRANSPORT_H__
 
-#include <LyntraNet/Network/Socket/NetworkSocket.h>
+#include <LT/Network/Socket/NetworkSocket.h>
 
 namespace LT::Transport
 {

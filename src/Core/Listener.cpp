@@ -1,4 +1,4 @@
-#include <LyntraNet/Core/Listener.h>
+#include <LT/Core/Listener.h>
 
 using namespace LT;
 
@@ -23,25 +23,25 @@ using namespace LT;
 //		reinterpret_cast<void**>(&m_lpAcceptEx));
 //	loadExtension(WSAID_GETACCEPTEXSOCKADDRS, 
 //		reinterpret_cast<void**>(&m_lpGetAcceptExSockaddrs));
-//}
+////}
 //
 //void Listener<TCP>::PostAccept()
 //{
-//	PACCEPTCONTEXT ctx = new ACCEPTCONTEXT; //OBJ pool 적용
-//
-//	if ((ctx->m_ownerSock = WSASocket(
-//		AF_INET,
-//		SOCK_STREAM,
-//		0, NULL, 0,
-//		WSA_FLAG_OVERLAPPED)) == INVALID_SOCKET)
-//	{
-//		delete ctx;
-//		return; //loging
-//	}
-//
-//	DWORD bytes = 0;
-//	DWORD dwLen = sizeof(SOCKADDR_IN) + 16;
-//
-//	if (!m_lpAcceptEx(m_listenSock, ctx->m_ownerSock, ctx->m_wsaBuf.buf, 0,
-//		dwLen, dwLen, &bytes, &ctx->m_overlapped)) return; //loging
+	//PACCEPTCONTEXT ctx = new ACCEPTCONTEXT; //OBJ pool 적용
+
+	//if ((ctx->m_ownerSock = WSASocket(
+	//	AF_INET,
+	//	SOCK_STREAM,
+	//	0, NULL, 0,
+	//	WSA_FLAG_OVERLAPPED)) == INVALID_SOCKET)
+	//{
+	//	delete ctx;
+	//	return; //loging
+	//}
+
+	//DWORD bytes = 0;
+	//DWORD dwLen = sizeof(SOCKADDR_IN) + 16;
+
+	//if (!m_lpAcceptEx(m_listenSock, ctx->m_ownerSock, ctx->m_wsaBuf.buf, 0,
+	//	dwLen, dwLen, &bytes, &ctx->m_overlapped)) return; //loging
 //}

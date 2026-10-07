@@ -1,4 +1,4 @@
-#include <LyntraNet/LyntraNet.h>
+#include <LT/LyntraNet.h>
 
 #include <array>
 #include <chrono>

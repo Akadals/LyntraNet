@@ -1,4 +1,4 @@
-#include <LyntraNet/Core/LyntraIOCPCore.h>
+#include <LT/Core/LyntraIOCPCore.h>
 using namespace LT;
 //Core::Core(std::unique_ptr<Listener> _listener)
 //{

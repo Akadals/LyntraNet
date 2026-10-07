@@ -1,4 +1,4 @@
-#include <LyntraNet/Memory.h>
+#include <LT/Memory.h>
 
 #define COPY_CASE(N) case N: Copy<N>(_dest, _src); break;
 

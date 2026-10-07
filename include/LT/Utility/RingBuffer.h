@@ -2,7 +2,7 @@
 #define __INCL_LYNTRA_RING_BUFFER_H__
 
 #include "ConcurrentPolicy.h"
-#include <LyntraNet/Memory.h>
+#include <LT/Memory.h>
 #include <atomic>
 #include <memory>
 #include <span>

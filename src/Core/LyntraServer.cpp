@@ -1,4 +1,4 @@
-#include <LyntraNet/Core/LyntraServer.h>
+#include <LT/Core/LyntraServer.h>
 
 using namespace LT;
 

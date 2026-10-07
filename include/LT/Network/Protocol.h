@@ -2,6 +2,11 @@
 #define __INCL_LYNTRA_PROTOCOL_H__
 #include <concepts>
 
+#define PROTOCOL_TCP 0
+#define PROTOCOL_UDP 0
+#define PROTOCOL_KCP 0
+#define PROTOCOL_QUIC 0
+
 struct TCP {};
 struct UDP {};
 struct KCP {};

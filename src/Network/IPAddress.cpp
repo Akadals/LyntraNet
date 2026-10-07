@@ -1,4 +1,4 @@
-#include "LyntraNet/Network/IPAddress.h"
+#include "LT/Network/IPAddress.h"
 
 using namespace LT;
 

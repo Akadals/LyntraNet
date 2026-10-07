@@ -1,4 +1,4 @@
-#include <LyntraNet/Network/IPEndPoint.h>
+#include <LT/Network/IPEndPoint.h>
 
 using namespace LT
 ;

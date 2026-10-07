@@ -6,11 +6,8 @@
 #include <string>
 #include <sal.h>
 
-#ifdef ADDRESS_IPV6_BASED
-#define DEFAULT_LOOPBACK "::1"
-#else
-#define DEFAULT_LOOPBACK "127.0.0.1"
-#endif 
+#define IPV4_DEFAULT_LOOPBACK "127.0.0.1"
+#define IPV6_DEFAULT_LOOPBACK "::1"
 
 
 namespace LT
@@ -21,7 +18,7 @@ namespace LT
 		sockaddr_storage m_storage = {};
 		socklen_t m_length = {};
 	public:
-		explicit IPAddress(std::string_view = DEFAULT_LOOPBACK);
+		explicit IPAddress(std::string_view = IPV4_DEFAULT_LOOPBACK);
 
 		void SetAddress(
 			_In_reads_to_ptr_(_len) const sockaddr* _addr,

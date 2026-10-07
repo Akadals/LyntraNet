@@ -1,12 +1,12 @@
 #ifndef __INCL_LYNTRA_CONNECTION_MANAGER_H__
 #define __INCL_LYNTRA_CONNECTION_MANAGER_H__
 
-#include <LyntraNet/Utility.h>
+#include <LT/Utility.h>
 #include "NetworkConnection.h"
 #include "Socket/NetworkSocket.h"
 #include "Session.h"
 
-#include <LyntraNet/Network/IOContext.h>
+#include <LT/Network/IOContext.h>
 
 #define U_PTR std::unique_ptr
 #define S_PTR std::shared_ptr
@@ -28,7 +28,7 @@ namespace LT
 		LockFreePool<U_PTR<Socket::NET_SOCK>>
 			m_socketPool = { CONNECTION_POOL_SIZE };
 
-		LockFreePool<PIOCONTEXT, ACCEPT_CONTEXT_POOL_SIZE>
+		LockFreePool<PPIOCTX, ACCEPT_CONTEXT_POOL_SIZE>
 			m_acceptCtxPool;
 
 		//LockFreePool<Packet::JOB> m_JobPool = { JOB_POOL_SIZE };
@@ -54,7 +54,7 @@ namespace LT
 		{ return m_transportPool.Acquire(); }
 		U_PTR<Socket::NET_SOCK> AcquireSocket()
 		{ return m_socketPool.Acquire(); }
-		PIOCONTEXT AcquireAcceptCtx()
+		PPIOCTX AcquireAcceptCtx()
 		{ return m_acceptCtxPool.Acquire(); }
 	};
 }

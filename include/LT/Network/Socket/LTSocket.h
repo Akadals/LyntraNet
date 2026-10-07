@@ -9,16 +9,22 @@
 
 namespace LT
 {
-	typedef class LTSocket
+	typedef struct LTSocket
 		LTSOCKET, * PLTSOCKET;
 
-	class LTSocket
+	struct LTSocket
 	{
-	public:
 #ifdef _WIN32
 		SOCKET m_sock;
+
+		LTSocket() :
+			m_sock(INVALID_SOCKET) {}
 		LTSocket(const SOCKET& _socket) :
 			m_sock(_socket) {}
+
+		BOOL IsValid() const { return m_sock != INVALID_SOCKET; }
+
+		static LTSocket INVALID() { return INVALID_SOCKET; }
 #elif __linux__
 		int m_fd;
 		LTSocket(int _fd) :

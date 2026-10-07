@@ -2,37 +2,39 @@
 #define __INCL_LYNTRA_IOCONTEXT_H__
 
 #include <winsock2.h>
+#include <LT/Network/Socket/LTSocket.h>
 
 namespace LT
 {
 	typedef enum class IOType : uint8_t
 	{ READING, WRITING } IOTYPE;
 
-	typedef class AcceptContext
-		ACCEPTCONTEXT, * PACCEPTCONTEXT;
 
-	typedef class IOContext
-		IOCONTEXT, * PIOCONTEXT;
+	typedef struct AcceptContext
+		ACPTCTX, * PACPTCTX;
 
-	class alignas(64) AcceptContext
+	typedef struct IOContext
+		IOCTX, * PPIOCTX;
+
+
+	struct alignas(64) AcceptContext
 	{
-	public:
-		OVERLAPPED m_overlapped = {};
-		WSABUF m_wsaBuf = {};
-		SOCKET m_ownerSock = { INVALID_SOCKET };
-	public:
-		AcceptContext();
-		void Init();
+		LTSOCKET m_AcceptSock;
+		WSABUF m_wsaBuf;
+		CHAR* buffer;
+		OVERLAPPED m_overlapped;
+
+		AcceptContext() :
+			m_AcceptSock(LTSOCKET::INVALID()) {}
 	};
 
-	class alignas(64) IOContext
+	struct alignas(64) IOContext
 	{
-	public:
 		OVERLAPPED m_overlapped = {};
 		WSABUF m_wsaBuf[2] = {};
 		IOTYPE m_ioType = {};
 		SOCKET m_ownerSock = { INVALID_SOCKET };
-	public:
+
 		IOContext();
 		void Init();
 	};
