@@ -5,6 +5,9 @@
 #include <Windows.h>
 #include <MSWSock.h>
 #include <ws2tcpip.h>
+#include <vector>
+#include <sal.h>
+
 #include <LT/Network/ConnectionManager.h>
 #include <LT/Network/IOContext.h>
 #include <LT/Network/IPEndPoint.h>
@@ -12,14 +15,23 @@
 #include <LT/Utility/LTReturnObject.h>
 #include <LT/Utility.h>
 #include <LT/Network/Socket/LTSocket.h>
+#include <LT/Network/Socket/SocketOption.h>
 #include <LT/Windows/Core/ListenerConfig.h>
-#include <vector>
-#include <sal.h>
 
 #define DEFAULT_POSTING_ACCEPT_DEPTH 50
 
 namespace LT
 {
+	typedef enum ListenerState
+	{
+		LISTENER_CREATED,
+		LISTENER_BINDING,
+		LISTENER_BOUND,
+		LISTENER_LISTENING,
+		LISTENER_CLOSING,
+		LISTENER_CLOSED
+	} LSTNRSTATE;
+
 	class IListener
 	{
 	protected:
@@ -28,7 +40,7 @@ namespace LT
 		UINT							m_backlog;
 		UINT							m_protocol;
 
-		BOOL							m_isListening;
+		LSTNRSTATE						m_state;
 
 		LockFreePool<ACPTCTX>			m_acceptContextPool;
 		std::vector<PACPTCTX>			m_acceptContexts;
@@ -41,7 +53,7 @@ namespace LT
 			m_listenSock(LTSOCKET::INVALID()),
 			m_backlog(_backlog),
 			m_protocol(_protocol),
-			m_isListening(FALSE),
+			m_state(LISTENER_CREATED),
 			m_acceptContextPool(DEFAULT_POSTING_ACCEPT_DEPTH),
 			m_acceptContexts(DEFAULT_POSTING_ACCEPT_DEPTH) {}
 
@@ -59,8 +71,8 @@ namespace LT
 		virtual LTReturnObject Listen() = 0;
 		virtual LTReturnObject Close()	= 0;
 
-		UINT Protocol() const { return m_protocol; }
-		const IPEndPoint& LocalEndPoint() const { return m_localEndpoint; }
+		UINT				Protocol() const { return m_protocol; }
+		const IPEndPoint&	LocalEndPoint() const { return m_localEndpoint; }
 	};
 
 	template<TProtocol>
@@ -76,8 +88,8 @@ namespace LT
 	public:
 		explicit Listener<TCP>(
 			_In_		const IPEndPoint&	_endpoint,
-			_In_opt_	UINT				_backlog = SOMAXCONN,
-			_In_opt_	UINT				_acceptDepth = DEFAULT_POSTING_ACCEPT_DEPTH) :
+			_In_opt_	UINT				_backlog		= SOMAXCONN,
+			_In_opt_	UINT				_acceptDepth	= DEFAULT_POSTING_ACCEPT_DEPTH) :
 			IListener(_endpoint, _backlog, PROTOCOL_TCP),
 			m_lpAcceptEx(nullptr),
 			m_lpGetAcceptExSockaddrs(nullptr),

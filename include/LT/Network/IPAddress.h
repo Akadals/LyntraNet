@@ -7,7 +7,8 @@
 #include <sal.h>
 
 #define IPV4_DEFAULT_LOOPBACK "127.0.0.1"
-#define IPV6_DEFAULT_LOOPBACK "::1"
+#define IPV6_DEFAULT_LOOPBACK "::1" 
+// 수정 필요
 
 
 namespace LT
@@ -56,5 +57,7 @@ namespace LT
 
 		static IPAddress Parse(std::string_view);
 	};
+
+	typedef IPAddress IPEndPoint;
 }
 #endif

@@ -12,7 +12,7 @@ namespace LT
 	class ConcurrentQueue;
 
 	template<typename T>
-	class ConcurrentRingQueue<T, SPSC>
+	class ConcurrentQueue<T, SPSC>
 	{
 	private:
 		std::unique_ptr<T[]> m_buffer;
@@ -23,7 +23,7 @@ namespace LT
 		mutable CacheLineAtomic m_head;
 		mutable CacheLineAtomic m_tail;
 	public:
-		ConcurrentRingQueue(size_t _size);
+		ConcurrentQueue(size_t _size);
 		bool Enqueue(const T* __restrict _src);
 		bool Dequeue(T* __restrict _dest);
 	};

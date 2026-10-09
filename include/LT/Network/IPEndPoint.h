@@ -10,30 +10,30 @@
 
 namespace LT
 {
-	class IPEndPoint
-	{
-	private:
-		IPAddress m_address;
-		uint16_t m_port;
-	public:
-#ifdef ADDRESS_IPV6_BASED
-		IPEndPoint() :
-			m_address(IPAddress::LoopbackIPv6()),
-			m_port(IPAddress::AnyPort()) {}
-#else
-		IPEndPoint() :
-			m_address(IPAddress::LoopbackIPv4()),
-			m_port(IPAddress::AnyPort()) {}
-#endif
-		IPEndPoint(const IPAddress& _address, uint16_t _port) :
-			m_address(_address),
-			m_port(_port) {}
-
-		void SetIPAddress(const IPAddress& _address) { m_address = _address; }
-		const IPAddress& GetAddress() const noexcept { return m_address; }
-
-		void SetPort(uint16_t _port) { m_port = _port; }
-		uint16_t GetPort() const noexcept { return m_port; }
-	};
+//	class IPEndPoint //필요없음, typedef로 IPAddress를 Endpoint로 변환
+//	{
+//	private:
+//		IPAddress m_address;
+//		uint16_t m_port;
+//	public:
+//#ifdef ADDRESS_IPV6_BASED
+//		IPEndPoint() :
+//			m_address(IPAddress::LoopbackIPv6()),
+//			m_port(IPAddress::AnyPort()) {}
+//#else
+//		IPEndPoint() :
+//			m_address(IPAddress::LoopbackIPv4()),
+//			m_port(IPAddress::AnyPort()) {}
+//#endif
+//		IPEndPoint(const IPAddress& _address, uint16_t _port) :
+//			m_address(_address),
+//			m_port(_port) {}
+//
+//		void SetIPAddress(const IPAddress& _address) { m_address = _address; }
+//		const IPAddress& GetAddress() const noexcept { return m_address; }
+//
+//		void SetPort(uint16_t _port) { m_port = _port; }
+//		uint16_t GetPort() const noexcept { return m_port; }
+//	};
 }
 #endif
