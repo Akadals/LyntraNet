@@ -88,7 +88,7 @@ LTReturnValue<BOOL> Listener<TCP>::PostAccept()
             RETOBJ_ERR_TYPE_OS,
             RETOBJ_MSG_INVALID };
 
-    ACPTCTX remoteCtx = std::move(m_acceptContextPool.Acquire());
+    ACPTCTX remoteCtx = m_acceptContextPool.Acquire();
     remoteCtx.m_contextState = CONTEXT_AVAILABLE;
 
     if ((remoteCtx.m_acceptSock.m_sock = WSASocket(
@@ -150,7 +150,7 @@ LTReturnValue<LTSOCKET> Listener<TCP>::Accept()
             RETOBJ_ERR_TYPE_OS,
             RETOBJ_MSG_INVALID };
 
-    ACPTCTX remoteCtx = std::move(m_acceptContextPool.Acquire());
+    ACPTCTX remoteCtx = m_acceptContextPool.Acquire();
     remoteCtx.m_contextState = CONTEXT_AVAILABLE;
     int remoteAddressLength = static_cast<int>(remoteCtx.m_remoteAddress.Length());
 

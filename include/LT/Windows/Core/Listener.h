@@ -6,6 +6,7 @@
 #include <MSWSock.h>
 #include <ws2tcpip.h>
 #include <vector>
+#include <atomic>
 #include <sal.h>
 
 #include <LT/Network/ConnectionManager.h>
@@ -42,8 +43,8 @@ namespace LT
 
 		LSTNRSTATE						m_state;
 
-		LockFreePool<ACPTCTX>			m_acceptContextPool;
-		std::vector<PACPTCTX>			m_acceptContexts;
+		LockFreePool<ACPTCTX>			m_acceptContextPool; //Connection으로 이전
+		std::vector<PACPTCTX>			m_acceptContexts; //Connection으로 이전
 	public:
 		explicit IListener(
 			_In_		const IPEndPoint&	_endpoint,
