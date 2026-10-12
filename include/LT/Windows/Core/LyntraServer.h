@@ -29,11 +29,16 @@ namespace LT
 		void Wait();
 
 		template<TProtocol T> 
-		LTReturnObject AddListener(const IPEndPoint& _endpoint);
+		LTReturnObject AddListener(
+			const IPEndPoint& _endpoint);
 		template<TProtocol T> 
-		LTReturnObject AddListener(const IPAddress& _address, uint16_t _port);
+		LTReturnObject AddListener(
+			const IPAddress& _address,
+			uint16_t _port);
 		template<TProtocol T> 
-		LTReturnObject AddListener(uint16_t _port);
+		LTReturnObject AddListener(
+			uint16_t _port,
+			UINT16 _ipVersion = IPV4);
 	};
 }
 

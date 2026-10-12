@@ -33,8 +33,7 @@ namespace LT
 		LISTENER_CLOSED
 	} LSTNRSTATE;
 
-	class IListener
-	{
+	class IListener {
 	protected:
 		LTSOCKET						m_listenSock;
 		IPEndPoint						m_localEndpoint;
@@ -43,8 +42,8 @@ namespace LT
 
 		LSTNRSTATE						m_state;
 
-		LockFreePool<ACPTCTX>			m_acceptContextPool; //Connection으로 이전
-		std::vector<PACPTCTX>			m_acceptContexts; //Connection으로 이전
+		LockFreePool<U_PTR<ACPTCTX>>	m_acceptContextPool;
+		std::vector<U_PTR<ACPTCTX>>		m_acceptContexts;
 	public:
 		explicit IListener(
 			_In_		const IPEndPoint&	_endpoint,
@@ -61,8 +60,7 @@ namespace LT
 		explicit IListener(
 			_In_		const LISTENCFG& _config) :
 			m_acceptContextPool(DEFAULT_POSTING_ACCEPT_DEPTH),
-			m_acceptContexts(DEFAULT_POSTING_ACCEPT_DEPTH)
-		{
+			m_acceptContexts(DEFAULT_POSTING_ACCEPT_DEPTH) {
 			//config 적용
 		}
 
@@ -80,8 +78,7 @@ namespace LT
 	class Listener;
 
 	template<>
-	class Listener<TCP> : public IListener
-	{
+	class Listener<TCP> : public IListener {
 	private:
 		LPFN_ACCEPTEX				m_lpAcceptEx;
 		LPFN_GETACCEPTEXSOCKADDRS	m_lpGetAcceptExSockaddrs;

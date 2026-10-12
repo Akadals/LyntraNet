@@ -7,6 +7,10 @@
 #include <mstcpip.h>
 #include <sal.h>
 
+#define CICP CreateIoCompletionPort
+#define GQCS GetQueuedCompletionStatus
+#define GQCSEx GetQueuedCompletionStatusEx
+
 namespace LT
 {
 	typedef struct LTSocket

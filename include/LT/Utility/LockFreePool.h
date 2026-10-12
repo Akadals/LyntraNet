@@ -3,6 +3,9 @@
 
 #include "ConcurrentStack.h"
 
+#define U_PTR std::unique_ptr
+#define S_PTR std::shared_ptr
+
 namespace LT
 {
 	template<typename T, size_t Size = 0>

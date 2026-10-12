@@ -19,11 +19,14 @@ LTReturnObject LyntraServer::AddListener(const IPAddress& _address, uint16_t _po
 }
 template<TProtocol T>
 
-LTReturnObject LyntraServer::AddListener(uint16_t _port)
+LTReturnObject LyntraServer::AddListener(uint16_t _port, UINT16 _ipVersion)
 {
 	auto listener = std::make_unique<Listener<T>>(
 		IPEndPoint(
-			IPAddress::AnyIPv4, _port));
+			_ipVersion == IPV4 ? 
+			IPAddress::AnyIPv4() : 
+			IPAddress::AnyIPv6(), 
+			_port));
 	m_listeners.emplace_back(std::move(listener));
 	return LTReturnObject();
 }

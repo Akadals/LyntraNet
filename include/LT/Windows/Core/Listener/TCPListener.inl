@@ -1,8 +1,7 @@
 using namespace LT;
 
 
-LTReturnObject Listener<TCP>::Bind()
-{
+LTReturnObject Listener<TCP>::Bind() {
     m_state = LISTENER_BINDING;
 
     if ((m_listenSock.m_sock = WSASocket(
@@ -21,22 +20,27 @@ LTReturnObject Listener<TCP>::Bind()
     if (::bind(
         m_listenSock.m_sock,
         m_localEndpoint.Data(),
-        m_localEndpoint.Length()) == SOCKET_ERROR)
+        m_localEndpoint.Length()) == SOCKET_ERROR) {
+        if (closesocket(m_listenSock.m_sock) == SOCKET_ERROR)
+            return {
+                RETOBJ_RSN_SOCK,
+                RETOBJ_ERR_TYPE_OS,
+                RETOBJ_MSG_INVALID };
+
         return {
             RETOBJ_RSN_BIND,
             RETOBJ_ERR_TYPE_OS,
-            RETOBJ_MSG_INVALID }; 
+            RETOBJ_MSG_INVALID };
+    }
 
     m_state = LISTENER_BOUND;
     return {};
 }
 
-LTReturnObject Listener<TCP>::Listen()
-{
+LTReturnObject Listener<TCP>::Listen() {
     if (listen(
         m_listenSock.m_sock,
-        m_backlog) == SOCKET_ERROR)
-    {
+        m_backlog) == SOCKET_ERROR) {
         if (m_listenSock.m_sock != INVALID_SOCKET)
             closesocket(m_listenSock.m_sock);
         return {
@@ -54,19 +58,16 @@ LTReturnObject Listener<TCP>::Listen()
     return {};
 }
 
-LTReturnObject Listener<TCP>::Close()
-{
+LTReturnObject Listener<TCP>::Close() {
     if (m_listenSock.m_sock == INVALID_SOCKET)
         return {};
 
     m_state = LISTENER_CLOSING;
 
-    for (auto* ctx : m_acceptContexts)
+    for (auto& ctx : m_acceptContexts)
         CancelIoEx(
             reinterpret_cast<HANDLE>(m_listenSock.m_sock),
             &ctx->m_overlapped);
-
-    //shutdown 추가 고려
 
     if (closesocket(m_listenSock.m_sock) == SOCKET_ERROR)
         return {
@@ -80,27 +81,28 @@ LTReturnObject Listener<TCP>::Close()
     return {};
 }
 
-LTReturnValue<BOOL> Listener<TCP>::PostAccept()
-{
+LTReturnValue<BOOL> Listener<TCP>::PostAccept() {
     if (m_state != LISTENER_LISTENING)
         return {
             RETOBJ_RSN_LISTEN,
             RETOBJ_ERR_TYPE_OS,
             RETOBJ_MSG_INVALID };
 
-    ACPTCTX remoteCtx = m_acceptContextPool.Acquire();
-    remoteCtx.m_contextState = CONTEXT_AVAILABLE;
+    U_PTR<ACPTCTX> remoteCtx = m_acceptContextPool.Acquire();
+    remoteCtx->m_contextState = CONTEXT_AVAILABLE;
 
-    if ((remoteCtx.m_acceptSock.m_sock = WSASocket(
+    if ((remoteCtx->m_acceptSock.m_sock = WSASocket(
         m_localEndpoint.Family(),
         SOCK_STREAM,
         IPPROTO_TCP,
         NULL,
         SG_UNCONSTRAINED_GROUP,
-        WSA_FLAG_OVERLAPPED)) == INVALID_SOCKET)
-    {
-        if (remoteCtx.m_acceptSock.m_sock != INVALID_SOCKET)
-            closesocket(remoteCtx.m_acceptSock.m_sock);
+        WSA_FLAG_OVERLAPPED)) == INVALID_SOCKET) {
+        if (remoteCtx->m_acceptSock.m_sock != INVALID_SOCKET)
+            closesocket(remoteCtx->m_acceptSock.m_sock);
+
+        m_acceptContextPool.Release(std::move(remoteCtx));
+        remoteCtx = nullptr;
 
         return {
             RETOBJ_RSN_SOCK,
@@ -113,28 +115,29 @@ LTReturnValue<BOOL> Listener<TCP>::PostAccept()
 
     if (!m_lpAcceptEx(
         m_listenSock.m_sock,
-        remoteCtx.m_acceptSock.m_sock,
-        remoteCtx.m_buffer,
+        remoteCtx->m_acceptSock.m_sock,
+        remoteCtx->m_buffer,
         0,
         dwLen,
         dwLen,
         &bytes,
-        &remoteCtx.m_overlapped) &&
-        WSAGetLastError() != WSA_IO_PENDING)
-    {
-        if (remoteCtx.m_acceptSock.m_sock != INVALID_SOCKET)
-            closesocket(remoteCtx.m_acceptSock.m_sock);
+        &remoteCtx->m_overlapped) &&
+        WSAGetLastError() != WSA_IO_PENDING) {
+        if (remoteCtx->m_acceptSock.m_sock != INVALID_SOCKET)
+            closesocket(remoteCtx->m_acceptSock.m_sock);
 
         m_acceptContextPool.Release(std::move(remoteCtx));
+        remoteCtx = nullptr;
 
         return {
-            RETOBJ_RSN_SOCK,
+            RETOBJ_RSN_ACPT,
             RETOBJ_ERR_TYPE_OS,
             RETOBJ_MSG_INVALID };
     }
 
-    remoteCtx.m_contextState = CONTEXT_PENDING;
-    m_acceptContexts.emplace_back(remoteCtx);
+    remoteCtx->m_contextState = CONTEXT_PENDING;
+    m_acceptContexts.emplace_back(std::move(remoteCtx));
+    remoteCtx = nullptr;
 
     return { TRUE };
 
@@ -142,43 +145,61 @@ LTReturnValue<BOOL> Listener<TCP>::PostAccept()
     // local과 remote 주소 기록 필요
 }
 
-LTReturnValue<LTSOCKET> Listener<TCP>::Accept()
-{
+LTReturnValue<LTSOCKET> Listener<TCP>::Accept() {
     if (m_state != LISTENER_LISTENING)
         return {
             RETOBJ_RSN_LISTEN,
             RETOBJ_ERR_TYPE_OS,
             RETOBJ_MSG_INVALID };
 
-    ACPTCTX remoteCtx = m_acceptContextPool.Acquire();
-    remoteCtx.m_contextState = CONTEXT_AVAILABLE;
-    int remoteAddressLength = static_cast<int>(remoteCtx.m_remoteAddress.Length());
+    U_PTR<ACPTCTX> remoteCtx = m_acceptContextPool.Acquire();
+    remoteCtx->m_contextState = CONTEXT_AVAILABLE;
+    int remoteAddressLength = 
+        static_cast<int>(remoteCtx->m_remoteAddress.Length());
 
-    if ((remoteCtx.m_acceptSock.m_sock = WSAAccept(
+    if ((remoteCtx->m_acceptSock.m_sock = WSAAccept(
         m_listenSock.m_sock,
-        remoteCtx.m_remoteAddress.Data(),
+        remoteCtx->m_remoteAddress.Data(),
         &remoteAddressLength,
         NULL,
-        NULL)) == INVALID_SOCKET)
+        NULL)) == INVALID_SOCKET) {
+        m_acceptContextPool.Release(std::move(remoteCtx));
+        remoteCtx = nullptr;
+
         return {
             RETOBJ_RSN_ACPT,
             RETOBJ_ERR_TYPE_OS,
             RETOBJ_MSG_INVALID };
+    }
 
-    remoteCtx.m_contextState = CONTEXT_PENDING;
+    remoteCtx->m_contextState = CONTEXT_PENDING;
 
-    return { remoteCtx.m_acceptSock };
+    HANDLE g_hComPort; // 임시 comport
+
+    if (CICP(
+        (HANDLE)remoteCtx->m_acceptSock.m_sock,
+        g_hComPort,
+        (ULONG_PTR)remoteCtx.get(),
+        0) == INVALID_HANDLE_VALUE) {
+        m_acceptContextPool.Release(std::move(remoteCtx));
+        remoteCtx = nullptr;
+
+        return {
+            RETOBJ_RSN_ACPT,
+            RETOBJ_ERR_TYPE_OS,
+            RETOBJ_MSG_INVALID };
+    }
+
+    return { remoteCtx->m_acceptSock };
 }
 
-LTReturnValue<BOOL> Listener<TCP>::load_accept_extensions()
-{
+LTReturnValue<BOOL> Listener<TCP>::load_accept_extensions() {
     if (m_lpAcceptEx && m_lpGetAcceptExSockaddrs) [[unlikely]]
         return { TRUE };
 
     DWORD bytes = 0;
 
-    auto load = [&](GUID guid, auto& function) -> bool
-        {
+    auto load = [&](GUID guid, auto& function) -> bool {
             return WSAIoctl(
                 m_listenSock.m_sock,
                 SIO_GET_EXTENSION_FUNCTION_POINTER,

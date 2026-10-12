@@ -9,7 +9,8 @@
 #define IPV4_DEFAULT_LOOPBACK "127.0.0.1"
 #define IPV6_DEFAULT_LOOPBACK "::1" 
 // 수정 필요
-
+#define IPV4 0
+#define IPV6 1
 
 namespace LT
 {
