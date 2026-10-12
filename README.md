@@ -8,7 +8,7 @@ It aims to provide low-level networking infrastructure, reusable framework compo
 
 <div align="center">
 
-**C++20 Â· Cross-Platform Â· High Performance Â· Modular Â· Game Networking**
+**C++20 | Cross-Platform | High Performance | Modular | Game Networking**
 
 </div>
 
@@ -23,19 +23,19 @@ Socket management, asynchronous I/O, connection handling, packet processing, thr
 LyntraNet is being designed to provide these components as a single, layered networking framework.
 
 ```text
-?Œâ??€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€??
-??             Game / Application             ??
-?œâ??€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€??
-??              High-Level API                ??
-?œâ??€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€??
-??                  Preset                    ??
-?œâ??€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€??
-??                Framework                   ??
-?œâ??€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€??
-??                   Core                     ??
-?œâ??€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€??
-??         Platform / OS Networking           ??
-?”â??€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€??
++--------------------------------------+
+| Game / Application                   |
++--------------------------------------+
+| High-Level API                       |
++--------------------------------------+
+| Preset                               |
++--------------------------------------+
+| Framework                            |
++--------------------------------------+
+| Core                                 |
++--------------------------------------+
+| Platform / OS Networking             |
++--------------------------------------+
 ```
 
 The goal is to provide:
@@ -77,17 +77,20 @@ LyntraNet aims to provide multiple levels of abstraction.
 
 ```text
 Simple
-  ??
-  ??
+  |
+  v
 High-Level API
-  ??
+  |
+  v
 Preset
-  ??
+  |
+  v
 Framework
-  ??
+  |
+  v
 Core
-  ??
-  ??
+  |
+  v
 Low-Level
 ```
 
@@ -103,13 +106,17 @@ The major architecture is:
 
 ```text
 Core
-  ??
+  |
+  v
 Framework
-  ??
+  |
+  v
 Preset
-  ??
-High-Level
-  ??
+  |
+  v
+High-Level API
+  |
+  v
 SDK / Deployment / Cloud
 ```
 
@@ -125,12 +132,12 @@ Core provides the low-level infrastructure required by the rest of LyntraNet.
 
 ```text
 Core
-?œâ??€ Platform
-?œâ??€ Network
-?œâ??€ I/O
-?œâ??€ Memory
-?œâ??€ Concurrency
-?”â??€ Utility
+|-- Platform
+|-- Network
+|-- I/O
+|-- Memory
+|-- Concurrency
+`-- Utility
 ```
 
 Potential responsibilities include:
@@ -167,12 +174,12 @@ Framework provides reusable networking components built on top of Core.
 
 ```text
 Framework
-?œâ??€ Connection
-?œâ??€ Listener
-?œâ??€ Packet
-?œâ??€ Execution
-?œâ??€ Gameplay Networking
-?”â??€ Server
+|-- Connection
+|-- Listener
+|-- Packet
+|-- Execution
+|-- Gameplay Networking
+`-- Server
 ```
 
 The Framework layer is intended to provide building blocks such as:
@@ -219,23 +226,23 @@ For example:
 
 ```text
 FPS
-?”â??€ MatchServer
-    ?œâ??€ UDP
-    ?œâ??€ Fixed Tick
-    ?œâ??€ Snapshot
-    ?”â??€ Interest Management
+`-- MatchServer
+    |-- UDP
+    |-- Fixed Tick
+    |-- Snapshot
+    `-- Interest Management
 ```
 
 A larger persistent world could instead be composed from several different server roles:
 
 ```text
 GatewayServer
-      ??
-      ?œâ??€ WorldServer
-      ??
-      ?œâ??€ ZoneServer
-      ??
-      ?”â??€ ServiceServer
+  |
+  +-- WorldServer
+  |
+  +-- ZoneServer
+  |
+  `-- ServiceServer
 ```
 
 The preset system is still being designed and may change substantially during development.
@@ -250,19 +257,19 @@ Potential areas include:
 
 ```text
 Client
-?œâ??€ Connection
-?œâ??€ Authentication
-?œâ??€ Room
-?œâ??€ Matchmaking
-?”â??€ Session
+|-- Connection
+|-- Authentication
+|-- Room
+|-- Matchmaking
+`-- Session
 
 Backend
-?œâ??€ Player Data
-?œâ??€ Friends
-?œâ??€ Guild
-?œâ??€ Chat
-?œâ??€ Ranking
-?”â??€ Notification
+|-- Player Data
+|-- Friends
+|-- Guild
+|-- Chat
+|-- Ranking
+`-- Notification
 ```
 
 These APIs are currently in the **design phase**.
@@ -277,9 +284,9 @@ LyntraNet is designed around a platform abstraction layer so that platform-speci
 
 | Platform | Backend |       Status      |
 | :------- | :------ | :---------------: |
-| Windows  | IOCP    | ?š§ In Development |
-| Linux    | epoll   |     ?“‹ Planned    |
-| macOS    | TBD     |     ?“‹ Planned    |
+| Windows  | IOCP    | In Development |
+| Linux    | epoll   |     Planned    |
+| macOS    | TBD     |     Planned    |
 
 The first implementation target is Windows.
 
@@ -291,11 +298,11 @@ Linux support will follow once the core architecture has stabilized.
 
 | Protocol |       Status      |
 | :------- | :---------------: |
-| TCP      | ?š§ In Development |
-| UDP      |     ?“‹ Planned    |
-| TLS      |     ?“‹ Planned    |
-| RUDP     |     ?“‹ Planned    |
-| QUIC     |     ?“‹ Planned    |
+| TCP      | In Development |
+| UDP      |     Planned    |
+| TLS      |     Planned    |
+| RUDP     |     Planned    |
+| QUIC     |     Planned    |
 
 Protocol implementations are intended to remain as independent as practical from higher-level gameplay systems.
 
@@ -331,23 +338,23 @@ The project is being developed from the lowest-level networking infrastructure u
 
 ```text
 Current
-   ??
-   ??
+  |
+  v
 Core
-   ??
-   ??
+  |
+  v
 Framework
-   ??
-   ??
+  |
+  v
 Presets
-   ??
-   ??
+  |
+  v
 High-Level API
-   ??
-   ??
+  |
+  v
 Client SDK / Deployment
-   ??
-   ??
+  |
+  v
 Cloud Services
 ```
 
@@ -379,13 +386,13 @@ The project is organized around the networking architecture rather than individu
 
 ```text
 LT/
-?œâ??€ include/
-??  ?”â??€ LT/
-?œâ??€ src/
-?œâ??€ tests/
-?œâ??€ examples/
-?œâ??€ docs/
-?”â??€ CMakeLists.txt
+|-- include/
+|   `-- LT/
+|-- src/
+|-- tests/
+|-- examples/
+|-- docs/
+`-- CMakeLists.txt
 ```
 
 The internal directory structure is still evolving alongside the architecture.
@@ -407,13 +414,13 @@ The underlying networking library remains independent from any particular game e
 
 ```text
              LyntraNet
-                 ??
-       ?Œâ??€?€?€?€?€?€?€?€?¼â??€?€?€?€?€?€?€?€??
-       ??        ??        ??
-     Unity    Unreal     Godot
-       ??        ??        ??
-       ?”â??€?€?€?€?€?€?€?€?¼â??€?€?€?€?€?€?€?€??
-                 ??
+                 |
+        +--------+--------+
+        |        |        |
+      Unity    Unreal    Godot
+        |        |        |
+        +--------+--------+
+                 |
           Game Application
 ```
 
@@ -427,19 +434,16 @@ SDK and engine integration are planned for later development.
 
 ```text
           LyntraNet
-              ??
-       Networking Library
-              ??
-              ??
+              |
+     Networking Framework
+              |
            Blockia
-              ??
+              |
        Real Integration
-              ??
-              ??
+              |
       Problems / Testing
-              ??
-              ??
-       LyntraNet ê°œì„ 
+              |
+       LyntraNet Improvements
 ```
 
 The purpose is to validate LyntraNet against real gameplay requirements rather than designing the networking framework entirely in isolation.
@@ -451,59 +455,52 @@ Blockia is therefore treated primarily as an integration and validation project.
 # Roadmap
 
 ```text
-Phase 1
-Core Networking
-?œâ??€ Socket
-?œâ??€ TCP
-?œâ??€ IOCP
-?œâ??€ Buffer
-?œâ??€ Memory
-?”â??€ Concurrency
+Phase 1: Core Networking
+|-- Socket
+|-- TCP
+|-- IOCP
+|-- Buffer
+|-- Memory
+`-- Concurrency
 
-Phase 2
-Framework
-?œâ??€ Connection
-?œâ??€ Session
-?œâ??€ Packet
-?œâ??€ EventLoop
-?œâ??€ Worker
-?”â??€ Server
+Phase 2: Framework
+|-- Connection
+|-- Session
+|-- Packet
+|-- EventLoop
+|-- Worker
+`-- Server
 
-Phase 3
-Presets
-?œâ??€ BasicServer
-?œâ??€ RoomServer
-?œâ??€ MatchServer
-?”â??€ RealtimeServer
+Phase 3: Presets
+|-- BasicServer
+|-- RoomServer
+|-- MatchServer
+`-- RealtimeServer
 
-Phase 4
-High-Level API
-?œâ??€ Client
-?œâ??€ Authentication
-?œâ??€ Room
-?œâ??€ Matchmaking
-?”â??€ Backend Services
+Phase 4: High-Level API
+|-- Client
+|-- Authentication
+|-- Room
+|-- Matchmaking
+`-- Backend Services
 
-Phase 5
-Cross-Platform
-?œâ??€ Linux
-?”â??€ epoll
+Phase 5: Cross-Platform
+|-- Linux
+`-- epoll
 
-Phase 6
-SDK / Deployment
-?œâ??€ Unity
-?œâ??€ Unreal
-?œâ??€ Godot
-?œâ??€ Docker
-?”â??€ Server Management
+Phase 6: SDK / Deployment
+|-- Unity
+|-- Unreal
+|-- Godot
+|-- Docker
+`-- Server Management
 
-Phase 7
-Cloud
-?œâ??€ Server Allocation
-?œâ??€ Region / Zone
-?œâ??€ Instance Lifecycle
-?œâ??€ Monitoring
-?”â??€ Cloud Management
+Phase 7: Cloud
+|-- Server Allocation
+|-- Region / Zone
+|-- Instance Lifecycle
+|-- Monitoring
+`-- Cloud Management
 ```
 
 ---
