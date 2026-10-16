@@ -1,14 +1,23 @@
-#include "LT/Network/IPAddress.h"
+#include "LT/Windows/Network/IPAddress.h"
 
 using namespace LT;
 
-IPAddress::IPAddress(std::string_view)
+IPAddress::IPAddress(std::string_view, UINT16 _port)
+{}
+
+IPAddress::IPAddress(const IPAddress & _address, UINT16 _port)
 {}
 
 void IPAddress::SetAddress(const sockaddr * _addr, socklen_t _len)
 {
 	m_length = _len;
-	memcpy(&m_storage, _addr, _len);
+	memcpy(&m_storage, _addr, m_length);
+}
+
+void IPAddress::SetAddress(const IPAddress& _address)
+{
+	m_length = _address.Length();
+	memcpy(&m_storage, _address.Data(), m_length);
 }
 
 ADDRESS_FAMILY IPAddress::Family() const
@@ -95,6 +104,11 @@ sockaddr* IPAddress::Data()
 socklen_t IPAddress::Length() const
 {
 	return m_length;
+}
+
+socklen_t* IPAddress::Length()
+{
+	return &m_length;
 }
 
 uint16_t IPAddress::Port() const

@@ -6,6 +6,7 @@
 #include <atomic>
 #include <memory>
 #include <span>
+#include <algorithm>
 
 namespace LT
 {
@@ -24,44 +25,35 @@ namespace LT
 		mutable CacheLineAtomic m_head;
 		mutable CacheLineAtomic m_tail;
 	public:
-		RingBuffer<SPSC>(size_t _size);
+		RingBuffer<SPSC>(_In_ size_t _size);
 		~RingBuffer();
 
 		template<size_t ByteSize>
 		bool TryWrite(
-			_In_reads_bytes_(ByteSize) const std::byte* __restrict _src
-		);
+			_In_reads_bytes_(ByteSize) const std::byte* __restrict _src);
 		bool TryWrite(
 			_In_reads_bytes_(_len)	const std::byte* __restrict _src,
-			_In_					size_t _len
-		);
+			_In_					size_t _len);
 		bool TryWrite(
-			_In_ std::span<const std::byte> _src
-		);
+			_In_ std::span<const std::byte> _src);
 
 		template<size_t ByteSize>
 		bool TryRead(
-			_Out_writes_bytes_all_(ByteSize) std::byte* __restrict _dest
-		);
+			_Out_writes_bytes_all_(ByteSize) std::byte* __restrict _dest);
 		bool TryRead(
-			_Out_writes_bytes_all_(_len)	std::byte* __restrict _dest, 
-			_In_							size_t _len
-		);
+			_Out_writes_bytes_all_(_len)	std::byte* __restrict _dest,
+			_In_							size_t _len);
 		bool TryRead(
-			_Out_ std::span<std::byte> _dest
-		);
+			_Out_ std::span<std::byte> _dest);
 
 		template<size_t ByteSize>
 		void ReadPreview(
-			_Out_writes_bytes_all_(ByteSize) std::byte* __restrict _dest
-		) const;
+			_Out_writes_bytes_all_(ByteSize) std::byte* __restrict _dest) const;
 		void ReadPreview(
-			_Out_writes_bytes_all_(_len)	std::byte* __restrict _dest, 
-			_In_							size_t _len
-		) const;
+			_Out_writes_bytes_all_(_len)	std::byte* __restrict _dest,
+			_In_							size_t _len) const;
 		void ReadPreview(
-			_Out_ std::span<std::byte> _dest
-		) const;
+			_Out_ std::span<std::byte> _dest) const;
 
 		void Clear();
 
@@ -95,7 +87,7 @@ namespace LT
 	public:
 		RingBuffer<SPMC>(size_t _size);
 	};
-	
+
 	template<>
 	class RingBuffer<MPMC>
 	{
@@ -111,33 +103,25 @@ namespace LT
 		mutable CacheLineAtomic m_reserveTail;
 		mutable CacheLineAtomic m_publishTail;
 	public:
-		RingBuffer<MPMC>(
-			_In_ size_t _size
-		);
+		RingBuffer<MPMC>(_In_ size_t _size);
 
 		bool TryWrite(
 			_In_reads_bytes_(_len)	const std::byte* __restrict _src,
-			_In_					size_t _len
-		);
+			_In_					size_t _len);
 		bool TryWrite(
-			_In_ std::span<const std::byte> _src
-		);
+			_In_ std::span<const std::byte> _src);
 
 		bool TryRead(
 			_Out_writes_bytes_all_(_len)	std::byte* __restrict _dest,
-			_In_							size_t _len
-		);
+			_In_							size_t _len);
 		bool TryRead(
-			_Out_ std::span<std::byte> _dest
-		);
+			_Out_ std::span<std::byte> _dest);
 
 		void ReadPreview(
 			_Out_writes_bytes_all_(_len)	std::byte* __restrict _dest,
-			_In_							size_t _len
-		) const;
+			_In_							size_t _len) const;
 		void ReadPreview(
-			_Out_ std::span<std::byte> _dest
-		) const;
+			_Out_ std::span<std::byte> _dest) const;
 
 		void Clear();
 
@@ -160,39 +144,30 @@ namespace LT
 
 		template<size_t ByteSize>
 		bool TryWrite(
-			_In_reads_bytes_(ByteSize) const std::byte* __restrict _src
-		);
+			_In_reads_bytes_(ByteSize) const std::byte* __restrict _src);
 		bool TryWrite(
 			_In_reads_bytes_(_len)	const std::byte* __restrict _src,
-			_In_					size_t _len
-		);
+			_In_					size_t _len);
 		bool TryWrite(
-			_In_ std::span<const std::byte> _src
-		);
+			_In_ std::span<const std::byte> _src);
 
 		template<size_t ByteSize>
 		bool TryRead(
-			_Out_writes_bytes_all_(ByteSize) std::byte* __restrict _dest
-		);
+			_Out_writes_bytes_all_(ByteSize) std::byte* __restrict _dest);
 		bool TryRead(
-			_Out_writes_bytes_all_(_len)	std::byte* __restrict _dest, 
-			_In_							size_t _len
-		);
+			_Out_writes_bytes_all_(_len)	std::byte* __restrict _dest,
+			_In_							size_t _len);
 		bool TryRead(
-			_Out_ std::span<std::byte> _dest
-		);
+			_Out_ std::span<std::byte> _dest);
 
 		template<size_t ByteSize>
 		void ReadPreview(
-			_Out_writes_bytes_all_(ByteSize) std::byte* __restrict _dest
-		) const;
+			_Out_writes_bytes_all_(ByteSize) std::byte* __restrict _dest) const;
 		void ReadPreview(
 			_Out_writes_bytes_all_(_len)	std::byte* __restrict _dest,
-			_In_							size_t _len
-		) const;
+			_In_							size_t _len) const;
 		void ReadPreview(
-			_Out_ std::span<std::byte> _dest
-		) const;
+			_Out_ std::span<std::byte> _dest) const;
 
 		void Clear();
 
@@ -214,8 +189,7 @@ namespace LT
 				_Out_writes_bytes_all_(_firstSize)	std::byte* _firstPtr,
 				_Out_								size_t _firstSize,
 				_Out_writes_bytes_all_(_secondSize)	std::byte* _secondPtr,
-				_Out_								size_t _secondSize
-				) :
+				_Out_								size_t _secondSize) :
 				firstPtr(_firstPtr),
 				firstSize(_firstSize),
 				secondPtr(_secondPtr),
@@ -235,8 +209,7 @@ namespace LT
 				_Out_								size_t _firstSize,
 				_Out_writes_bytes_all_(_secondSize) std::byte* _secondPtr,
 				_Out_								size_t _secondSize,
-				_Out_								size_t _writableSize
-			) :
+				_Out_								size_t _writableSize) :
 				Region(
 					_firstPtr,
 					_firstSize,
@@ -284,13 +257,6 @@ namespace LT
 			_In_ size_t _size
 		);
 	};
-} //namespace LyntraNet
+}
 
-
-#include "Detail/RingBuffer/RingBufferSPSC.inl"
-#include "Detail/RingBuffer/RingBufferMPSC.inl"
-#include "Detail/RingBuffer/RingBufferSPMC.inl"
-#include "Detail/RingBuffer/RingBufferMPMC.inl"
-#include "Detail/RingBuffer/RingBufferFastSPSC.inl"
-#include "Detail/RingBuffer/RingBufferZeroCopy.inl"
 #endif //__INCL_LYNTRA_RING_BUFFER_H__

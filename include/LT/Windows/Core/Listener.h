@@ -9,17 +9,15 @@
 #include <atomic>
 #include <sal.h>
 
-#include <LT/Network/ConnectionManager.h>
-#include <LT/Network/IOContext.h>
-#include <LT/Network/IPEndPoint.h>
-#include <LT/Network/Protocol.h>
-#include <LT/Utility/LTReturnObject.h>
+#include <LT/Windows/Network/ConnectionManager.h>
+#include <LT/Windows/Network/IOContext.h>
+#include <LT/Windows/Network/IPEndPoint.h>
+#include <LT/Common/Protocol/TProtocol.h>
+#include <LT/Common/Utility/LTReturnObject.h>
 #include <LT/Utility.h>
-#include <LT/Network/Socket/LTSocket.h>
-#include <LT/Network/Socket/SocketOption.h>
+#include <LT/Windows/Network/Socket/LTSocket.h>
+#include <LT/Windows/Network/Socket/SocketOption.h>
 #include <LT/Windows/Core/ListenerConfig.h>
-
-#define DEFAULT_POSTING_ACCEPT_DEPTH 50
 
 namespace LT
 {
@@ -36,39 +34,28 @@ namespace LT
 	class IListener {
 	protected:
 		LTSOCKET						m_listenSock;
-		IPEndPoint						m_localEndpoint;
-		UINT							m_backlog;
+		IPEndPoint						m_localEndpoint; //EndPoint 수정 필요
 		UINT							m_protocol;
 
 		LSTNRSTATE						m_state;
-
-		LockFreePool<U_PTR<ACPTCTX>>	m_acceptContextPool;
-		std::vector<U_PTR<ACPTCTX>>		m_acceptContexts;
 	public:
-		explicit IListener(
+		IListener(
 			_In_		const IPEndPoint&	_endpoint,
-			_In_		UINT				_backlog,
 			_In_		UINT				_protocol) :
 			m_localEndpoint(_endpoint),
 			m_listenSock(LTSOCKET::INVALID()),
-			m_backlog(_backlog),
 			m_protocol(_protocol),
-			m_state(LISTENER_CREATED),
-			m_acceptContextPool(DEFAULT_POSTING_ACCEPT_DEPTH),
-			m_acceptContexts(DEFAULT_POSTING_ACCEPT_DEPTH) {}
+			m_state(LISTENER_CREATED) {}
 
-		explicit IListener(
-			_In_		const LISTENCFG& _config) :
-			m_acceptContextPool(DEFAULT_POSTING_ACCEPT_DEPTH),
-			m_acceptContexts(DEFAULT_POSTING_ACCEPT_DEPTH) {
-			//config 적용
-		}
+		IListener operator=(const IListener&)	= delete;
+		IListener operator=(IListener&&)		= delete;
 
 		virtual ~IListener() = default;
 
-		virtual LTReturnObject Bind()	= 0;
-		virtual LTReturnObject Listen() = 0;
-		virtual LTReturnObject Close()	= 0;
+		virtual LTReturnObject Bind() { return{}; }
+		virtual LTReturnObject Bind(_In_ HANDLE _comPort) { return{}; }
+		virtual LTReturnObject Listen() { return{}; }
+		virtual LTReturnObject Close() { return{}; }
 
 		UINT				Protocol() const { return m_protocol; }
 		const IPEndPoint&	LocalEndPoint() const { return m_localEndpoint; }
@@ -80,45 +67,84 @@ namespace LT
 	template<>
 	class Listener<TCP> : public IListener {
 	private:
+		static const int DEFAULT_ACCEPT_CONTEXT_SIZE = 50;
+	private:
 		LPFN_ACCEPTEX				m_lpAcceptEx;
 		LPFN_GETACCEPTEXSOCKADDRS	m_lpGetAcceptExSockaddrs;
-		UINT						m_acceptDepth;
+		UINT						m_backlog;
+
+		UINT							m_acceptContextSize;
+		LockFreePool<U_PTR<ACPTCTX>>	m_acceptContextPool;
+		VEC<U_PTR<ACPTCTX>>				m_acceptContexts; //예약 contexts *사용하지않음
 	public:
 		explicit Listener<TCP>(
 			_In_		const IPEndPoint&	_endpoint,
-			_In_opt_	UINT				_backlog		= SOMAXCONN,
-			_In_opt_	UINT				_acceptDepth	= DEFAULT_POSTING_ACCEPT_DEPTH) :
-			IListener(_endpoint, _backlog, PROTOCOL_TCP),
+			_In_opt_	UINT				_backlog			= SOMAXCONN,
+			_In_opt_	UINT				_acceptContextSize	= DEFAULT_ACCEPT_CONTEXT_SIZE) :
+			IListener(
+				_endpoint,
+				PROTOCOL_TCP),
 			m_lpAcceptEx(nullptr),
 			m_lpGetAcceptExSockaddrs(nullptr),
-			m_acceptDepth(_acceptDepth) {}
+			m_backlog(_backlog),
+			m_acceptContextSize(_acceptContextSize),
+			m_acceptContextPool(_acceptContextSize),
+			m_acceptContexts(_acceptContextSize) {}
 
-		LTReturnObject Bind()	override;
-		LTReturnObject Listen() override;
-		LTReturnObject Close()	override;
+		LTReturnObject Bind()						override;
+		LTReturnObject Bind(_In_ HANDLE _comPort)	override;
+		LTReturnObject Listen()						override;
+		LTReturnObject Close()						override;
 
-		LTReturnValue<BOOL>		PostAccept();	// Non-Blocking AcceptEx Based
-		LTReturnValue<LTSOCKET> Accept();		// Blocking WSAAccept Based
+		LTReturnValue<BOOL>		PostAccept();					// Non-Blocking AcceptEx Based
+		LTReturnValue<LTSOCKET> Accept(_In_ HANDLE _comPort);	// Blocking WSAAccept Based
+
+		VOID GetAcceptExSockAddrs(
+			_In_ PACPTCTX _acptCtx,
+			_Out_ IPAddress* _localAdrPtr,
+			_Out_ IPAddress* _remoteAdrPtr);
 	private:
 		LTReturnValue<BOOL> load_accept_extensions();
 	};
 
 	template<>
-	class Listener<UDP> : public IListener
-	{
+	class Listener<UDP> : public IListener {
+	public:
+		explicit Listener<UDP>(
+			_In_		const IPEndPoint& _endpoint) :
+			IListener(
+				_endpoint,
+				PROTOCOL_UDP) {}
 
+		LTReturnObject Bind()						override;
+		LTReturnObject Bind(_In_ HANDLE _comPort)	override;
+		LTReturnObject Close()						override;
 	};
 	template<>
 	class Listener<QUIC> : public IListener
 	{
-
+	public:
+		explicit Listener<QUIC>(
+			_In_		const IPEndPoint& _endpoint) :
+			IListener(
+				_endpoint,
+				PROTOCOL_QUIC) {}
+		LTReturnObject Bind()						override { return{}; }
+		LTReturnObject Bind(_In_ HANDLE _comPort)	override { return{}; }
+		LTReturnObject Close()						override { return{}; }
 	};
 	template<>
 	class Listener<KCP> : public IListener
 	{
-
+	public:
+		explicit Listener<KCP>(
+			_In_		const IPEndPoint& _endpoint) :
+			IListener(
+				_endpoint,
+				PROTOCOL_KCP) {}
+		LTReturnObject Bind()						override { return{}; }
+		LTReturnObject Bind(_In_ HANDLE _comPort)	override { return{}; }
+		LTReturnObject Close()						override { return{}; }
 	};
 }
-
-#include "Listener/TCPListener.inl"
 #endif //__INCL_LYNTRA_LISTENER_H__

@@ -1,5 +1,5 @@
-#ifndef __INCL_LYNTRA_ERROR_HANDLER_H__
-#define __INCL_LYNTRA_ERROR_HANDLER_H__
+#ifndef __INCL_LYNTRA_RETURN_OBJECT_H__
+#define __INCL_LYNTRA_RETURN_OBJECT_H__
 
 #include <string>
 #include <optional>
@@ -12,7 +12,10 @@
 #define RETOBJ_RSN_ACPTEXSOCKADDRS		0x00000004
 #define RETOBJ_RSN_LOAD					0x00000005
 #define RETOBJ_RSN_BIND					0x00000006
-#define RETOBJ_RSN_LISTEN				0x00000006
+#define RETOBJ_RSN_LISTEN				0x00000007
+#define RETOBJ_RSN_STARTUP				0x00000008
+
+#define RETOBJ_RSN_CICP					0x00000009
 
 #define RETOBJ_ERR_TYPE_LT				0
 #define RETOBJ_ERR_TYPE_OS				1 //윈도우인경우 message는 WSAGetLastError출력
@@ -27,15 +30,15 @@ namespace LT
 	class ReturnObject
 	{
 	protected:
-		UINT16		m_statusCode;
-		UINT16		m_reason;
+		int16_t		m_statusCode;
+		int16_t		m_reason;
 		std::string m_message;
 	public:
 		ReturnObject() = default;
-		ReturnObject(UINT16 _code) :
+		ReturnObject(_In_ int16_t _code) :
 			m_statusCode(_code) {}
 
-		const UINT16 StatusCode() const noexcept { return m_statusCode; }
+		const int16_t StatusCode() const noexcept { return m_statusCode; }
 		const std::string_view Message() const { return m_message; }
 	};
 	class LTReturnObject : public ReturnObject
@@ -44,9 +47,9 @@ namespace LT
 		LTReturnObject() :
 			ReturnObject(RETOBJ_STATE_NONE) {}
 		LTReturnObject(
-			int _returnObjectReason,
-			int _returnObjectErrorType,
-			int _returnObjectMessage = RETOBJ_MSG_NONE) {}
+			_In_ int _returnObjectReason,
+			_In_ int _returnObjectErrorType,
+			_In_ int _returnObjectMessage = RETOBJ_MSG_NONE) {}
 	};
 
 	template<typename T>
@@ -61,14 +64,14 @@ namespace LT
 		LTReturnValue(T value) :
 			m_value(value) {}
 		LTReturnValue(
-			int _returnObjectReason,
-			int _returnObjectErrorType,
-			int _returnObjectMessage = RETOBJ_MSG_NONE,
-			T _defaultValue = T{}) :
+			_In_ int _returnObjectReason,
+			_In_ int _returnObjectErrorType,
+			_In_ int _returnObjectMessage = RETOBJ_MSG_NONE,
+			_In_ T _defaultValue = T{}) :
 			m_value(_defaultValue) {}
 		LTReturnValue(
-			const LTReturnObject& _ReturnObject,
-			T _defaultValue = T{}) :
+			_In_ const LTReturnObject& _ReturnObject,
+			_In_ T _defaultValue = T{}) :
 			m_value(_defaultValue) {}
 		const T& Value() const { return m_value; }
 	};

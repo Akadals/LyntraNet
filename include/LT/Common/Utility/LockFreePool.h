@@ -29,6 +29,7 @@ namespace LT
 		size_t m_size;
 		size_t m_capacity;
 	public:
+		explicit LockFreePool() = default;
 		explicit LockFreePool(size_t _size) :
 			m_size(_size), m_capacity(_size) {};
 		T Acquire();

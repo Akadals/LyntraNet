@@ -16,7 +16,7 @@ RingBuffer<ZeroCopy>::WriteRegion RingBuffer<ZeroCopy>::AcquireWriteRegion()
 		? (m_capacity - tailIdx)
 		: (headIdx - tailIdx);
 	size_t size =
-		std::min(writable, contiguous);
+		(std::min)(writable, contiguous);
 
 	return
 	{
@@ -44,7 +44,7 @@ RingBuffer<ZeroCopy>::ReadRegion RingBuffer<ZeroCopy>::AcquireReadRegion()
 		: m_capacity - headIdx;
 
 	size_t size =
-		std::min(readable, contiguous);
+		(std::min)(readable, contiguous);
 
 	return
 	{

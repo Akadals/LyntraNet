@@ -1,15 +1,15 @@
-#ifndef __INCL_LYNTRA_IPENDPOINT_H__
-#define __INCL_LYNTRA_IPENDPOINT_H__
-
-#include <LT/Network/IPAddress.h>
-#include <WinSock2.h>
-#include <WS2tcpip.h>
-#include <string>
-#include <sal.h>
-
-
-namespace LT
-{
+//#ifndef __INCL_LYNTRA_IPENDPOINT_H__
+//#define __INCL_LYNTRA_IPENDPOINT_H__
+//
+//#include <LT/Windows/Network/IPAddress.h>
+//#include <WinSock2.h>
+//#include <WS2tcpip.h>
+//#include <string>
+//#include <sal.h>
+//
+//
+//namespace LT
+//{
 //	class IPEndPoint //필요없음, typedef로 IPAddress를 Endpoint로 변환
 //	{
 //	private:
@@ -35,5 +35,5 @@ namespace LT
 //		void SetPort(uint16_t _port) { m_port = _port; }
 //		uint16_t GetPort() const noexcept { return m_port; }
 //	};
-}
-#endif
+//}
+//#endif

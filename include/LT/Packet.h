@@ -1,7 +1,7 @@
 #ifndef __INCL_LYNTRA_PACKET_H__
 #define __INCL_LYNTRA_PACKET_H__
 
-#include "Utility/ConcurrentPolicy.h"
+//#include "Utility/ConcurrentPolicy.h"
 #include <winsock2.h>
 #include <atomic>
 #include <vector>

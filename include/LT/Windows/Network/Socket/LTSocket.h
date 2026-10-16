@@ -27,6 +27,10 @@ namespace LT
 			m_sock(_socket) {}
 
 		BOOL IsValid() const { return m_sock != INVALID_SOCKET; }
+		BOOL operator==(const LTSOCKET& other) const noexcept
+		{
+			return m_sock == other.m_sock;
+		}
 
 		static LTSocket INVALID() { return INVALID_SOCKET; }
 #elif __linux__
@@ -34,6 +38,14 @@ namespace LT
 		LTSocket(int _fd) :
 			m_fd(_fd) {}
 #endif
+	};
+
+	struct LTSocketHash
+	{
+		size_t operator()(const LTSOCKET& socket) const noexcept
+		{
+			return std::hash<SOCKET>{}(socket.m_sock);
+		}
 	};
 }
 

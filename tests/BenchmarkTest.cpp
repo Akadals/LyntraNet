@@ -5,7 +5,7 @@
 #include <iomanip>
 #include <iostream>
 
-using namespace LyntraNet;
+using namespace LT;
 using namespace std;
 
 template<size_t DataSize>

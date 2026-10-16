@@ -20,11 +20,18 @@ namespace LT
 		sockaddr_storage m_storage = {};
 		socklen_t m_length = {};
 	public:
-		explicit IPAddress(std::string_view = IPV4_DEFAULT_LOOPBACK);
+		explicit IPAddress(
+			_In_ std::string_view = IPV4_DEFAULT_LOOPBACK,
+			_In_ UINT16 _port = 0);
+		explicit IPAddress(
+			_In_ const IPAddress& _address,
+			_In_ UINT16 _port = 0);
 
 		void SetAddress(
 			_In_reads_to_ptr_(_len) const sockaddr* _addr,
 			_In_					socklen_t _len);
+		void SetAddress(
+			_In_ const IPAddress& _address);
 
 		ADDRESS_FAMILY Family() const;
 
@@ -43,6 +50,7 @@ namespace LT
 		const sockaddr* Data() const;
 		sockaddr* Data();
 		socklen_t Length() const;
+		socklen_t* Length();
 		uint16_t Port() const;
 
 		std::string ToString() const;

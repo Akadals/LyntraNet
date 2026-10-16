@@ -1,0 +1,83 @@
+#ifndef __INCL_LYNTRA_IOCONTEXT_H__
+#define __INCL_LYNTRA_IOCONTEXT_H__
+
+#include <winsock2.h>
+#include <atomic>
+#include <LT/Windows/Network/Socket/LTSocket.h>
+#include <LT/Windows/Network/IPAddress.h>
+#include <LT/Windows/Core/Transport.h>
+//#include <LT/Windows/Core/Listener.h>
+
+namespace LT
+{
+	template<typename T>
+	using ATOMIC = std::atomic<T>;
+
+	typedef enum class IOType : uint8_t
+	{ READING, WRITING } IOTYPE;
+
+	typedef enum ContextState
+	{
+		CONTEXT_READY,
+		CONTEXT_PENDING,
+		CONTEXT_AVAILABLE,
+		CONTEXT_COMPLETED
+	} CTXSTATE; //State 수정 필요
+
+	typedef enum AcceptMode
+	{
+		ACCEPT_EX,
+		WSA_ACCEPT
+	} ACPTMOD;
+
+	class IListener;
+
+	struct alignas(64) IContext 
+	{	
+		OVERLAPPED			m_overlapped;
+		ATOMIC<CTXSTATE>	m_contextState;
+		IListener*			m_ownerListener;
+
+		IContext() :
+			m_overlapped{},
+			m_contextState(CONTEXT_READY),
+			m_ownerListener(nullptr) {}
+	};
+
+	typedef struct AcceptContext
+		ACPTCTX, * PACPTCTX;
+
+	typedef struct IOContext
+		IOCTX, * PIOCTX;
+
+	struct alignas(64) AcceptContext : public IContext
+	{
+		ACPTMOD		m_acceptMode;
+
+		LTSOCKET	m_acceptSock;
+		PCHAR		m_buffer;
+
+		IPAddress	m_localAddress;		//Accept에서만 사용 PostAccept는 사용하지않음
+		IPAddress	m_remoteAddress;	//Accept에서만 사용 PostAccept는 사용하지않음
+
+		AcceptContext() :
+			m_acceptMode(ACCEPT_EX),
+			m_acceptSock(LTSOCKET::INVALID()),
+			m_localAddress{},
+			m_remoteAddress{},
+			m_buffer(nullptr) {}
+	};
+
+	struct alignas(64) IOContext : public IContext
+	{
+		IOTYPE m_ioType;
+		WSABUF m_wsaBuf[2];
+
+		ITransport* m_ownerTransport;
+
+		IOContext() : 
+			m_ownerTransport(nullptr),
+			m_wsaBuf{} {}
+	};
+}
+#endif

@@ -2,10 +2,12 @@
 
 #define COPY_CASE(N) case N: Copy<N>(_dest, _src); break;
 
+using namespace LT;
+
 template<size_t Size>
-void LT::Memory::Copy(
-    _Out_writes_bytes_all_(Size)    void* _dest,
-    _In_                            const void* _src
+void Memory::Copy(
+    void* _dest,
+    const void* _src
 )
 {
     static_assert(Size <= 256);
@@ -122,10 +124,10 @@ void LT::Memory::Copy(
         *d = *s;
     }
 }
-void LT::Memory::Copy(
-    _Out_writes_bytes_all_(_size)   void* _dest,
-    _In_                            const void* _src,
-    _In_                            size_t _size
+void Memory::Copy(
+    void* _dest,
+    const void* _src,
+    size_t _size
 )
 {
     switch (_size)
