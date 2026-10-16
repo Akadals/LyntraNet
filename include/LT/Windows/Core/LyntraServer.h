@@ -54,15 +54,14 @@ namespace LT
 
 		template<TProtocol T>
 		LTReturnObject AddListener(
-			const IPEndPoint& _endpoint);
+			_In_ const IPEndPoint& _endpoint);
 		template<TProtocol T>
 		LTReturnObject AddListener(
-			const IPAddress& _address,
-			uint16_t _port);
+			_In_ const IPAddress& _address,
+			_In_ UINT16 _port);
 		template<TProtocol T>
 		LTReturnObject AddListener(
-			uint16_t _port,
-			UINT16 _ipVersion = IPV4);
+			_In_ UINT16 _port);
 	};
 }
 

@@ -1,39 +1,55 @@
-//#ifndef __INCL_LYNTRA_IPENDPOINT_H__
-//#define __INCL_LYNTRA_IPENDPOINT_H__
-//
-//#include <LT/Windows/Network/IPAddress.h>
-//#include <WinSock2.h>
-//#include <WS2tcpip.h>
-//#include <string>
-//#include <sal.h>
-//
-//
-//namespace LT
-//{
-//	class IPEndPoint //필요없음, typedef로 IPAddress를 Endpoint로 변환
-//	{
-//	private:
-//		IPAddress m_address;
-//		uint16_t m_port;
-//	public:
-//#ifdef ADDRESS_IPV6_BASED
-//		IPEndPoint() :
-//			m_address(IPAddress::LoopbackIPv6()),
-//			m_port(IPAddress::AnyPort()) {}
-//#else
-//		IPEndPoint() :
-//			m_address(IPAddress::LoopbackIPv4()),
-//			m_port(IPAddress::AnyPort()) {}
-//#endif
-//		IPEndPoint(const IPAddress& _address, uint16_t _port) :
-//			m_address(_address),
-//			m_port(_port) {}
-//
-//		void SetIPAddress(const IPAddress& _address) { m_address = _address; }
-//		const IPAddress& GetAddress() const noexcept { return m_address; }
-//
-//		void SetPort(uint16_t _port) { m_port = _port; }
-//		uint16_t GetPort() const noexcept { return m_port; }
-//	};
-//}
-//#endif
+#ifndef __INCL_LYNTRA_IP_ENDPOINT_H__
+#define __INCL_LYNTRA_IP_ENDPOINT_H__
+
+#include <WinSock2.h>
+#include <WS2tcpip.h>
+#include <sal.h>
+
+#include <LT/Windows/Network/IPAddress.h>
+namespace LT
+{
+	class IPEndPoint
+	{
+	private:
+		IPADDRESS			m_ipAddress;
+		UINT16				m_port;
+		SOCKADDR_STORAGE	m_storage;
+		socklen_t			m_length;
+	public:
+		IPEndPoint() = default;
+		explicit IPEndPoint(
+			_In_ const IPAddress& _ip,
+			_In_ UINT16 _port) :
+			m_ipAddress(_ip),
+			m_port(_port),
+			m_storage{},
+			m_length{} {}
+		IPEndPoint(_In_ const IPEndPoint& _endpoint) = default;
+		IPEndPoint(
+			_In_reads_to_ptr_(_len) const sockaddr* _addr,
+			_In_ socklen_t _len) { Set(_addr, _len); }
+
+		void Set(_In_ const IPEndPoint& _endpoint) { *this = _endpoint; }
+		void Set(
+			_In_reads_to_ptr_(_len) const sockaddr* _addr,
+			_In_ socklen_t _len);
+
+		ADDRESS_FAMILY Family() const { return m_storage.ss_family; }
+
+		bool operator==(const IPEndPoint& _endpoint) const {
+			return m_ipAddress == _endpoint.m_ipAddress
+				&& m_port == _endpoint.m_port;
+		}
+		bool operator!=(const IPEndPoint& _endpoint) const { return !(*this == _endpoint); }
+
+		IPAddress GetIPAddress() const { return m_ipAddress; }
+		UINT16 Port() const { return m_port; }
+		const sockaddr* Data() const { return reinterpret_cast<const sockaddr*>(&m_storage); }
+		sockaddr* Data() { return reinterpret_cast<sockaddr*>(&m_storage); }
+		socklen_t Length() const { return m_length; }
+		socklen_t* Length() { return &m_length; }
+	public:
+		static UINT16 AnyPort() { return 0; }
+	};
+}
+#endif

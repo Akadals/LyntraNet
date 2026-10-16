@@ -3,45 +3,46 @@
 using namespace LT;
 
 template<TProtocol T>
-LTReturnObject LyntraServer::AddListener(const IPEndPoint& _endpoint)
-{
+LTReturnObject LyntraServer::AddListener(const IPEndPoint& _endpoint) {
+	for (auto& listener : m_listeners) {
+		if (_endpoint.Port() == listener->LocalEndPoint().Port())
+			return {}; //포트중복
+	}
 	auto listener = std::make_unique<Listener<T>>(_endpoint); //일단 기본값
 	m_listeners.emplace_back(std::move(listener));
-	return LTReturnObject();
+	return {};
 }
 template<TProtocol T>
-LTReturnObject LyntraServer::AddListener(const IPAddress& _address, uint16_t _port)
-{
+LTReturnObject LT::LyntraServer::AddListener(UINT16 _port) {
+	for (auto& listener : m_listeners) {
+		if (port == listener->LocalEndPoint().Port())
+			return {}; //포트중복
+	}
+	auto listener = std::make_unique<Listener<T>>(
+		IPEndPoint(IPAddress::AnyIPv4(), _port)); //일단 기본값
+	m_listeners.emplace_back(std::move(listener));
+	return {};
+}
+template<TProtocol T>
+LTReturnObject LyntraServer::AddListener(const IPAddress& _address, UINT16 _port) {
+	for (auto& listener : m_listeners) {
+		if (port == listener->LocalEndPoint().Port())
+			return {}; //포트중복
+	}
 	auto listener = std::make_unique<Listener<T>>(
 		IPEndPoint(_address, _port)); //일단 기본값
 	m_listeners.emplace_back(std::move(listener));
-	return LTReturnObject();
-}
-template<TProtocol T>
-
-LTReturnObject LyntraServer::AddListener(uint16_t _port, UINT16 _ipVersion)
-{
-	auto listener = std::make_unique<Listener<T>>(
-		IPEndPoint(
-			_ipVersion == IPV4 ? 
-			IPAddress::AnyIPv4() : 
-			IPAddress::AnyIPv6(), 
-			_port)); //일단 기본값
-	m_listeners.emplace_back(std::move(listener));
-	return LTReturnObject();
+	return {};
 }
 
-LTReturnObject LyntraServer::Start()
-{
+LTReturnObject LyntraServer::Start() {
 	auto backend = dynamic_cast<IOCompletionPort*>(m_backend.get());
 	auto ret = backend->Startup();
 	if (ret.StatusCode() != RETOBJ_STATE_NONE)
 		return ret;
 
-	for (auto& listener : m_listeners)
-	{
-		switch (listener->Protocol())
-		{
+	for (auto& listener : m_listeners) {
+		switch (listener->Protocol()) {
 		case PROTOCOL_TCP: {
 			auto tcpListner = dynamic_cast<Listener<TCP>*>(listener.get());
 			tcpListner->Bind(backend->GetComPort());
@@ -60,6 +61,7 @@ LTReturnObject LyntraServer::Start()
 			break;
 		}
 	}
+	return {};
 }
 
 
@@ -69,12 +71,12 @@ template LTReturnObject LyntraServer::AddListener<QUIC>(const IPEndPoint& _endpo
 template LTReturnObject LyntraServer::AddListener<KCP>(const IPEndPoint& _endpoint);
 
 
-template LTReturnObject LyntraServer::AddListener<TCP>(const IPAddress& _address, uint16_t _port);
-template LTReturnObject LyntraServer::AddListener<UDP>(const IPAddress& _address, uint16_t _port);
-template LTReturnObject LyntraServer::AddListener<QUIC>(const IPAddress& _address, uint16_t _port);
-template LTReturnObject LyntraServer::AddListener<KCP>(const IPAddress& _address, uint16_t _port);
+template LTReturnObject LyntraServer::AddListener<TCP>(const IPAddress& _address, UINT16 _port);
+template LTReturnObject LyntraServer::AddListener<UDP>(const IPAddress& _address, UINT16 _port);
+template LTReturnObject LyntraServer::AddListener<QUIC>(const IPAddress& _address, UINT16 _port);
+template LTReturnObject LyntraServer::AddListener<KCP>(const IPAddress& _address, UINT16 _port);
 
-template LTReturnObject LyntraServer::AddListener<TCP>(uint16_t _port, UINT16 _ipVersion);
-template LTReturnObject LyntraServer::AddListener<UDP>(uint16_t _port, UINT16 _ipVersion);
-template LTReturnObject LyntraServer::AddListener<QUIC>(uint16_t _port, UINT16 _ipVersion);
-template LTReturnObject LyntraServer::AddListener<KCP>(uint16_t _port, UINT16 _ipVersion);
+template LTReturnObject LyntraServer::AddListener<TCP>(UINT16 _port);
+template LTReturnObject LyntraServer::AddListener<UDP>(UINT16 _port);
+template LTReturnObject LyntraServer::AddListener<QUIC>(UINT16 _port);
+template LTReturnObject LyntraServer::AddListener<KCP>(UINT16 _port);

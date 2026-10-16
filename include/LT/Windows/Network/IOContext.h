@@ -57,8 +57,8 @@ namespace LT
 		LTSOCKET	m_acceptSock;
 		PCHAR		m_buffer;
 
-		IPAddress	m_localAddress;		//Accept에서만 사용 PostAccept는 사용하지않음
-		IPAddress	m_remoteAddress;	//Accept에서만 사용 PostAccept는 사용하지않음
+		IPEndPoint	m_localAddress;		//Accept에서만 사용 PostAccept는 사용하지않음
+		IPEndPoint	m_remoteAddress;	//Accept에서만 사용 PostAccept는 사용하지않음
 
 		AcceptContext() :
 			m_acceptMode(ACCEPT_EX),

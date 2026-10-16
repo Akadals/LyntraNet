@@ -1,72 +1,77 @@
-#ifndef __INCL_LYNTRA_IPADDRESS_H__
-#define __INCL_LYNTRA_IPADDRESS_H__
+#ifndef __INCL_LYNTRA_IP_ADDRESS_H__
+#define __INCL_LYNTRA_IP_ADDRESS_H__
 
 #include <WinSock2.h>
 #include <WS2tcpip.h>
 #include <string>
+#include <cstring>
+#include <regex>
+#include <optional>
 #include <sal.h>
-
-#define IPV4_DEFAULT_LOOPBACK "127.0.0.1"
-#define IPV6_DEFAULT_LOOPBACK "::1" 
-// 수정 필요
-#define IPV4 0
-#define IPV6 1
 
 namespace LT
 {
-	class IPAddress
-	{
-	private:
-		sockaddr_storage m_storage = {};
-		socklen_t m_length = {};
-	public:
-		explicit IPAddress(
-			_In_ std::string_view = IPV4_DEFAULT_LOOPBACK,
-			_In_ UINT16 _port = 0);
-		explicit IPAddress(
-			_In_ const IPAddress& _address,
-			_In_ UINT16 _port = 0);
 
-		void SetAddress(
-			_In_reads_to_ptr_(_len) const sockaddr* _addr,
-			_In_					socklen_t _len);
-		void SetAddress(
-			_In_ const IPAddress& _address);
+	typedef enum class IPVersion {
+		INVALID, IPv4, IPv6
+	} IPVERSION;
 
-		ADDRESS_FAMILY Family() const;
-
-		size_t Hash() const;
-
-		bool IsIPv4() const;
-		bool IsIPv6() const;
-		bool IsLoopback() const;
-		bool IsAny() const;
-		bool IsBroadcast() const;
-		bool IsMulticast() const;
-
-		bool operator==(const IPAddress&) const;
-		bool operator!=(const IPAddress&) const;
-
-		const sockaddr* Data() const;
-		sockaddr* Data();
-		socklen_t Length() const;
-		socklen_t* Length();
-		uint16_t Port() const;
-
-		std::string ToString() const;
-		std::string ToStringWithPort() const;
-	public:
-		static IPAddress AnyIPv4();
-		static IPAddress AnyIPv6();
-
-		static uint16_t AnyPort();
-
-		static IPAddress LoopbackIPv4();
-		static IPAddress LoopbackIPv6();
-
-		static IPAddress Parse(std::string_view);
+	struct IPv4 {
+		IN_ADDR m_address;
+		char m_addressStr[INET_ADDRSTRLEN];
+	};
+	struct IPv6 {
+		IN6_ADDR m_address;
+		char m_addressStr[INET6_ADDRSTRLEN];
 	};
 
-	typedef IPAddress IPEndPoint;
+	typedef union Address {
+		IPv4 ipv4;
+		IPv6 ipv6;
+	} ADDRESS;
+
+	typedef class IPAddress
+		IPADDRESS, * PIPADDRESS;
+
+	class IPAddress {
+	private:
+		IPVERSION m_ipVersion;
+		ADDRESS m_ipAddress;
+	public:
+		IPAddress() :
+			m_ipVersion(IPVersion::INVALID) {}
+		explicit IPAddress(_In_ const char* _ip);
+		explicit IPAddress(_In_ const IN_ADDR& _ipv4);
+		explicit IPAddress(_In_ const IN6_ADDR& _ipv6);
+
+		BOOL IsIPv4() const { return m_ipVersion == IPVersion::IPv4; }
+		BOOL IsIPv6() const { return m_ipVersion == IPVersion::IPv6; }
+		BOOL IsValid() const { return m_ipVersion != IPVersion::INVALID; }
+		BOOL IsLoopback() const;
+		BOOL IsBroadcast() const;
+		BOOL IsLinkLocalAllNodes() const;
+
+		bool operator==(const IPAddress& _ip) const;
+		bool operator!=(const IPAddress& _ip) const;
+
+		IPVersion IPVersion() const { return m_ipVersion; }
+
+		std::string ToString() const;
+	public:
+		static std::optional<IN_ADDR> ParseToIPv4(_In_ const char* _ip);
+		static std::optional<IN6_ADDR> ParseToIPv6(_In_ const char* _ip);
+
+		static IPAddress AnyIPv4() { return IPAddress("0.0.0.0"); }
+		static IPAddress AnyIPv6() { return IPAddress("::"); }
+
+		static IPAddress LoopbackIPv4() { return IPAddress("127.0.0.1"); }
+		static IPAddress LoopbackIPv6() { return IPAddress("::1"); }
+		
+		static IPAddress BroadcastIPv4() { return IPAddress("255.255.255.255"); }
+		static IPAddress LinkLocalAllNodesIPv6() { return IPAddress("ff02::1"); }
+
+		static BOOL IsValidIPv4(_In_ const char* _ip);
+		static BOOL IsValidIPv6(_In_ const char* _ip);
+	};
 }
 #endif

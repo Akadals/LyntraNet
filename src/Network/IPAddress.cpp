@@ -1,193 +1,162 @@
-#include "LT/Windows/Network/IPAddress.h"
+#include <LT/Windows/Network/IPAddress.h>
 
-using namespace LT;
+namespace LT {
+	IPAddress::IPAddress(const char* ip)
+		: m_ipVersion(IPVersion::INVALID) {
+		if (auto ipv4 = ParseToIPv4(ip)) {
+			m_ipAddress.ipv4.m_address = *ipv4;
 
-IPAddress::IPAddress(std::string_view, UINT16 _port)
-{}
+			if (inet_ntop(
+				AF_INET,
+				&m_ipAddress.ipv4.m_address,
+				m_ipAddress.ipv4.m_addressStr,
+				sizeof(m_ipAddress.ipv4.m_addressStr)) != nullptr) {
+				m_ipVersion = IPVersion::IPv4;
+			}
+		}
+		else if (auto ipv6 = ParseToIPv6(ip)) {
+			m_ipAddress.ipv6.m_address = *ipv6;
 
-IPAddress::IPAddress(const IPAddress & _address, UINT16 _port)
-{}
-
-void IPAddress::SetAddress(const sockaddr * _addr, socklen_t _len)
-{
-	m_length = _len;
-	memcpy(&m_storage, _addr, m_length);
-}
-
-void IPAddress::SetAddress(const IPAddress& _address)
-{
-	m_length = _address.Length();
-	memcpy(&m_storage, _address.Data(), m_length);
-}
-
-ADDRESS_FAMILY IPAddress::Family() const
-{
-	return m_storage.ss_family;
-}
-
-size_t IPAddress::Hash() const
-{
-	return size_t();
-}
-
-bool IPAddress::IsIPv4() const
-{
-	return Family() == AF_INET;
-}
-
-bool IPAddress::IsIPv6() const
-{
-	return Family() == AF_INET6;
-}
-
-bool IPAddress::IsLoopback() const
-{
-	if (Family() == AF_INET)
-	{
-		const sockaddr_in* addr =
-			reinterpret_cast<const sockaddr_in*>(&m_storage);
-		uint32_t ip = ntohl(addr->sin_addr.s_addr);
-		return (ip & 0xFF000000) == 0x7F000000;
-	}
-	else if(Family() == AF_INET6)
-	{
-		const sockaddr_in6* addr =
-			reinterpret_cast<const sockaddr_in6*>(&m_storage);
-		if (IN6_IS_ADDR_LOOPBACK(&addr->sin6_addr))
-			return true;
-		if (IN6_IS_ADDR_V4MAPPED(&addr->sin6_addr))
-		{
-			const uint32_t* v4_mapped = 
-				reinterpret_cast<const uint32_t*>(addr->sin6_addr.s6_addr + 12);
-			uint32_t ip = ntohl(*v4_mapped);
-			return (ip & 0xFF000000) == 0x7F000000;
+			if (inet_ntop(
+				AF_INET6,
+				&m_ipAddress.ipv6.m_address,
+				m_ipAddress.ipv6.m_addressStr,
+				sizeof(m_ipAddress.ipv6.m_addressStr)) != nullptr) {
+				m_ipVersion = IPVersion::IPv6;
+			}
 		}
 	}
-	return false;
-}
+	IPAddress::IPAddress(const IN_ADDR& ipv4)
+		: m_ipVersion(IPVersion::IPv4) {
+		m_ipAddress.ipv4.m_address = ipv4;
 
-bool IPAddress::IsAny() const
-{
-	return false;
-}
-
-bool IPAddress::IsBroadcast() const
-{
-	return false;
-}
-
-bool IPAddress::IsMulticast() const
-{
-	return false;
-}
-
-bool IPAddress::operator==(const IPAddress&) const
-{
-	return false;
-}
-
-bool IPAddress::operator!=(const IPAddress&) const
-{
-	return false;
-}
-
-const sockaddr* IPAddress::Data() const
-{
-	return reinterpret_cast<const sockaddr*>(&m_storage);
-}
-
-sockaddr* IPAddress::Data()
-{
-	return reinterpret_cast<sockaddr*>(&m_storage);
-}
-
-socklen_t IPAddress::Length() const
-{
-	return m_length;
-}
-
-socklen_t* IPAddress::Length()
-{
-	return &m_length;
-}
-
-uint16_t IPAddress::Port() const
-{
-	switch (Family())
-	{
-	case AF_INET:
-		return ntohs(
-			reinterpret_cast<const sockaddr_in*>
-			(&m_storage)->sin_port);
-	case AF_INET6:
-		return ntohs(
-			reinterpret_cast<const sockaddr_in6*>
-			(&m_storage)->sin6_port);
-	default: return 0;
-	}
-}
-
-std::string IPAddress::ToString() const
-{
-	char buffer[INET6_ADDRSTRLEN]{};
-
-	switch (Family())
-	{
-	case AF_INET:
-		inet_ntop(
+		if (inet_ntop(
 			AF_INET,
-			&reinterpret_cast<const sockaddr_in*>
-			(&m_storage)->sin_addr,
-			buffer,
-			sizeof(buffer));
-		break;
-	case AF_INET6:
-		inet_ntop(
-			AF_INET6,
-			&reinterpret_cast<const sockaddr_in6*>
-			(&m_storage)->sin6_addr,
-			buffer,
-			sizeof(buffer));
-		break;
-	default:
-		strcpy_s(buffer, "Unknown");
-		break;
+			&m_ipAddress.ipv4.m_address,
+			m_ipAddress.ipv4.m_addressStr,
+			sizeof(m_ipAddress.ipv4.m_addressStr)) == nullptr)
+		{
+			m_ipVersion = IPVersion::INVALID;
+		}
 	}
 
-	return buffer;
-}
+	IPAddress::IPAddress(const IN6_ADDR& ipv6)
+		: m_ipVersion(IPVersion::IPv6) {
+		m_ipAddress.ipv6.m_address = ipv6;
 
-std::string IPAddress::ToStringWithPort() const
-{
-	return ToString() + ":" + std::to_string(Port());
-}
+		if (inet_ntop(
+			AF_INET6,
+			&m_ipAddress.ipv6.m_address,
+			m_ipAddress.ipv6.m_addressStr,
+			sizeof(m_ipAddress.ipv6.m_addressStr)) == nullptr)
+		{
+			m_ipVersion = IPVersion::INVALID;
+		}
+	}
+	BOOL IPAddress::IsLoopback() const {
+		if (m_ipVersion == IPVersion::IPv4) {
+			const uint32_t ip =
+				ntohl(m_ipAddress.ipv4.m_address.s_addr);
 
-IPAddress IPAddress::AnyIPv4()
-{
-	return IPAddress();
-}
+			return (ip & 0xFF000000u) == 0x7F000000u;
+		}
 
-IPAddress IPAddress::AnyIPv6()
-{
-	return IPAddress();
-}
+		if (m_ipVersion == IPVersion::IPv6) {
+			const auto& addr = m_ipAddress.ipv6.m_address;
 
-uint16_t IPAddress::AnyPort()
-{
-	return 0;
-}
+			if (IN6_IS_ADDR_LOOPBACK(&addr))
+				return TRUE;
 
-IPAddress IPAddress::LoopbackIPv4()
-{
-	return IPAddress();
-}
+			if (IN6_IS_ADDR_V4MAPPED(&addr))
+				return addr.s6_addr[12] == 127;
+		}
 
-IPAddress IPAddress::LoopbackIPv6()
-{
-	return IPAddress();
-}
+		return FALSE;
+	}
+	BOOL IPAddress::IsBroadcast() const {
+		if (m_ipVersion != IPVersion::IPv4)
+			return FALSE;
 
-IPAddress IPAddress::Parse(std::string_view _ip)
-{
-	return IPAddress();
+		return m_ipAddress.ipv4.m_address.s_addr
+			== INADDR_BROADCAST;
+	}
+	BOOL IPAddress::IsLinkLocalAllNodes() const {
+		if (m_ipVersion != IPVersion::IPv6)
+			return FALSE;
+
+		static constexpr UCHAR expected[16] = {
+			0xFF, 0x02, 0, 0, 0, 0, 0, 0,
+			0, 0, 0, 0, 0, 0, 0, 1
+		};
+
+		return std::memcmp(
+			m_ipAddress.ipv6.m_address.s6_addr,
+			expected,
+			sizeof(expected)) == 0;
+	}
+	bool IPAddress::operator==(const IPAddress& ip) const {
+		if (m_ipVersion != ip.m_ipVersion)
+			return false;
+
+		switch (m_ipVersion)
+		{
+		case IPVersion::IPv4:
+			return m_ipAddress.ipv4.m_address.s_addr
+				== ip.m_ipAddress.ipv4.m_address.s_addr;
+		case IPVersion::IPv6:
+			return std::memcmp(
+				&m_ipAddress.ipv6.m_address,
+				&ip.m_ipAddress.ipv6.m_address,
+				sizeof(IN6_ADDR)) == 0;
+		default: return true;
+		}
+	}
+
+	bool IPAddress::operator!=(const IPAddress& ip) const {
+		return !(*this == ip);
+	}
+	std::string IPAddress::ToString() const {
+		if (m_ipVersion == IPVersion::IPv4)
+			return m_ipAddress.ipv4.m_addressStr;
+		else if (m_ipVersion == IPVersion::IPv6)
+			return m_ipAddress.ipv6.m_addressStr;
+		return "";
+	}
+	std::optional<IN_ADDR> IPAddress::ParseToIPv4(const char* ip) {
+		if (ip == nullptr)
+			return std::nullopt;
+
+		IN_ADDR addr{};
+
+		if (InetPtonA(AF_INET, ip, &addr) != 1)
+			return std::nullopt;
+
+		return addr;
+	}
+
+	std::optional<IN6_ADDR> IPAddress::ParseToIPv6(const char* ip) {
+		if (ip == nullptr)
+			return std::nullopt;
+
+		IN6_ADDR addr{};
+
+		if (InetPtonA(AF_INET6, ip, &addr) != 1)
+			return std::nullopt;
+
+		return addr;
+	}
+	BOOL IPAddress::IsValidIPv4(const char* ip) {
+		if (ip == nullptr)
+			return FALSE;
+
+		IN_ADDR address{};
+		return InetPtonA(AF_INET, ip, &address) == 1;
+	}
+	BOOL IPAddress::IsValidIPv6(const char* _ip) {
+		if (_ip == nullptr)
+			return FALSE;
+
+		IN6_ADDR address{};
+		return InetPtonA(AF_INET6, _ip, &address) == 1;
+	}
 }

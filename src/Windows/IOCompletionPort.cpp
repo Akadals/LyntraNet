@@ -54,14 +54,14 @@ LTReturnObject IOCompletionPort::OnAcceptCompleted(PACPTCTX _acptCtx)
 			transport->GetRemoteAddress());
 		break;
 	case WSA_ACCEPT:
-		transport->GetLocalAddress()->SetAddress(
+		transport->GetLocalAddress()->Set(
 			_acptCtx->m_localAddress);
-		transport->GetRemoteAddress()->SetAddress(
+		transport->GetRemoteAddress()->Set(
 			_acptCtx->m_remoteAddress);
 		break;
 	}
 
-	transport->StartRecv();
+	transport->StartRecv(); //추가 처리 필요
 
 	_acptCtx->m_contextState.store(CONTEXT_COMPLETED);
 }

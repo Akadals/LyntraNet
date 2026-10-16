@@ -3,7 +3,7 @@
 
 #include <LT/Windows/Network/Socket/LTSocket.h>
 #include <LT/Common/Protocol/TProtocol.h>
-#include <LT/Windows/Network/IPAddress.h>
+#include <LT/Windows/Network/IPEndPoint.h>
 #include <LT/Utility.h>
 
 namespace LT
@@ -35,8 +35,8 @@ namespace LT
 	class Transport<TCP> : public ITransport
 	{
 	private:
-		IPAddress m_localAddress;
-		IPAddress m_remoteAddress;
+		IPEndPoint m_localAddress;
+		IPEndPoint m_remoteAddress;
 	public:
 		Transport<TCP>(size_t _bufferSize = 0x2000) : // 8KiB
 			ITransport(_bufferSize),
@@ -45,8 +45,11 @@ namespace LT
 
 		~Transport<TCP>() {}
 
-		IPAddress* GetLocalAddress() { return &m_localAddress; }
-		IPAddress* GetRemoteAddress() { return &m_remoteAddress; }
+		IPEndPoint GetLocalAddress() const { return m_localAddress; }
+		IPEndPoint GetRemoteAddress() const { return m_remoteAddress; }
+
+		IPEndPoint* GetLocalAddress() { return &m_localAddress; }
+		IPEndPoint* GetRemoteAddress() { return &m_remoteAddress; }
 	};
 }
 #endif

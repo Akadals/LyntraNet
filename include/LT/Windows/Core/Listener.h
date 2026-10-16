@@ -34,7 +34,7 @@ namespace LT
 	class IListener {
 	protected:
 		LTSOCKET						m_listenSock;
-		IPEndPoint						m_localEndpoint; //EndPoint 수정 필요
+		IPEndPoint						m_localEndpoint;
 		UINT							m_protocol;
 
 		LSTNRSTATE						m_state;
@@ -75,7 +75,7 @@ namespace LT
 
 		UINT							m_acceptContextSize;
 		LockFreePool<U_PTR<ACPTCTX>>	m_acceptContextPool;
-		VEC<U_PTR<ACPTCTX>>				m_acceptContexts; //예약 contexts *사용하지않음
+		VEC<PACPTCTX>					m_pendingAcceptContexts; // Pool Release 전용
 	public:
 		explicit Listener<TCP>(
 			_In_		const IPEndPoint&	_endpoint,
@@ -89,7 +89,7 @@ namespace LT
 			m_backlog(_backlog),
 			m_acceptContextSize(_acceptContextSize),
 			m_acceptContextPool(_acceptContextSize),
-			m_acceptContexts(_acceptContextSize) {}
+			m_pendingAcceptContexts(_acceptContextSize) {}
 
 		LTReturnObject Bind()						override;
 		LTReturnObject Bind(_In_ HANDLE _comPort)	override;
@@ -101,8 +101,8 @@ namespace LT
 
 		VOID GetAcceptExSockAddrs(
 			_In_ PACPTCTX _acptCtx,
-			_Out_ IPAddress* _localAdrPtr,
-			_Out_ IPAddress* _remoteAdrPtr);
+			_Out_ IPEndPoint* _localAdrPtr,
+			_Out_ IPEndPoint* _remoteAdrPtr);
 	private:
 		LTReturnValue<BOOL> load_accept_extensions();
 	};

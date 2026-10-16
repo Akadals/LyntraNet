@@ -82,7 +82,7 @@ namespace LT
 
         m_state = LISTENER_CLOSING;
 
-        for (auto& ctx : m_acceptContexts)
+        for (auto& ctx : m_pendingAcceptContexts)
             CancelIoEx(
                 reinterpret_cast<HANDLE>(m_listenSock.m_sock),
                 &ctx->m_overlapped);
@@ -156,7 +156,6 @@ namespace LT
         remoteCtx->m_acceptMode = ACCEPT_EX;
         remoteCtx->m_contextState.store(CONTEXT_PENDING);
         remoteCtx->m_ownerListener = this;
-        m_acceptContexts.emplace_back(std::move(remoteCtx));
         remoteCtx = nullptr;
 
         return { TRUE };
@@ -172,7 +171,7 @@ namespace LT
         auto remoteCtx = m_acceptContextPool.Acquire();
         remoteCtx->m_contextState.store(CONTEXT_AVAILABLE);
 
-        remoteCtx->m_localAddress.SetAddress(m_localEndpoint);
+        remoteCtx->m_localAddress.Set(m_localEndpoint);
 
         if ((remoteCtx->m_acceptSock.m_sock = WSAAccept(
             m_listenSock.m_sock,
@@ -212,8 +211,8 @@ namespace LT
 
     VOID Listener<TCP>::GetAcceptExSockAddrs(
         PACPTCTX _acptCtx,
-        IPAddress * _localAdrPtr,
-        IPAddress * _remoteAdrPtr) {
+        IPEndPoint* _localAdrPtr,
+        IPEndPoint* _remoteAdrPtr) {
         PSOCKADDR localAdr = nullptr;
         PSOCKADDR remoteAdr = nullptr;
         int localAdrLen = 0;
@@ -231,8 +230,8 @@ namespace LT
             &remoteAdr,
             &remoteAdrLen);
 
-        _localAdrPtr->SetAddress(localAdr, localAdrLen);
-        _remoteAdrPtr->SetAddress(remoteAdr, remoteAdrLen);
+        _localAdrPtr->Set(localAdr, localAdrLen);
+        _remoteAdrPtr->Set(remoteAdr, remoteAdrLen);
     }
 
     LTReturnValue<BOOL> Listener<TCP>::load_accept_extensions() {
