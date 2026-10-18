@@ -60,7 +60,14 @@ target_include_directories(LyntraNet
 
         $<INSTALL_INTERFACE:include>
 )
-
+target_sources(LyntraNet PRIVATE
+    "${CMAKE_CURRENT_SOURCE_DIR}/ThirdParty/Protobuf/Generated/Packet.pb.cc"
+)
+target_include_directories(LyntraNet
+    PRIVATE
+        "${CMAKE_CURRENT_SOURCE_DIR}/ThirdParty/Protobuf/src"
+        "${CMAKE_CURRENT_SOURCE_DIR}/ThirdParty/Protobuf/Generated"
+)
 # --------------------------------------------------
 # Compile Options
 # --------------------------------------------------
@@ -132,3 +139,14 @@ source_group(TREE
 
 enable_testing()
 add_subdirectory(tests)
+
+set(protobuf_BUILD_TESTS OFF CACHE BOOL "" FORCE)
+set(protobuf_BUILD_SHARED_LIBS OFF CACHE BOOL "" FORCE)
+set(protobuf_BUILD_PROTOC_BINARIES OFF CACHE BOOL "" FORCE)
+
+add_subdirectory(thirdparty/protobuf/cmake)
+
+target_link_libraries(LyntraNet
+    PRIVATE
+        libprotobuf
+)

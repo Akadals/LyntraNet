@@ -14,17 +14,17 @@ namespace LT
 	{
 	private:
 		LockFreePool<U_PTR<LTConnection>> m_connectionPool;
-		DICT<LTSOCKET, U_PTR<LTConnection>, LTSocketHash> m_connections;
+		VEC<U_PTR<LTConnection>> m_connections;
 	public:
 		ConnectionManager() = default;
 		LTConnection* NewConnection()
 		{
 			auto ret = std::make_unique<LTConnection>(); //m_connectionPool.Acquire();
-			m_connections.emplace(ret->GetSock(), std::move(ret));
+			m_connections.emplace_back(std::move(ret));
 			return ret.get();
 		}
 
-		LTConnection* operator[](LTSOCKET _socket)
+		/*LTConnection* operator[](LTSOCKET _socket)
 		{
 			return m_connections[_socket] &&
 				m_connections[_socket]->GetSock().IsValid() ?
@@ -38,7 +38,7 @@ namespace LT
 					return m_connections[_socket].get();
 			}
 			return nullptr;
-		}
+		}*/
 	};
 }
 #endif

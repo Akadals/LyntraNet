@@ -1,0 +1,86 @@
+syntax = "proto3";
+package Protocol;
+
+enum PACKET_HEADER
+{
+    PACKET_UNKNOWN = 0;
+
+    PACKET_UDP_CONNECTION = 10000; //Test
+};
+
+enum CHAT_TARGET
+{
+    HOST = 0;
+    USER = 1;
+    ALL = 2;
+};
+
+enum LOCK_STATE
+{
+    LOCKED = 0;
+    UNLOCKED = 1;
+};
+
+message RoomInfo
+{
+    int64 uid = 1;
+    string roomName = 2;
+    string hostName = 3;
+    int32 maxClnt = 4;
+    int32 currClnt = 5;
+    LOCK_STATE lockState = 6;
+    string password = 7;
+};
+message RoomDataInfo
+{
+    int64 uid = 1;
+    string code = 2;
+};
+message RoomConnectInfo
+{
+    int64 uid = 1;
+    string password = 2;
+};
+message RoomReady
+{
+    int64 uid = 1;
+    bool isReady = 2;
+}
+
+message Chat
+{
+    int64 uid = 1;
+    string message = 2;
+};
+
+message NewClientSession
+{
+    string sessionKey = 1;
+    string nickname = 2;
+};
+message ClientSession
+{
+    int64 uid = 1;
+    string nickname = 2;
+    bool isReady = 3;
+};
+
+message Vector
+{
+    float x = 1;
+    float y = 2;
+    float z = 3;
+};
+
+message Transform
+{
+    Vector position = 1;
+    Vector rotation = 2;
+    Vector scale = 3;
+};
+
+message ObjectInfo
+{
+    int64 id = 1;
+    string serialized = 2;
+};

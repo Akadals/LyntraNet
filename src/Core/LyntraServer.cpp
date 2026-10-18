@@ -44,9 +44,9 @@ LTReturnObject LyntraServer::Start() {
 		switch (listener->Protocol()) {
 		case PROTOCOL_TCP: {
 			auto tcpListner = dynamic_cast<Listener<TCP>*>(listener.get());
-			std::cout << tcpListner->Bind(backend->GetComPort()).Message(); //출력방식 변경 필요
+			std::cout << tcpListner->Bind(*backend->GetComPort()).Message(); //출력방식 변경 필요
 			std::cout << tcpListner->Listen().Message();
-			std::cout << tcpListner->PostAccept().Message(); //Accept() 처리도 필요
+			std::cout << tcpListner->ReserveAccept().Message();
 			break;
 		}
 		case PROTOCOL_UDP: {

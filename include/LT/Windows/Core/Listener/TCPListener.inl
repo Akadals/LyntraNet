@@ -44,7 +44,6 @@ namespace LT
                 RETOBJ_RSN_SOCK,
                 RETOBJ_ERR_TYPE_OS };
         }
-
         m_state = LISTENER_BOUND;
         return {};
     }
@@ -129,25 +128,43 @@ namespace LT
             dwLen,
             dwLen,
             &bytes,
-            &remoteCtx->m_overlapped) &&
-            WSAGetLastError() != WSA_IO_PENDING) {
-            if (remoteCtx->m_acceptSock.m_sock != INVALID_SOCKET)
-                closesocket(remoteCtx->m_acceptSock.m_sock);
+            &remoteCtx->m_overlapped)) {
+            const DWORD error = WSAGetLastError();
 
-            //m_acceptContextPool.Release(std::move(remoteCtx));
-            remoteCtx = nullptr;
+            if (error != WSA_IO_PENDING)
+            {
+                std::cout << "AcceptEx failed: " << error << '\n';
+                // 기존 오류 처리
+                if (remoteCtx->m_acceptSock.m_sock != INVALID_SOCKET)
+                    closesocket(remoteCtx->m_acceptSock.m_sock);
 
-            return {
-                RETOBJ_RSN_ACPT,
-                RETOBJ_ERR_TYPE_OS };
+                //m_acceptContextPool.Release(std::move(remoteCtx));
+                remoteCtx = nullptr;
+
+                return {
+                    RETOBJ_RSN_ACPT,
+                    RETOBJ_ERR_TYPE_OS };
+            }
+            else
+            {
+                std::cout << "AcceptEx pending\n";
+            }
         }
-
         remoteCtx->m_acceptMode = ACCEPT_EX;
         remoteCtx->m_contextState.store(CONTEXT_PENDING);
         remoteCtx->m_ownerListener = this;
+
+        m_pendingAcceptContexts.emplace_back(std::move(remoteCtx));
         remoteCtx = nullptr;
 
         return { TRUE };
+    }
+
+    LTReturnObject Listener<TCP>::ReserveAccept()
+    {
+        for (int i = 0; i < m_acceptContextSize; i++)
+            PostAccept();
+        return {};
     }
 
     LTReturnValue<LTSOCKET> Listener<TCP>::Accept(HANDLE _comPort) {
@@ -175,10 +192,6 @@ namespace LT
                 RETOBJ_ERR_TYPE_OS };
         }
 
-        remoteCtx->m_acceptMode = WSA_ACCEPT;
-        remoteCtx->m_contextState.store(CONTEXT_PENDING);
-        remoteCtx->m_ownerListener = this;
-
         if (CICP(
             (HANDLE)remoteCtx->m_acceptSock.m_sock,
             _comPort,
@@ -191,6 +204,13 @@ namespace LT
                 RETOBJ_RSN_ACPT,
                 RETOBJ_ERR_TYPE_OS };
         }
+
+
+        remoteCtx->m_acceptMode = WSA_ACCEPT;
+        remoteCtx->m_contextState.store(CONTEXT_PENDING);
+        remoteCtx->m_ownerListener = this;
+        m_pendingAcceptContexts.emplace_back(std::move(remoteCtx));
+        remoteCtx = nullptr;
 
         return { remoteCtx->m_acceptSock };
     }

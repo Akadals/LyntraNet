@@ -76,7 +76,7 @@ namespace LT
 
 		UINT							m_acceptContextSize;
 		LockFreePool<U_PTR<ACPTCTX>>	m_acceptContextPool;
-		VEC<PACPTCTX>					m_pendingAcceptContexts; // Pool Release 전용
+		VEC<U_PTR<ACPTCTX>>				m_pendingAcceptContexts; // Pool Release 전용
 	public:
 		explicit Listener<TCP>(
 			_In_		const IPEndPoint&	_endpoint,
@@ -98,6 +98,7 @@ namespace LT
 		LTReturnObject Close()						override;
 
 		LTReturnValue<BOOL>		PostAccept();					// Non-Blocking AcceptEx Based
+		LTReturnObject			ReserveAccept();
 		LTReturnValue<LTSOCKET> Accept(_In_ HANDLE _comPort);	// Blocking WSAAccept Based
 
 		VOID GetAcceptExSockAddrs(

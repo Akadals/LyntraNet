@@ -13,13 +13,14 @@ namespace LT
 	protected:
 		LTSOCKET m_ownerSock;
 
-		RingBuffer<ZeroCopy> m_recvBuffer;
-		RingBuffer<ZeroCopy> m_sendBuffer;
+		//RingBuffer<ZeroCopy> m_recvBuffer;
+		//RingBuffer<ZeroCopy> m_sendBuffer;
 	public:
 		ITransport(size_t _bufferSize) :
-			m_ownerSock(LTSOCKET::INVALID()),
-			m_recvBuffer(_bufferSize),
-			m_sendBuffer(_bufferSize) {}
+			m_ownerSock(LTSOCKET::INVALID()) {}
+			/*m_recvBuffer(_bufferSize),
+			m_sendBuffer(_bufferSize) {}*/
+		virtual ~ITransport() = default;
 
 		LTSOCKET Get() const { return m_ownerSock; }
 		void Set(LTSOCKET _sock) { m_ownerSock = _sock; }
@@ -43,13 +44,15 @@ namespace LT
 			m_localAddress{},
 			m_remoteAddress{} {}
 
-		~Transport<TCP>() {}
-
 		IPEndPoint GetLocalAddress() const { return m_localAddress; }
 		IPEndPoint GetRemoteAddress() const { return m_remoteAddress; }
 
 		IPEndPoint* GetLocalAddress() { return &m_localAddress; }
 		IPEndPoint* GetRemoteAddress() { return &m_remoteAddress; }
+
+
+		DWORD StartRecv() override { return 0; }
+		DWORD StartSend() override { return 0; }
 	};
 }
 #endif

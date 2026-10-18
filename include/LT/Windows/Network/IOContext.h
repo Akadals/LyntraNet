@@ -53,10 +53,17 @@ namespace LT
 
 	struct alignas(64) AcceptContext : public IContext
 	{
+	private:
+		static constexpr DWORD ADDRESS_LENGTH =
+			sizeof(SOCKADDR_STORAGE) + 16;
+
+		static constexpr DWORD BUFFER_LENGTH =
+			ADDRESS_LENGTH * 2;
+	public:
 		ACPTMOD		m_acceptMode;
 
 		LTSOCKET	m_acceptSock;
-		PCHAR		m_buffer;
+		CHAR		m_buffer[BUFFER_LENGTH];
 
 		IPEndPoint	m_localAddress;		//Accept에서만 사용 PostAccept는 사용하지않음
 		IPEndPoint	m_remoteAddress;	//Accept에서만 사용 PostAccept는 사용하지않음
@@ -65,8 +72,9 @@ namespace LT
 			m_acceptMode(ACCEPT_EX),
 			m_acceptSock(LTSOCKET::INVALID()),
 			m_localAddress{},
-			m_remoteAddress{},
-			m_buffer(nullptr) {}
+			m_remoteAddress{} {
+			ZeroMemory(&m_overlapped, sizeof(OVERLAPPED));
+		}
 	};
 
 	struct alignas(64) IOContext : public IContext

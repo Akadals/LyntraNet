@@ -30,7 +30,7 @@ namespace LT {
 
 	LTReturnObject IOCompletionPort::OnAcceptCompleted(PACPTCTX _acptCtx) {
 		auto conn = m_connectionManager.NewConnection();
-		auto transport = dynamic_cast<Transport<TCP>*>(conn->GetTransport());
+		auto transport = std::make_unique<Transport<TCP>>();//dynamic_cast<Transport<TCP>*>(conn->GetTransport());
 		if (!transport)
 			return {
 				RETOBJ_RSN_ACPT,
@@ -57,6 +57,7 @@ namespace LT {
 				_acptCtx,
 				transport->GetLocalAddress(),
 				transport->GetRemoteAddress());
+			listener->PostAccept();
 			break;
 		case WSA_ACCEPT:
 			transport->GetLocalAddress()->Set(
@@ -67,11 +68,12 @@ namespace LT {
 		}
 
 		std::cout << transport->GetRemoteAddress()->GetIPAddress().ToString() << " : " <<
-			transport->GetRemoteAddress()->Port();
+			transport->GetRemoteAddress()->Port() << " Protocol: " << listener->Protocol();
 
 		//transport->StartRecv(); //추가 처리 필요
 
 		_acptCtx->m_contextState.store(CONTEXT_COMPLETED);
+		return {};
 	}
 	unsigned __stdcall IOCompletionPort::ThreadEntry(void* _this) {
 		auto* self = static_cast<IOCompletionPort*>(_this);
@@ -92,12 +94,13 @@ namespace LT {
 			overlapped = nullptr;
 
 			res = GQCS(m_comPort, &byteTrans, &completionKey, &overlapped, INFINITE);
+			DWORD error = res ? ERROR_SUCCESS : GetLastError();
+
 			if (res)
 			{
-				std::cout << "GQCS\n";
 				IContext* context = CONTAINING_RECORD(overlapped, IContext, m_overlapped);
 				if (auto* accept = dynamic_cast<ACPTCTX*>(context))
-					std::cout << OnAcceptCompleted(accept).Message();
+					OnAcceptCompleted(accept);
 				else if (auto* io = dynamic_cast<IOCTX*>(context))
 				{
 
