@@ -1,6 +1,32 @@
 #include <LT/Windows/Network/IPEndPoint.h>
 
 namespace LT {
+    IPEndPoint::IPEndPoint(const IPAddress& _ip, UINT16 _port) :
+        m_ipAddress(_ip),
+        m_port(_port),
+        m_storage{},
+        m_length{} {
+        if (_ip.IsIPv4())
+        {
+            sockaddr_in addr{};
+            addr.sin_family = AF_INET;
+            addr.sin_port = htons(_port);
+            addr.sin_addr = _ip.GetAddress().ipv4.m_address;
+
+            std::memcpy(&m_storage, &addr, sizeof(addr));
+            m_length = sizeof(addr);
+        }
+        else if (_ip.IsIPv6())
+        {
+            sockaddr_in6 addr{};
+            addr.sin6_family = AF_INET6;
+            addr.sin6_port = htons(_port);
+            addr.sin6_addr = _ip.GetAddress().ipv6.m_address;
+
+            std::memcpy(&m_storage, &addr, sizeof(addr));
+            m_length = sizeof(addr);
+        }
+    }
     void IPEndPoint::Set(const sockaddr* addr, socklen_t len)
     {
         if (addr == nullptr || len > sizeof(m_storage))

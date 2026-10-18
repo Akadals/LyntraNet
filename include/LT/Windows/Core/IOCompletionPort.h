@@ -15,7 +15,6 @@ namespace LT
 		static const int THREAD_PER_PROCESSOR = 4;
 	private:
 		HANDLE m_completionPort;
-		CONNMGR m_connectionManager;
 
 		WSADATA m_wsaData;
 		SYSTEM_INFO m_sysInfo;

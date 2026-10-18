@@ -12,16 +12,14 @@ namespace LT {
 		if (WSAStartup(MAKEWORD(2, 2), &m_wsaData) != 0)
 			return {
 				RETOBJ_RSN_STARTUP,
-				RETOBJ_ERR_TYPE_OS,
-				RETOBJ_MSG_INVALID };
+				RETOBJ_ERR_TYPE_OS };
 
 		if ((m_comPort = CreateIoCompletionPort(
 			INVALID_HANDLE_VALUE,
 			NULL, 0, m_processorSize)) == NULL)
 			return {
 				RETOBJ_RSN_CICP,
-				RETOBJ_ERR_TYPE_OS,
-				RETOBJ_MSG_INVALID };
+				RETOBJ_ERR_TYPE_OS };
 
 		for (int i = 0; i < m_processorSize; i++)
 			_beginthreadex(NULL, 0, ThreadEntry, this, 0, NULL);
@@ -36,8 +34,7 @@ namespace LT {
 		if (!transport)
 			return {
 				RETOBJ_RSN_ACPT,
-				RETOBJ_ERR_TYPE_OS,
-				RETOBJ_MSG_INVALID };
+				RETOBJ_ERR_TYPE_OS };
 
 		transport->Set(_acptCtx->m_acceptSock);
 
@@ -45,11 +42,17 @@ namespace LT {
 		if (!listener)
 			return {
 				RETOBJ_RSN_ACPT,
-				RETOBJ_ERR_TYPE_OS,
-				RETOBJ_MSG_INVALID };
+				RETOBJ_ERR_TYPE_OS };
 
 		switch (_acptCtx->m_acceptMode) {
 		case ACCEPT_EX:
+			if (setsockopt(_acptCtx->m_acceptSock.m_sock, SOL_SOCKET, SO_UPDATE_ACCEPT_CONTEXT,
+				(char*)listener->GetSocket(), sizeof(listener->GetSocket())) == SOCKET_ERROR)
+			{
+				closesocket(_acptCtx->m_acceptSock.m_sock);
+				//예외처리
+			}
+
 			listener->GetAcceptExSockAddrs(
 				_acptCtx,
 				transport->GetLocalAddress(),
@@ -88,12 +91,13 @@ namespace LT {
 			completionKey = 0;
 			overlapped = nullptr;
 
-			res = GetQueuedCompletionStatus(m_comPort, &byteTrans, &completionKey, &overlapped, INFINITE);
+			res = GQCS(m_comPort, &byteTrans, &completionKey, &overlapped, INFINITE);
 			if (res)
 			{
+				std::cout << "GQCS\n";
 				IContext* context = CONTAINING_RECORD(overlapped, IContext, m_overlapped);
 				if (auto* accept = dynamic_cast<ACPTCTX*>(context))
-					OnAcceptCompleted(accept);
+					std::cout << OnAcceptCompleted(accept).Message();
 				else if (auto* io = dynamic_cast<IOCTX*>(context))
 				{
 

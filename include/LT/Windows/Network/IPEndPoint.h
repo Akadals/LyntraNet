@@ -19,11 +19,7 @@ namespace LT
 		IPEndPoint() = default;
 		explicit IPEndPoint(
 			_In_ const IPAddress& _ip,
-			_In_ UINT16 _port) :
-			m_ipAddress(_ip),
-			m_port(_port),
-			m_storage{},
-			m_length{} {}
+			_In_ UINT16 _port);
 		IPEndPoint(_In_ const IPEndPoint& _endpoint) = default;
 		IPEndPoint(
 			_In_reads_to_ptr_(_len) const sockaddr* _addr,

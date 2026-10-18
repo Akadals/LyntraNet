@@ -11,7 +11,6 @@ int main()
 	LyntraServer server(IOBackendType::IOCP);
 	
 	server.AddListener<TCP>(IPAddress::AnyIPv4(), 9000);
-	server.AddListener<UDP>(IPAddress::AnyIPv4(), 9001);
 
 	server.Start();
 	std::cout << "Successfully started\n";

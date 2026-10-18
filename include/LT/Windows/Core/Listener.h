@@ -58,6 +58,7 @@ namespace LT
 		virtual LTReturnObject Close() { return{}; }
 
 		UINT				Protocol() const { return m_protocol; }
+		LTSOCKET*			GetSocket() { return &m_listenSock; }
 		const IPEndPoint&	LocalEndPoint() const { return m_localEndpoint; }
 	};
 

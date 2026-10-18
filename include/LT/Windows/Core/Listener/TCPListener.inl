@@ -15,9 +15,7 @@ namespace LT
             WSA_FLAG_OVERLAPPED)) == INVALID_SOCKET)
             return {
                 RETOBJ_RSN_SOCK,
-                RETOBJ_ERR_TYPE_OS,
-                RETOBJ_MSG_INVALID };
-
+                RETOBJ_ERR_TYPE_OS };
 
         if (::bind(
             m_listenSock.m_sock,
@@ -26,13 +24,11 @@ namespace LT
             if (closesocket(m_listenSock.m_sock) == SOCKET_ERROR)
                 return {
                     RETOBJ_RSN_SOCK,
-                    RETOBJ_ERR_TYPE_OS,
-                    RETOBJ_MSG_INVALID };
+                    RETOBJ_ERR_TYPE_OS };
 
             return {
                 RETOBJ_RSN_BIND,
-                RETOBJ_ERR_TYPE_OS,
-                RETOBJ_MSG_INVALID };
+                RETOBJ_ERR_TYPE_OS };
         }
 
         if (CICP(
@@ -46,9 +42,7 @@ namespace LT
 
             return {
                 RETOBJ_RSN_SOCK,
-                RETOBJ_ERR_TYPE_OS,
-                RETOBJ_MSG_INVALID
-            };
+                RETOBJ_ERR_TYPE_OS };
         }
 
         m_state = LISTENER_BOUND;
@@ -63,8 +57,7 @@ namespace LT
                 closesocket(m_listenSock.m_sock);
             return {
                 RETOBJ_RSN_LISTEN,
-                RETOBJ_ERR_TYPE_OS,
-                RETOBJ_MSG_INVALID };
+                RETOBJ_ERR_TYPE_OS };
         }
 
         auto res = load_accept_extensions();
@@ -90,8 +83,7 @@ namespace LT
         if (closesocket(m_listenSock.m_sock) == SOCKET_ERROR)
             return {
                 RETOBJ_RSN_SOCK,
-                RETOBJ_ERR_TYPE_OS,
-                RETOBJ_MSG_INVALID };
+                RETOBJ_ERR_TYPE_OS };
 
         m_listenSock.m_sock = INVALID_SOCKET;
         m_state = LISTENER_CLOSED;
@@ -103,10 +95,9 @@ namespace LT
         if (m_state != LISTENER_LISTENING)
             return {
                 RETOBJ_RSN_LISTEN,
-                RETOBJ_ERR_TYPE_OS,
-                RETOBJ_MSG_INVALID };
+                RETOBJ_ERR_TYPE_OS };
 
-        auto remoteCtx = m_acceptContextPool.Acquire();
+        auto remoteCtx = std::make_unique<ACPTCTX>(); //m_acceptContextPool.Acquire();
         remoteCtx->m_contextState.store(CONTEXT_AVAILABLE);
 
         if ((remoteCtx->m_acceptSock.m_sock = WSASocket(
@@ -119,13 +110,12 @@ namespace LT
             if (remoteCtx->m_acceptSock.m_sock != INVALID_SOCKET)
                 closesocket(remoteCtx->m_acceptSock.m_sock);
 
-            m_acceptContextPool.Release(std::move(remoteCtx));
+            //m_acceptContextPool.Release(std::move(remoteCtx));
             remoteCtx = nullptr;
 
             return {
                 RETOBJ_RSN_SOCK,
-                RETOBJ_ERR_TYPE_OS,
-                RETOBJ_MSG_INVALID };
+                RETOBJ_ERR_TYPE_OS };
         }
 
         DWORD bytes = 0;
@@ -144,13 +134,12 @@ namespace LT
             if (remoteCtx->m_acceptSock.m_sock != INVALID_SOCKET)
                 closesocket(remoteCtx->m_acceptSock.m_sock);
 
-            m_acceptContextPool.Release(std::move(remoteCtx));
+            //m_acceptContextPool.Release(std::move(remoteCtx));
             remoteCtx = nullptr;
 
             return {
                 RETOBJ_RSN_ACPT,
-                RETOBJ_ERR_TYPE_OS,
-                RETOBJ_MSG_INVALID };
+                RETOBJ_ERR_TYPE_OS };
         }
 
         remoteCtx->m_acceptMode = ACCEPT_EX;
@@ -165,10 +154,9 @@ namespace LT
         if (m_state != LISTENER_LISTENING)
             return {
                 RETOBJ_RSN_LISTEN,
-                RETOBJ_ERR_TYPE_OS,
-                RETOBJ_MSG_INVALID };
+                RETOBJ_ERR_TYPE_OS };
 
-        auto remoteCtx = m_acceptContextPool.Acquire();
+        auto remoteCtx = std::make_unique<ACPTCTX>(); //m_acceptContextPool.Acquire();
         remoteCtx->m_contextState.store(CONTEXT_AVAILABLE);
 
         remoteCtx->m_localAddress.Set(m_localEndpoint);
@@ -179,13 +167,12 @@ namespace LT
             remoteCtx->m_remoteAddress.Length(),
             NULL,
             NULL)) == INVALID_SOCKET) {
-            m_acceptContextPool.Release(std::move(remoteCtx));
+            //m_acceptContextPool.Release(std::move(remoteCtx));
             remoteCtx = nullptr;
 
             return {
                 RETOBJ_RSN_ACPT,
-                RETOBJ_ERR_TYPE_OS,
-                RETOBJ_MSG_INVALID };
+                RETOBJ_ERR_TYPE_OS };
         }
 
         remoteCtx->m_acceptMode = WSA_ACCEPT;
@@ -197,13 +184,12 @@ namespace LT
             _comPort,
             (ULONG_PTR)remoteCtx.get(),
             0) == INVALID_HANDLE_VALUE) {
-            m_acceptContextPool.Release(std::move(remoteCtx));
+            //m_acceptContextPool.Release(std::move(remoteCtx));
             remoteCtx = nullptr;
 
             return {
                 RETOBJ_RSN_ACPT,
-                RETOBJ_ERR_TYPE_OS,
-                RETOBJ_MSG_INVALID };
+                RETOBJ_ERR_TYPE_OS };
         }
 
         return { remoteCtx->m_acceptSock };
@@ -261,7 +247,6 @@ namespace LT
             return {
                 RETOBJ_RSN_ACPTEX,
                 RETOBJ_ERR_TYPE_OS,
-                RETOBJ_MSG_INVALID,
                 FALSE };
 
         if (!m_lpGetAcceptExSockaddrs &&
@@ -271,7 +256,6 @@ namespace LT
             return {
                 RETOBJ_RSN_ACPTEX,
                 RETOBJ_ERR_TYPE_OS,
-                RETOBJ_MSG_INVALID,
                 FALSE };
 
         return { TRUE };

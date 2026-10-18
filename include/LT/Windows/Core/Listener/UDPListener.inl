@@ -17,8 +17,7 @@ namespace LT
             WSA_FLAG_OVERLAPPED)) == INVALID_SOCKET)
             return {
                 RETOBJ_RSN_SOCK,
-                RETOBJ_ERR_TYPE_OS,
-                RETOBJ_MSG_INVALID };
+                RETOBJ_ERR_TYPE_OS };
 
         if (::bind(
             m_listenSock.m_sock,
@@ -27,13 +26,11 @@ namespace LT
             if (closesocket(m_listenSock.m_sock) == SOCKET_ERROR)
                 return {
                     RETOBJ_RSN_SOCK,
-                    RETOBJ_ERR_TYPE_OS,
-                    RETOBJ_MSG_INVALID };
+                    RETOBJ_ERR_TYPE_OS };
 
             return {
                 RETOBJ_RSN_BIND,
-                RETOBJ_ERR_TYPE_OS,
-                RETOBJ_MSG_INVALID };
+                RETOBJ_ERR_TYPE_OS };
         }
 
         if (CICP(
@@ -47,9 +44,7 @@ namespace LT
 
             return {
                 RETOBJ_RSN_SOCK,
-                RETOBJ_ERR_TYPE_OS,
-                RETOBJ_MSG_INVALID
-            };
+                RETOBJ_ERR_TYPE_OS };
         }
 
         m_state = LISTENER_BOUND;
@@ -65,8 +60,7 @@ namespace LT
         if (closesocket(m_listenSock.m_sock) == SOCKET_ERROR)
             return {
                 RETOBJ_RSN_SOCK,
-                RETOBJ_ERR_TYPE_OS,
-                RETOBJ_MSG_INVALID };
+                RETOBJ_ERR_TYPE_OS };
 
         m_listenSock.m_sock = INVALID_SOCKET;
         m_state = LISTENER_CLOSED;

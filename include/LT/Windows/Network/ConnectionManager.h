@@ -19,7 +19,7 @@ namespace LT
 		ConnectionManager() = default;
 		LTConnection* NewConnection()
 		{
-			auto ret = m_connectionPool.Acquire();
+			auto ret = std::make_unique<LTConnection>(); //m_connectionPool.Acquire();
 			m_connections.emplace(ret->GetSock(), std::move(ret));
 			return ret.get();
 		}

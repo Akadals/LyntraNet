@@ -55,6 +55,7 @@ namespace LT
 		bool operator!=(const IPAddress& _ip) const;
 
 		IPVersion IPVersion() const { return m_ipVersion; }
+		ADDRESS GetAddress() const { return m_ipAddress; }
 
 		std::string ToString() const;
 	public:

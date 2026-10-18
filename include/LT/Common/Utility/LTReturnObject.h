@@ -20,9 +20,6 @@
 #define RETOBJ_ERR_TYPE_LT				0
 #define RETOBJ_ERR_TYPE_OS				1 //윈도우인경우 message는 WSAGetLastError출력
 
-#define RETOBJ_MSG_NONE					0x00000001
-#define RETOBJ_MSG_INVALID				0x00000002
-
 //상수값 수정필요
 
 namespace LT
@@ -35,21 +32,17 @@ namespace LT
 		std::string m_message;
 	public:
 		ReturnObject() = default;
-		ReturnObject(_In_ int16_t _code) :
-			m_statusCode(_code) {}
-
 		const int16_t StatusCode() const noexcept { return m_statusCode; }
 		const std::string_view Message() const { return m_message; }
 	};
+
 	class LTReturnObject : public ReturnObject
 	{
 	public:
-		LTReturnObject() :
-			ReturnObject(RETOBJ_STATE_NONE) {}
+		LTReturnObject();
 		LTReturnObject(
 			_In_ int _returnObjectReason,
-			_In_ int _returnObjectErrorType,
-			_In_ int _returnObjectMessage = RETOBJ_MSG_NONE) {}
+			_In_ int _returnObjectErrorType);
 	};
 
 	template<typename T>
@@ -66,7 +59,6 @@ namespace LT
 		LTReturnValue(
 			_In_ int _returnObjectReason,
 			_In_ int _returnObjectErrorType,
-			_In_ int _returnObjectMessage = RETOBJ_MSG_NONE,
 			_In_ T _defaultValue = T{}) :
 			m_value(_defaultValue) {}
 		LTReturnValue(
