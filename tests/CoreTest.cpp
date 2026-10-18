@@ -14,5 +14,7 @@ int main()
 	server.AddListener<UDP>(IPAddress::AnyIPv4(), 9001);
 
 	server.Start();
-	std::cout << "Successfully started";
+	std::cout << "Successfully started\n";
+
+	while (true) Sleep(1);
 }

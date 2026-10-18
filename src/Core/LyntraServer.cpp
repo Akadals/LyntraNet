@@ -15,7 +15,7 @@ LTReturnObject LyntraServer::AddListener(const IPEndPoint& _endpoint) {
 template<TProtocol T>
 LTReturnObject LT::LyntraServer::AddListener(UINT16 _port) {
 	for (auto& listener : m_listeners) {
-		if (port == listener->LocalEndPoint().Port())
+		if (_port == listener->LocalEndPoint().Port())
 			return {}; //포트중복
 	}
 	auto listener = std::make_unique<Listener<T>>(
@@ -26,7 +26,7 @@ LTReturnObject LT::LyntraServer::AddListener(UINT16 _port) {
 template<TProtocol T>
 LTReturnObject LyntraServer::AddListener(const IPAddress& _address, UINT16 _port) {
 	for (auto& listener : m_listeners) {
-		if (port == listener->LocalEndPoint().Port())
+		if (_port == listener->LocalEndPoint().Port())
 			return {}; //포트중복
 	}
 	auto listener = std::make_unique<Listener<T>>(
@@ -61,6 +61,7 @@ LTReturnObject LyntraServer::Start() {
 			break;
 		}
 	}
+	std::cout << "Listener Working\n";
 	return {};
 }
 

@@ -42,6 +42,7 @@ namespace LT
 			m_overlapped{},
 			m_contextState(CONTEXT_READY),
 			m_ownerListener(nullptr) {}
+		virtual ~IContext() = default;
 	};
 
 	typedef struct AcceptContext

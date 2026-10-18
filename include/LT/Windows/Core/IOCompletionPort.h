@@ -22,10 +22,14 @@ namespace LT
 		DWORD m_processorSize;
 		HANDLE m_comPort;
 	public:
+		IOCompletionPort();
 		LTReturnObject Startup() override;
 		HANDLE* GetComPort() { return &m_comPort; }
 	private:
 		LTReturnObject OnAcceptCompleted(PACPTCTX _acptCtx); //TCP±â¹Ý
+		
+		static unsigned WINAPI ThreadEntry(void* _this);
+		unsigned WINAPI Worker();
 	};
 }
 
