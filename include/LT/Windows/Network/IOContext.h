@@ -18,10 +18,10 @@ namespace LT
 
 	typedef enum ContextState
 	{
-		CONTEXT_READY,
 		CONTEXT_PENDING,
 		CONTEXT_AVAILABLE,
-		CONTEXT_COMPLETED
+		CONTEXT_COMPLETED,
+		CONTEXT_PROCESSING
 	} CTXSTATE; //State 수정 필요
 
 	typedef enum AcceptMode

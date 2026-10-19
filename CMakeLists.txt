@@ -150,3 +150,15 @@ target_link_libraries(LyntraNet
     PRIVATE
         libprotobuf
 )
+add_library(LyntraNetBridge SHARED
+    src/Network/Packet/CallBackBridge.cpp
+)
+
+target_include_directories(LyntraNetBridge
+    PUBLIC
+        ${CMAKE_CURRENT_SOURCE_DIR}/include
+)
+
+target_compile_definitions(LyntraNetBridge
+    PRIVATE LT_EXPORTS
+)

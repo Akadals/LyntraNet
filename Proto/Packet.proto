@@ -1,12 +1,91 @@
 syntax = "proto3";
 package Protocol;
 
-enum PACKET_HEADER
-{
-    PACKET_UNKNOWN = 0;
 
-    PACKET_UDP_CONNECTION = 10000; //Test
-};
+
+
+enum PACKET_HEADER {
+    PKT_UNKNOWN = 0x0000;
+
+    // TCP
+    PKT_TCP_CS_CONN_REQ   = 0x1101;
+    PKT_TCP_SC_CONN_ACK   = 0x1182;
+    PKT_TCP_SC_CONN_REJ   = 0x1183;
+
+    PKT_TCP_CS_AUTH       = 0x1104;
+    PKT_TCP_SC_AUTH_ACK   = 0x1185;
+    PKT_TCP_SC_SESS_EXP   = 0x1186;
+
+    PKT_TCP_CS_PING       = 0x1107;
+    PKT_TCP_SC_PONG       = 0x1188;
+
+    PKT_TCP_CS_DISC_REQ   = 0x1109;
+    PKT_TCP_SC_DISC_ACK   = 0x118A;
+    PKT_TCP_SC_DISC_NTF   = 0x118B;
+
+    PKT_TCP_SC_ERR        = 0x118C;
+
+
+    // UDP
+    PKT_UDP_CS_CONN_REQ   = 0x1201;
+    PKT_UDP_SC_CONN_ACK   = 0x1282;
+    PKT_UDP_CS_CONN_CFM   = 0x1203;
+    PKT_UDP_SC_CONN_REJ   = 0x1284;
+
+    PKT_UDP_CS_AUTH       = 0x1205;
+    PKT_UDP_SC_AUTH_ACK   = 0x1286;
+    PKT_UDP_SC_SESS_EXP   = 0x1287;
+
+    PKT_UDP_CS_PING       = 0x1208;
+    PKT_UDP_SC_PONG       = 0x1289;
+
+    PKT_UDP_CS_DISC_REQ   = 0x120A;
+    PKT_UDP_SC_DISC_ACK   = 0x128B;
+    PKT_UDP_SC_DISC_NTF   = 0x128C;
+
+    PKT_UDP_SC_ERR        = 0x128D;
+
+
+    // KCP
+    PKT_KCP_CS_CONN_REQ   = 0x1301;
+    PKT_KCP_SC_CONN_ACK   = 0x1382;
+    PKT_KCP_CS_CONN_CFM   = 0x1303;
+    PKT_KCP_SC_CONN_REJ   = 0x1384;
+
+    PKT_KCP_CS_AUTH       = 0x1305;
+    PKT_KCP_SC_AUTH_ACK   = 0x1386;
+    PKT_KCP_SC_SESS_EXP   = 0x1387;
+
+    PKT_KCP_CS_PING       = 0x1308;
+    PKT_KCP_SC_PONG       = 0x1389;
+
+    PKT_KCP_CS_DISC_REQ   = 0x130A;
+    PKT_KCP_SC_DISC_ACK   = 0x138B;
+    PKT_KCP_SC_DISC_NTF   = 0x138C;
+
+    PKT_KCP_SC_ERR        = 0x138D;
+
+
+    // QUIC
+    PKT_QUIC_CS_CONN_REQ  = 0x1401;
+    PKT_QUIC_SC_CONN_ACK  = 0x1482;
+    PKT_QUIC_SC_CONN_REJ  = 0x1483;
+
+    PKT_QUIC_CS_AUTH      = 0x1404;
+    PKT_QUIC_SC_AUTH_ACK  = 0x1485;
+    PKT_QUIC_SC_SESS_EXP  = 0x1486;
+
+    PKT_QUIC_CS_PING      = 0x1407;
+    PKT_QUIC_SC_PONG      = 0x1488;
+
+    PKT_QUIC_CS_DISC_REQ  = 0x1409;
+    PKT_QUIC_SC_DISC_ACK  = 0x148A;
+    PKT_QUIC_SC_DISC_NTF  = 0x148B;
+
+    PKT_QUIC_SC_ERR       = 0x148C;
+}
+
+
 
 enum CHAT_TARGET
 {

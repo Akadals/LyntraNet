@@ -326,11 +326,41 @@ const char descriptor_table_protodef_packet_2eproto[] PROTOBUF_SECTION_VARIABLE(
   "ol.Vector\022\"\n\010rotation\030\002 \001(\0132\020.Protocol.V"
   "ector\022\037\n\005scale\030\003 \001(\0132\020.Protocol.Vector\","
   "\n\nObjectInfo\022\n\n\002id\030\001 \001(\003\022\022\n\nserialized\030\002"
-  " \001(\t*\?\n\rPACKET_HEADER\022\022\n\016PACKET_UNKNOWN\020"
-  "\000\022\032\n\025PACKET_UDP_CONNECTION\020\220N**\n\013CHAT_TA"
-  "RGET\022\010\n\004HOST\020\000\022\010\n\004USER\020\001\022\007\n\003ALL\020\002*&\n\nLOC"
-  "K_STATE\022\n\n\006LOCKED\020\000\022\014\n\010UNLOCKED\020\001b\006proto"
-  "3"
+  " \001(\t*\374\t\n\rPACKET_HEADER\022\017\n\013PKT_UNKNOWN\020\000\022"
+  "\030\n\023PKT_TCP_CS_CONN_REQ\020\201\"\022\030\n\023PKT_TCP_SC_"
+  "CONN_ACK\020\202#\022\030\n\023PKT_TCP_SC_CONN_REJ\020\203#\022\024\n"
+  "\017PKT_TCP_CS_AUTH\020\204\"\022\030\n\023PKT_TCP_SC_AUTH_A"
+  "CK\020\205#\022\030\n\023PKT_TCP_SC_SESS_EXP\020\206#\022\024\n\017PKT_T"
+  "CP_CS_PING\020\207\"\022\024\n\017PKT_TCP_SC_PONG\020\210#\022\030\n\023P"
+  "KT_TCP_CS_DISC_REQ\020\211\"\022\030\n\023PKT_TCP_SC_DISC"
+  "_ACK\020\212#\022\030\n\023PKT_TCP_SC_DISC_NTF\020\213#\022\023\n\016PKT"
+  "_TCP_SC_ERR\020\214#\022\030\n\023PKT_UDP_CS_CONN_REQ\020\201$"
+  "\022\030\n\023PKT_UDP_SC_CONN_ACK\020\202%\022\030\n\023PKT_UDP_CS"
+  "_CONN_CFM\020\203$\022\030\n\023PKT_UDP_SC_CONN_REJ\020\204%\022\024"
+  "\n\017PKT_UDP_CS_AUTH\020\205$\022\030\n\023PKT_UDP_SC_AUTH_"
+  "ACK\020\206%\022\030\n\023PKT_UDP_SC_SESS_EXP\020\207%\022\024\n\017PKT_"
+  "UDP_CS_PING\020\210$\022\024\n\017PKT_UDP_SC_PONG\020\211%\022\030\n\023"
+  "PKT_UDP_CS_DISC_REQ\020\212$\022\030\n\023PKT_UDP_SC_DIS"
+  "C_ACK\020\213%\022\030\n\023PKT_UDP_SC_DISC_NTF\020\214%\022\023\n\016PK"
+  "T_UDP_SC_ERR\020\215%\022\030\n\023PKT_KCP_CS_CONN_REQ\020\201"
+  "&\022\030\n\023PKT_KCP_SC_CONN_ACK\020\202\'\022\030\n\023PKT_KCP_C"
+  "S_CONN_CFM\020\203&\022\030\n\023PKT_KCP_SC_CONN_REJ\020\204\'\022"
+  "\024\n\017PKT_KCP_CS_AUTH\020\205&\022\030\n\023PKT_KCP_SC_AUTH"
+  "_ACK\020\206\'\022\030\n\023PKT_KCP_SC_SESS_EXP\020\207\'\022\024\n\017PKT"
+  "_KCP_CS_PING\020\210&\022\024\n\017PKT_KCP_SC_PONG\020\211\'\022\030\n"
+  "\023PKT_KCP_CS_DISC_REQ\020\212&\022\030\n\023PKT_KCP_SC_DI"
+  "SC_ACK\020\213\'\022\030\n\023PKT_KCP_SC_DISC_NTF\020\214\'\022\023\n\016P"
+  "KT_KCP_SC_ERR\020\215\'\022\031\n\024PKT_QUIC_CS_CONN_REQ"
+  "\020\201(\022\031\n\024PKT_QUIC_SC_CONN_ACK\020\202)\022\031\n\024PKT_QU"
+  "IC_SC_CONN_REJ\020\203)\022\025\n\020PKT_QUIC_CS_AUTH\020\204("
+  "\022\031\n\024PKT_QUIC_SC_AUTH_ACK\020\205)\022\031\n\024PKT_QUIC_"
+  "SC_SESS_EXP\020\206)\022\025\n\020PKT_QUIC_CS_PING\020\207(\022\025\n"
+  "\020PKT_QUIC_SC_PONG\020\210)\022\031\n\024PKT_QUIC_CS_DISC"
+  "_REQ\020\211(\022\031\n\024PKT_QUIC_SC_DISC_ACK\020\212)\022\031\n\024PK"
+  "T_QUIC_SC_DISC_NTF\020\213)\022\024\n\017PKT_QUIC_SC_ERR"
+  "\020\214)**\n\013CHAT_TARGET\022\010\n\004HOST\020\000\022\010\n\004USER\020\001\022\007"
+  "\n\003ALL\020\002*&\n\nLOCK_STATE\022\n\n\006LOCKED\020\000\022\014\n\010UNL"
+  "OCKED\020\001b\006proto3"
   ;
 static const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable*const descriptor_table_packet_2eproto_deps[1] = {
 };
@@ -349,7 +379,7 @@ static ::PROTOBUF_NAMESPACE_ID::internal::SCCInfoBase*const descriptor_table_pac
 static ::PROTOBUF_NAMESPACE_ID::internal::once_flag descriptor_table_packet_2eproto_once;
 static bool descriptor_table_packet_2eproto_initialized = false;
 const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable descriptor_table_packet_2eproto = {
-  &descriptor_table_packet_2eproto_initialized, descriptor_table_protodef_packet_2eproto, "packet.proto", 841,
+  &descriptor_table_packet_2eproto_initialized, descriptor_table_protodef_packet_2eproto, "packet.proto", 2055,
   &descriptor_table_packet_2eproto_once, descriptor_table_packet_2eproto_sccs, descriptor_table_packet_2eproto_deps, 10, 0,
   schemas, file_default_instances, TableStruct_packet_2eproto::offsets,
   file_level_metadata_packet_2eproto, 10, file_level_enum_descriptors_packet_2eproto, file_level_service_descriptors_packet_2eproto,
@@ -365,7 +395,56 @@ const ::PROTOBUF_NAMESPACE_ID::EnumDescriptor* PACKET_HEADER_descriptor() {
 bool PACKET_HEADER_IsValid(int value) {
   switch (value) {
     case 0:
-    case 10000:
+    case 4353:
+    case 4356:
+    case 4359:
+    case 4361:
+    case 4482:
+    case 4483:
+    case 4485:
+    case 4486:
+    case 4488:
+    case 4490:
+    case 4491:
+    case 4492:
+    case 4609:
+    case 4611:
+    case 4613:
+    case 4616:
+    case 4618:
+    case 4738:
+    case 4740:
+    case 4742:
+    case 4743:
+    case 4745:
+    case 4747:
+    case 4748:
+    case 4749:
+    case 4865:
+    case 4867:
+    case 4869:
+    case 4872:
+    case 4874:
+    case 4994:
+    case 4996:
+    case 4998:
+    case 4999:
+    case 5001:
+    case 5003:
+    case 5004:
+    case 5005:
+    case 5121:
+    case 5124:
+    case 5127:
+    case 5129:
+    case 5250:
+    case 5251:
+    case 5253:
+    case 5254:
+    case 5256:
+    case 5258:
+    case 5259:
+    case 5260:
       return true;
     default:
       return false;
