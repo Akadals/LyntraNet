@@ -10,7 +10,7 @@ int main()
 {
 	LyntraServer server(IOBackendType::IOCP);
 	
-	server.AddListener<TCP>(IPAddress::AnyIPv4(), 9000);
+	server.AddListener<ProtocolType::TCP>(IPAddress::AnyIPv4(), 9000);
 
 	server.Start();
 	std::cout << "Successfully started\n";

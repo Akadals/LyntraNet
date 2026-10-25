@@ -1,7 +1,8 @@
 #include <LT/Windows/Core/IOCompletionPort.h>
 
 namespace LT {
-	IOCompletionPort::IOCompletionPort() {
+	IOCompletionPort::IOCompletionPort() :
+		IBackend(BackendType::IOCP) {
 		GetSystemInfo(&m_sysInfo);
 		m_processorSize =
 			m_sysInfo.dwNumberOfProcessors *
@@ -30,7 +31,7 @@ namespace LT {
 
 	LTReturnObject IOCompletionPort::OnAcceptCompleted(PACPTCTX _acptCtx) {
 		auto conn = m_connectionManager.NewConnection();
-		auto transport = std::make_unique<Transport<TCP>>();//dynamic_cast<Transport<TCP>*>(conn->GetTransport());
+		auto transport = std::make_unique<Transport<ProtocolType::TCP>>();//dynamic_cast<Transport<TCP>*>(conn->GetTransport());
 		if (!transport)
 			return {
 				RETOBJ_RSN_ACPT,
@@ -38,7 +39,7 @@ namespace LT {
 
 		transport->Set(_acptCtx->m_acceptSock);
 
-		auto listener = dynamic_cast<Listener<TCP>*>(_acptCtx->m_ownerListener);
+		auto listener = dynamic_cast<Listener<ProtocolType::TCP>*>(_acptCtx->m_ownerListener);
 		if (!listener)
 			return {
 				RETOBJ_RSN_ACPT,
@@ -47,7 +48,7 @@ namespace LT {
 		switch (_acptCtx->m_acceptMode) {
 		case ACCEPT_EX:
 			if (setsockopt(_acptCtx->m_acceptSock.m_sock, SOL_SOCKET, SO_UPDATE_ACCEPT_CONTEXT,
-				(char*)listener->GetSocket(), sizeof(listener->GetSocket())) == SOCKET_ERROR)
+				(char*)&listener->LTSocket(), sizeof(listener->LTSocket())) == SOCKET_ERROR)
 			{
 				closesocket(_acptCtx->m_acceptSock.m_sock);
 				//예외처리
@@ -66,9 +67,6 @@ namespace LT {
 				_acptCtx->m_remoteAddress);
 			break;
 		}
-
-		std::cout << transport->GetRemoteAddress()->GetIPAddress().ToString() << " : " <<
-			transport->GetRemoteAddress()->Port() << " Protocol: " << listener->Protocol();
 
 		//transport->StartRecv(); //추가 처리 필요
 
@@ -99,7 +97,7 @@ namespace LT {
 			if (res)
 			{
 				IContext* context = CONTAINING_RECORD(overlapped, IContext, m_overlapped);
-				if (auto* accept = dynamic_cast<ACPTCTX*>(context))
+				if (auto* accept = dynamic_cast<ACPTCTX*>(context)) [[unlikely]]
 					OnAcceptCompleted(accept);
 				else if (auto* io = dynamic_cast<IOCTX*>(context))
 				{

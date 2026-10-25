@@ -1,12 +1,6 @@
-namespace LT
-{
-
-    LTReturnObject Listener<UDP>::Bind() {
-
-        return {};
-    }
-    LTReturnObject Listener<UDP>::Bind(HANDLE _comPort) {
-        m_state = LISTENER_BINDING;
+namespace LT {
+    LTReturnObject Listener<ProtocolType::UDP>::Bind() {
+        m_state = LSTNR_BINDING;
 
         if ((m_listenSock.m_sock = WSASocket(
             m_localEndpoint.Family(),
@@ -35,7 +29,7 @@ namespace LT
 
         if (CICP(
             reinterpret_cast<HANDLE>(m_listenSock.m_sock),
-            _comPort,
+            m_backend->Handle(),
             reinterpret_cast<ULONG_PTR>(this),
             0) == INVALID_HANDLE_VALUE)
         {
@@ -47,15 +41,15 @@ namespace LT
                 RETOBJ_ERR_TYPE_OS };
         }
 
-        m_state = LISTENER_BOUND;
+        m_state = LSTNR_BOUND;
         return {};
     }
 
-    LTReturnObject Listener<UDP>::Close() {
+    LTReturnObject Listener<ProtocolType::UDP>::Close() {
         if (m_listenSock.m_sock == INVALID_SOCKET)
             return {};
 
-        m_state = LISTENER_CLOSING;
+        m_state = LSTNR_CLOSING;
 
         if (closesocket(m_listenSock.m_sock) == SOCKET_ERROR)
             return {
@@ -63,7 +57,7 @@ namespace LT
                 RETOBJ_ERR_TYPE_OS };
 
         m_listenSock.m_sock = INVALID_SOCKET;
-        m_state = LISTENER_CLOSED;
+        m_state = LSTNR_CLOSED;
 
         return {};
     }

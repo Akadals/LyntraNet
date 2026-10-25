@@ -8,13 +8,28 @@
 #define CACHE_SIZE std::hardware_destructive_interference_size
 #endif
 
+enum class ConcurrencyPolicy : uint8_t {
+    // Single-Producer Single-Consumer
+    SPSC,
+    // Multi-Producer Single-Consumer
+    MPSC,
+    // Single-Producer Multi-Consumer
+    SPMC,
+    // Multi-Producer Multi-Consumer
+    MPMC,
+
+    // Non-Atomic Based
+    // Single-Producer Single-Consumer
+    SPSC_UNSAFE
+};
+
 struct SPSC {}; // Single-Producer Single-Consumer
 struct MPSC {}; // Multi-Producer Single-Consumer
 struct SPMC {}; // Single-Producer Multi-Consumer
 struct MPMC {}; // Multi-Producer Multi-Consumer
 
-struct FastSPSC {}; // Fast Single-Producer Single-Consumer (Non-atomic)
-struct ZeroCopy {}; // Zero-Copy
+struct SPSC_UNSAFE {}; // Fast Single-Producer Single-Consumer (Non-atomic)
+struct ZeroCopy {}; // Zero-Copy 일단 Ringbuffer에서만 사용
 
 template<typename T>
 concept ConcurrentPolicy =
@@ -22,7 +37,7 @@ std::same_as<T, SPSC> ||
 std::same_as<T, MPSC> ||
 std::same_as<T, SPMC> ||
 std::same_as<T, MPMC> ||
-std::same_as<T, FastSPSC> ||
+std::same_as<T, SPSC_UNSAFE> ||
 std::same_as<T, ZeroCopy>;
 
 struct alignas(CACHE_SIZE) CacheLineAtomic

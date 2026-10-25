@@ -1,5 +1,5 @@
 #include <LT/Windows/Network/Packet/CallBackBridge.h>
-#include "Packet.pb.h"
+//#include "Packet.pb.h"
 int32_t __cdecl SendPacket(
     uint32_t header,
     const uint8_t* payload,

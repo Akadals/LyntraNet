@@ -1,14 +1,6 @@
 #ifndef __INCL_LYNTRA_UTLITY_H__
 #define __INCL_LYNTRA_UTLITY_H__
 
-#include "Common/Utility/ConcurrentPolicy.h"
-
-#include "Common/Utility/RingBuffer.h"
-#include "Common/Utility/ConcurrentQueue.h"
-#include "Common/Utility/ConcurrentStack.h"
-#include "Common/Utility/ConcurrentHashMap.h"
-#include "Common/Utility/LockFreePool.h"
-
 #include <vector>
 #include <unordered_map>
 

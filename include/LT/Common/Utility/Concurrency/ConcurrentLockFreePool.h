@@ -36,6 +36,4 @@ namespace LT
 		void Release(T&& _obj);
 	};
 }
-
-#include "Detail/LockFreePool.inl"
 #endif

@@ -4,7 +4,7 @@
 #include <LT/Windows/Network/Socket/LTSocket.h>
 #include <LT/Common/Protocol/TProtocol.h>
 #include <LT/Windows/Network/IPEndPoint.h>
-#include <LT/Utility.h>
+#include <LT/Common/Utility/Concurrency/ConcurrentRingBuffer.h>
 
 namespace LT
 {
@@ -13,13 +13,13 @@ namespace LT
 	protected:
 		LTSOCKET m_ownerSock;
 
-		//RingBuffer<ZeroCopy> m_recvBuffer;
-		//RingBuffer<ZeroCopy> m_sendBuffer;
+		RingBuffer<ZeroCopy> m_recvBuffer;
+		RingBuffer<ZeroCopy> m_sendBuffer;
 	public:
 		ITransport(size_t _bufferSize) :
-			m_ownerSock(LTSOCKET::INVALID()) {}
-			/*m_recvBuffer(_bufferSize),
-			m_sendBuffer(_bufferSize) {}*/
+			m_ownerSock(LTSOCKET::INVALID()),
+			m_recvBuffer(_bufferSize),
+			m_sendBuffer(_bufferSize) {}
 		virtual ~ITransport() = default;
 
 		LTSOCKET Get() const { return m_ownerSock; }
@@ -29,17 +29,17 @@ namespace LT
 		virtual DWORD StartSend() = 0;
 	};
 
-	template<TProtocol>
+	template<ProtocolType TProtocol>
 	class Transport;
 
 	template<>
-	class Transport<TCP> : public ITransport
+	class Transport<ProtocolType::TCP> : public ITransport
 	{
 	private:
 		IPEndPoint m_localAddress;
 		IPEndPoint m_remoteAddress;
 	public:
-		Transport<TCP>(size_t _bufferSize = 0x2000) : // 8KiB
+		Transport<ProtocolType::TCP>(size_t _bufferSize = 0x2000) : // 8KiB
 			ITransport(_bufferSize),
 			m_localAddress{},
 			m_remoteAddress{} {}

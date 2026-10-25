@@ -8,14 +8,12 @@
 #include <span>
 #include <algorithm>
 
-namespace LT
-{
+namespace LT {
 	template<ConcurrentPolicy>
 	class RingBuffer;
 
 	template<>
-	class RingBuffer<SPSC>
-	{
+	class RingBuffer<SPSC> {
 	private:
 		std::unique_ptr<std::byte[]> m_buffer;
 
@@ -62,10 +60,8 @@ namespace LT
 	};
 
 	template<>
-	class RingBuffer<MPSC>
-	{
+	class RingBuffer<MPSC> {
 	private:
-
 		size_t m_capacity;
 		size_t m_mask;
 
@@ -76,8 +72,7 @@ namespace LT
 	};
 
 	template<>
-	class RingBuffer<SPMC>
-	{
+	class RingBuffer<SPMC> {
 	private:
 		size_t m_capacity;
 		size_t m_mask;
@@ -89,8 +84,7 @@ namespace LT
 	};
 
 	template<>
-	class RingBuffer<MPMC>
-	{
+	class RingBuffer<MPMC> {
 	private:
 		std::unique_ptr<std::byte[]> m_buffer;
 
@@ -129,8 +123,7 @@ namespace LT
 		size_t Capacity() const { return m_capacity; }
 	};
 	template<>
-	class RingBuffer<FastSPSC>
-	{
+	class RingBuffer<SPSC_UNSAFE> {
 	private:
 		std::unique_ptr<std::byte[]> m_buffer;
 
@@ -140,7 +133,7 @@ namespace LT
 		mutable CacheLineCached m_producer;
 		mutable CacheLineCached m_consumer;
 	public:
-		RingBuffer<FastSPSC>(size_t _size);
+		RingBuffer<SPSC_UNSAFE>(size_t _size);
 
 		template<size_t ByteSize>
 		bool TryWrite(
@@ -175,8 +168,7 @@ namespace LT
 		size_t Capacity() const { return m_capacity; }
 	};
 	template<>
-	class RingBuffer<ZeroCopy>
-	{
+	class RingBuffer<ZeroCopy> {
 	public:
 		struct Region
 		{

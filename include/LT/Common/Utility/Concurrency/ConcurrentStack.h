@@ -69,12 +69,8 @@ namespace LT
 		ConcurrentStack(size_t _size);
 		bool Push(const T& _data);
 		bool Pop(T& _dest);
+		T& Pop();
 		void Top(T* _dest);
 	};
 }
-
-#include "Detail/ConcurrentStack/ConcurrentStackSPSC.inl"
-#include "Detail/ConcurrentStack/ConcurrentStackMPSC.inl"
-#include "Detail/ConcurrentStack/ConcurrentStackSPMC.inl"
-#include "Detail/ConcurrentStack/ConcurrentStackMPMC.inl"
 #endif

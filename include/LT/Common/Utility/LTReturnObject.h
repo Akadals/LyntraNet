@@ -17,8 +17,8 @@
 
 #define RETOBJ_RSN_CICP					0x00000009
 
-#define RETOBJ_ERR_TYPE_LT				0
-#define RETOBJ_ERR_TYPE_OS				1 //윈도우인경우 message는 WSAGetLastError출력
+#define RETOBJ_ERR_TYPE_LT				0 //커스텀 메시지 출력
+#define RETOBJ_ERR_TYPE_OS				1 //윈도우인경우 message는 WSAGetLastError or GetLastError출력
 
 //상수값 수정필요
 
@@ -52,8 +52,7 @@ namespace LT
 		T m_value;
 	public:
 		LTReturnValue() :
-			m_value(T{}),
-			ReturnObject(RETOBJ_STATE_NONE) {}
+			m_value(T{}) {}
 		LTReturnValue(T value) :
 			m_value(value) {}
 		LTReturnValue(

@@ -10,7 +10,6 @@
 #include <LT/Common/Protocol/TProtocol.h>
 #include <LT/Windows/Core/Listener.h>
 #include <LT/Common/Utility/LTReturnObject.h>
-#include <LT/Common/Preset/ServerPreset.h>
 
 namespace LT
 {
@@ -34,7 +33,6 @@ namespace LT
 		std::atomic<bool> m_isRunning = false;
 	public:
 		LyntraServer() = default;
-		LyntraServer(Preset _preset) {};
 		LyntraServer(IOBackendType _backendType) :
 			m_ioBackendType(_backendType)
 		{
@@ -52,14 +50,16 @@ namespace LT
 		LTReturnObject Stop() { return{}; };
 		void Wait() {};
 
-		template<TProtocol T>
+		template<ProtocolType TProtocol>
 		LTReturnObject AddListener(
 			_In_ const IPEndPoint& _endpoint);
-		template<TProtocol T>
+
+		template<ProtocolType TProtocol>
 		LTReturnObject AddListener(
 			_In_ const IPAddress& _address,
 			_In_ UINT16 _port);
-		template<TProtocol T>
+
+		template<ProtocolType TProtocol>
 		LTReturnObject AddListener(
 			_In_ UINT16 _port);
 	};

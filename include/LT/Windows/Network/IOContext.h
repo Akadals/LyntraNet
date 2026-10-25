@@ -18,8 +18,8 @@ namespace LT
 
 	typedef enum ContextState
 	{
-		CONTEXT_PENDING,
 		CONTEXT_AVAILABLE,
+		CONTEXT_PENDING,
 		CONTEXT_COMPLETED,
 		CONTEXT_PROCESSING
 	} CTXSTATE; //State 수정 필요
@@ -40,7 +40,7 @@ namespace LT
 
 		IContext() :
 			m_overlapped{},
-			m_contextState(CONTEXT_READY),
+			m_contextState(CONTEXT_AVAILABLE),
 			m_ownerListener(nullptr) {}
 		virtual ~IContext() = default;
 	};

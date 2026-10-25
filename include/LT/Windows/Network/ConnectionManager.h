@@ -13,7 +13,7 @@ namespace LT
 	class ConnectionManager
 	{
 	private:
-		LockFreePool<U_PTR<LTConnection>> m_connectionPool;
+		//LockFreePool<U_PTR<LTConnection>> m_connectionPool;
 		VEC<U_PTR<LTConnection>> m_connections;
 	public:
 		ConnectionManager() = default;
@@ -24,21 +24,24 @@ namespace LT
 			return ret.get();
 		}
 
-		/*LTConnection* operator[](LTSOCKET _socket)
+		LTConnection* operator[](LTSOCKET _socket)
 		{
-			return m_connections[_socket] &&
-				m_connections[_socket]->GetSock().IsValid() ?
-				m_connections[_socket].get() : nullptr;
+			for (auto& key : m_connections)
+			{
+				if (key.get()->GetSock() == _socket)
+					return key.get();
+			}
+			return nullptr;
 		}
 		LTConnection* operator[](SOCKET _socket)
 		{
-			for (const auto& [key, connection] : m_connections)
+			for (auto& key : m_connections)
 			{
-				if (key.m_sock == _socket)
+				if (key.get()->GetSock().m_sock == _socket)
 					return m_connections[_socket].get();
 			}
 			return nullptr;
-		}*/
+		}
 	};
 }
 #endif

@@ -63,10 +63,4 @@ namespace LT
 		bool TryDequeue(T* __restrict _dest);
 	};
 }
-
-#include "Detail/ConcurrentQueue/ConcurrentQueueSPSC.inl"
-#include "Detail/ConcurrentQueue/ConcurrentQueueMPSC.inl"
-#include "Detail/ConcurrentQueue/ConcurrentQueueSPMC.inl"
-#include "Detail/ConcurrentQueue/ConcurrentQueueMPMC.inl"
-
 #endif

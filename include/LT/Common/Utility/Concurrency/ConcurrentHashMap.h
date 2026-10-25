@@ -32,9 +32,4 @@ namespace LT
 		void Add(Key _key, Value _value); //юс╫ц
 	};
 }
-
-#include "Detail/ConcurrentHashMap/ConcurrentHashMapSPSC.inl"
-#include "Detail/ConcurrentHashMap/ConcurrentHashMapMPSC.inl"
-#include "Detail/ConcurrentHashMap/ConcurrentHashMapSPMC.inl"
-#include "Detail/ConcurrentHashMap/ConcurrentHashMapMPMC.inl"
 #endif
