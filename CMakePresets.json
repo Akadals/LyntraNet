@@ -17,6 +17,9 @@
       "binaryDir": "${sourceDir}/out/build/windows-release",
       "cacheVariables": {
         "CMAKE_BUILD_TYPE": "Release"
+      },
+      "environment": {
+        "CL": "/O2"
       }
     },
     {

@@ -1,5 +1,5 @@
 add_executable(LyntraNetTests
-    "CoreTest.cpp"
+    "BenchmarkTest.cpp"
  )
 
 target_link_libraries(LyntraNetTests

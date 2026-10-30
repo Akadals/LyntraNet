@@ -63,10 +63,11 @@ namespace LT
 		ACPTMOD		m_acceptMode;
 
 		LTSOCKET	m_acceptSock;
-		CHAR		m_buffer[BUFFER_LENGTH];
 
+		CHAR		m_buffer[BUFFER_LENGTH];
 		IPEndPoint	m_localAddress;		//Accept에서만 사용 PostAccept는 사용하지않음
 		IPEndPoint	m_remoteAddress;	//Accept에서만 사용 PostAccept는 사용하지않음
+		//Union 사용
 
 		AcceptContext() :
 			m_acceptMode(ACCEPT_EX),
