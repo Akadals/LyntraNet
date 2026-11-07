@@ -15,21 +15,20 @@ welcome.
 
 ## Licensing and contributor rights
 
-The Community Edition is distributed under AGPL-3.0-only. By submitting a
-contribution, you retain your copyright unless a separate written agreement
-states otherwise. You must have the right to submit the contribution under
-the project's published contribution terms and the AGPL-3.0 license.
+Development versions expressly distributed under the MIT License remain
+subject to the MIT License accompanying those versions.
 
-LyntraNet is intended to support a separate commercial licensing option.
-However, a contribution is **not automatically available for relicensing**
-under separate commercial terms merely because it is submitted or merged.
+The project may designate future releases as Proprietary Releases. A
+contribution is not automatically available for inclusion in a proprietary
+distribution merely because it is submitted or merged.
 
-Until the project publishes and obtains explicit contributor terms granting
-the necessary rights for dual licensing, contributors should not assume that
-their contributions can be included in proprietary commercial distributions.
-The project may ask for additional written permission before accepting a
-contribution intended for dual-licensed releases.
+Before accepting external contributions for a Proprietary Release, the project
+must obtain sufficient written rights from the contributor, for example through
+a contributor license agreement or another legally appropriate permission.
+Until such terms are published and accepted, contributors should not assume
+that their contributions can be relicensed or included in proprietary
+distributions.
 
-Do not include third-party code unless its license is compatible with the
-intended use and all required notices and obligations can be met. Clearly
-identify any third-party material in your pull request.
+Do not submit code, assets, or documentation unless you have the right to
+contribute them. Clearly identify third-party material and its license in your
+pull request. Third-party license obligations must be reviewed and preserved.
