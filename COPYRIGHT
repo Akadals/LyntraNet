@@ -4,13 +4,17 @@ Copyright (C) 2026 Akadals
 Unless otherwise stated in an individual file or third-party notice, the
 LyntraNet project source code is copyright (C) 2026 Akadals.
 
-The Community Edition is licensed under the GNU Affero General Public License
-version 3.0 only (AGPL-3.0-only). See LICENSE for the complete license text.
+Development versions expressly distributed under the MIT License remain
+governed by the MIT License accompanying those versions. Those permissions
+are not retroactively replaced by a later licensing policy.
 
-A separate commercial license may be offered for code for which the copyright
-holder owns or controls the necessary licensing rights. See
-COMMERCIAL-LICENSING.md for the proposed commercial licensing policy.
+A future release may be expressly designated as a Proprietary Release and
+distributed under a Proprietary License. Commercial use of such a release
+requires the permissions and terms stated in the applicable written license
+and signed Commercial Agreement. See COMMERCIAL-LICENSING.md.
 
-Third-party components and contributions may be subject to separate copyright
-notices and license terms. Their applicable notices and licenses must be
-preserved.
+The project may grant proprietary rights only for code and materials for which
+the copyright holder owns or controls the necessary rights. Third-party
+components and contributions remain subject to their own copyright notices,
+license terms, and any separate written permissions. Their applicable notices
+and obligations must be preserved.
