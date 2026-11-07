@@ -1,130 +1,135 @@
-# LyntraNet Commercial Licensing
+# LyntraNet — Proprietary License & Commercial Agreement
 
-**Document status:** Proposed commercial policy — not a binding license agreement  
+**Document status:** Proposed licensing framework; non-binding until a final agreement is signed  
 **Project:** LyntraNet  
 **Copyright holder:** Akadals
 
-This document describes the intended commercial licensing approach for LyntraNet. It is published for transparency and discussion. It does not itself grant a commercial license, create a payment obligation, or constitute an offer capable of acceptance. Commercial rights are granted only by a separate written agreement signed by the copyright holder and the licensee.
+This document separates two related but distinct instruments:
 
-## 1. Licensing model
+- **Proprietary License:** defines the intellectual-property permissions granted to use the designated LyntraNet software release.
+- **Commercial Agreement:** the negotiated written contract that records the customer, licensed product/version, permitted use, fees or royalties (if any), reporting, support, term, and other commercial conditions.
 
-LyntraNet is intended to use a dual-licensing model:
+Neither this policy page nor a public inquiry creates a license, fee, royalty, or payment obligation. A license for a Proprietary Release becomes effective only through the applicable written license and/or Commercial Agreement signed by the relevant parties.
 
-1. **Community Edition:** GNU Affero General Public License version 3.0 only (AGPL-3.0-only), as provided in the repository's `LICENSE` file.
-2. **Commercial License:** A separate license for customers who need permissions or contractual terms that differ from AGPL-3.0, including certain proprietary distribution and source-code confidentiality needs.
+## 1. Licensing direction
 
-AGPL-3.0 permits commercial use. A person or company may use, modify, provide services with, and distribute the Community Edition when they comply with the applicable AGPL-3.0 requirements. AGPL-3.0 does not require payment of a royalty to Akadals merely because LyntraNet is used commercially or made available as a network service.
+LyntraNet's proposed release policy is:
 
-A separate commercial license is an alternative licensing path. It is not an additional mandatory charge on users who choose and comply with AGPL-3.0.
+### 1.1 Current development versions — MIT License
 
-## 2. Intended use cases
+Development versions expressly distributed under the MIT License remain available under that license.
 
-### 2.1 Community and evaluation use
+- Personal and commercial use is permitted.
+- Modification and redistribution are permitted.
+- Copyright and license notices must be preserved as required by the MIT License.
+- No revenue royalty is charged merely for using an MIT-licensed version.
+- The rights granted for an already distributed MIT version are not retroactively replaced by a later Proprietary License.
 
-Personal learning, research, evaluation, and open-source development may use the Community Edition under AGPL-3.0. Commercial activity is not automatically excluded, but all applicable AGPL-3.0 conditions still apply.
+The exact version, tag, package, or commit published under MIT should be retained as the record of that grant.
 
-### 2.2 Managed online hosting — recommended deployment direction
+### 1.2 Designated future releases — Proprietary License
 
-As LyntraNet's hosting capabilities mature, the project intends to recommend a managed online hosting service for production teams that prefer not to operate networking infrastructure themselves.
+A future release may be expressly designated as a Proprietary Release.
 
-A future managed service may provide some combination of:
+The intended model is source-code confidential distribution, with authorized users receiving the permitted binary artifacts, such as compiled libraries, SDKs, or other deliverables specified in their agreement.
 
-- Server instance provisioning and lifecycle management;
-- Deployment and configuration tools;
-- Monitoring, logs, and operational visibility;
-- Scaling and regional deployment options;
-- Maintenance and managed updates.
+The Proprietary License may define permissions and restrictions covering:
 
-Managed hosting would be offered under its own service terms and pricing. This repository does not currently promise that such a service is available.
+- Internal development, testing, and production use;
+- Integration into identified games, applications, and services;
+- Distribution of authorized runtime components as part of a licensed product;
+- Number of products, projects, studios, seats, servers, or deployment environments;
+- Modification rights, if any;
+- Restrictions on source disclosure, sublicensing, resale, and redistribution;
+- Updates, maintenance, and support, if included.
 
-Using a third-party cloud provider (for example, renting virtual machines, containers, or bare-metal servers) is still self-hosting when the customer operates and manages the LyntraNet deployment. It is not automatically considered use of a LyntraNet-managed hosting service.
+The final scope must be written precisely in the license and agreement. No permission should be assumed from access to a binary or from this proposal alone.
 
-### 2.3 Self-hosted commercial products
+## 2. Commercial Agreement
 
-A team may operate LyntraNet on infrastructure it controls, including infrastructure rented from a cloud provider. It can either:
+The Commercial Agreement is the signed business contract associated with a Proprietary License. It may select one of the following commercial structures, or a negotiated combination:
 
-- Use the Community Edition and comply with AGPL-3.0; or
-- Obtain a separate commercial license if it needs rights or obligations different from AGPL-3.0.
+1. **Fixed license fee:** one-time or recurring fee for the defined license scope.
+2. **Revenue-based royalty:** a percentage of defined revenue attributable to the licensed product or service.
+3. **Hybrid arrangement:** a fixed fee combined with a revenue-based royalty.
+4. **Custom enterprise terms:** individually negotiated terms for larger or specialized deployments.
 
-A commercial royalty applies only when it is expressly included in a signed commercial agreement. There is no automatic royalty for self-hosting under AGPL-3.0.
+No rate, threshold, minimum fee, or payment obligation is currently fixed by this proposal. The actual commercial terms must be expressly stated in a signed agreement.
 
-## 3. Indicative self-hosted commercial royalty schedule
+## 3. Royalty and revenue definition
 
-For planning purposes, the proposed starting point for a revenue-based commercial license is a **marginal, annual tier schedule**:
+If the parties choose a revenue-based royalty, the Commercial Agreement must define the calculation rather than relying on an ambiguous reference to “revenue.”
 
-| Annual net revenue from each licensed LyntraNet product or service | Indicative royalty on the revenue in that band |
-| --- | ---: |
-| First KRW 100,000,000 | 0% |
-| Portion above KRW 100,000,000 up to KRW 500,000,000 | 2% |
-| Portion above KRW 500,000,000 | 5% |
+At minimum, it should specify:
 
-The percentages apply only to the portion of revenue inside each band, not retroactively to all revenue. The schedule is illustrative and subject to negotiation; it becomes binding only if incorporated into a signed commercial agreement.
+- The exact licensed game, application, product, or service;
+- Whether the royalty base is gross revenue or net revenue;
+- Treatment of VAT and other sales taxes, refunds, chargebacks, platform fees, payment processing fees, bundles, subscriptions, advertising, downloadable content, and in-app purchases;
+- Applicable territory, currency, exchange-rate source, and accounting period;
+- Any threshold, tier, cap, minimum guarantee, or royalty-free allowance;
+- Reporting format, reporting frequency, payment deadline, and record-retention period;
+- Reasonable verification or audit procedures, including confidentiality safeguards.
 
-### Example
+Unless expressly agreed otherwise, the royalty base should be limited to revenue attributable to the specific licensed product or service and should not automatically include the licensee's unrelated products or total company revenue.
 
-If a licensed product has annual net revenue of KRW 600,000,000, the indicative calculation would be:
+## 4. Scope, term, and termination
 
-- First KRW 100,000,000 × 0% = KRW 0
-- Next KRW 400,000,000 × 2% = KRW 8,000,000
-- Remaining KRW 100,000,000 × 5% = KRW 5,000,000
-- **Illustrative annual royalty: KRW 13,000,000**
+Each Commercial Agreement should identify:
 
-This example is not an invoice, quote, or payment demand.
+- Licensee legal name and contracting entity;
+- LyntraNet release, version, modules, and deliverables;
+- Licensed products, platforms, territories, and deployment environments;
+- Permitted users, studios, seats, servers, or instances, where relevant;
+- Whether modification, redistribution, or sublicensing is permitted;
+- License term, renewal, suspension, and termination conditions;
+- Fees, royalties, taxes, invoicing, and payment terms;
+- Support, maintenance, updates, and security-fix commitments, if any;
+- Treatment of existing deployed builds and customer data after termination.
 
-## 4. Revenue scope and calculation
+## 5. Technical support and managed hosting are separate services
 
-The intended royalty base is the revenue attributable to the specific game, application, server product, or service identified in the commercial agreement that uses LyntraNet. It is **not** automatically the licensee's total company-wide revenue.
+Software licensing, technical support, implementation assistance, and managed hosting are separate commercial items.
 
-The signed agreement must define the calculation in detail, including:
+Potential services may include:
 
-- The licensed product(s) and service(s);
-- Whether revenue is measured on a gross or net basis;
-- Permitted deductions, such as VAT/sales taxes, refunds, chargebacks, and third-party platform or payment processing fees;
-- Treatment of subscriptions, downloadable content, bundles, advertising, in-game purchases, and service contracts;
-- The accounting period, currency, exchange-rate method, and applicable thresholds;
-- Reporting format, reporting frequency, payment deadline, and record retention;
-- Any minimum fee, cap, threshold, or territory-specific terms.
+- Framework integration and initial setup assistance;
+- Server architecture consulting;
+- Troubleshooting and technical support;
+- Managed server hosting and deployment;
+- Monitoring, logging, and operational assistance;
+- Future AI-assisted operations.
 
-Unless the agreement explicitly says otherwise, revenue from unrelated products, unrelated services, and the licensee's other business activities is outside the royalty base.
+These services are not represented as currently available unless separately announced. Their scope, service levels, pricing, and responsibilities must be described in separate service terms or in clearly separated sections of the Commercial Agreement.
 
-The proposed thresholds are annual and measured separately for each licensed product or service. The signed agreement must specify how related editions, bundles, successor products, and multiple deployments are treated.
+A hosting subscription is a fee for operating infrastructure and services; it is not automatically a royalty on the customer's game revenue. Any combination of hosting fees and software royalties must be explicit and transparent.
 
-## 5. Commercial license scope
+## 6. Existing MIT releases and version boundaries
 
-A commercial agreement should identify:
+A later Proprietary License does not retroactively revoke or rewrite the MIT permissions already granted for earlier MIT releases.
 
-- The LyntraNet version, modules, and components covered;
-- The permitted products, services, platforms, and territories;
-- Whether modification, distribution, sublicensing, or redistribution is permitted;
-- Whether source-code confidentiality is permitted and under what conditions;
-- The license term, renewal, and termination conditions;
-- Applicable fees and any revenue-based royalty;
-- Support, maintenance, update, and security-fix commitments, if any.
+The project should clearly identify:
 
-No trademark, logo, third-party component, or separately licensed dependency right is granted unless the relevant rights holder expressly grants it.
+- The last version, tag, or commit distributed under MIT;
+- The first version designated as a Proprietary Release;
+- Which files and components are included in each release;
+- Any third-party dependencies and their separate license obligations.
 
-## 6. Managed hosting and commercial licensing are separate
+A customer may continue using an earlier MIT version under its applicable MIT terms. A new Proprietary Release requires its own authorization under the new terms.
 
-A future managed hosting subscription would pay for the hosting service described in its service agreement. It should not be confused with a royalty on the licensee's game revenue.
+## 7. Copyright, contributions, and third-party code
 
-If a customer uses a managed hosting service, the hosting fee and any separate software license obligations must be stated clearly in the applicable agreements. There should be no double charge for the same item unless the contract expressly and transparently provides for it.
+Akadals may offer a Proprietary License only for code and materials for which it owns or controls the necessary rights.
 
-## 7. Existing AGPL rights
+External contributions are not automatically eligible for inclusion in a proprietary distribution. Before accepting contributions intended for future Proprietary Releases, the project must establish appropriate contributor terms, such as a contributor license agreement or another legally sufficient written permission.
 
-A separate commercial agreement does not retroactively revoke permissions already granted to recipients under AGPL-3.0. Recipients who received a copy under AGPL-3.0 retain the rights granted by that license, subject to its terms.
+Third-party code, assets, and dependencies remain subject to their own licenses. Their notices and obligations must be reviewed and preserved. No third-party rights are transferred by this policy.
 
-## 8. Copyright, ownership, and contributions
+## 8. Commercial inquiries
 
-The copyright holder may offer code under a separate commercial license only to the extent they own the necessary rights or have obtained sufficient licensing authority.
+For an initial inquiry, open a GitHub issue titled **Commercial Licensing Inquiry**. Do not post confidential business, financial, security, or personal information in a public issue. Detailed negotiation and execution should take place through an appropriate private channel.
 
-Third-party contributions remain subject to their respective copyright and license terms. Merging a contribution into the repository does not, by itself, give the project permission to relicense that contribution under proprietary commercial terms.
+## 9. Legal status
 
-Before accepting external contributions for dual licensing, the project should establish clear contributor terms and obtain the rights needed for the intended licensing model. Until those terms are published, contributors should not assume their contributions will be relicensed commercially.
+This document is a proposed policy framework, not legal advice, a binding offer, or a complete Proprietary License or Commercial Agreement. No license, royalty, or payment obligation is created until the applicable final documents are executed by the relevant parties.
 
-## 9. Commercial inquiries
-
-For an initial inquiry, open a GitHub issue titled **Commercial Licensing Inquiry**. Do not post confidential business, financial, security, or personal information in a public issue. Negotiation and execution of any agreement should take place through an appropriate private channel.
-
-## 10. Legal status
-
-This page is a statement of proposed policy, not legal advice and not a substitute for a negotiated contract. The royalty schedule and all commercial terms must be reviewed and expressly accepted in a signed agreement. The final agreement should be reviewed by qualified legal counsel in the relevant jurisdiction.
+Before a Proprietary Release is distributed, the final license, Commercial Agreement template, contributor terms, and third-party dependency policy should be reviewed by qualified legal counsel in the relevant jurisdiction.
