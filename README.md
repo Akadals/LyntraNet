@@ -556,45 +556,34 @@ For substantial changes, please review the project's architecture and design doc
 
 # Licensing
 
-LyntraNet is intended to be distributed under a **dual-licensing model**.
+LyntraNet's proposed licensing direction distinguishes the license grant from the commercial contract.
 
-## Community Edition — GNU AGPL v3.0
+## Current development versions — MIT License
 
-The Community Edition is licensed under the **GNU Affero General Public License v3.0 only (AGPL-3.0-only)**. See [LICENSE](LICENSE) for the complete license text.
+Development versions expressly published under the MIT License remain under the MIT License:
 
-- Free to use, study, modify, and redistribute under the AGPL-3.0 terms.
-- Commercial use is permitted when the applicable AGPL-3.0 requirements are followed.
-- If you modify the program and make it available for users to interact with remotely over a network, AGPL-3.0 may require you to offer those users the corresponding source code of your modified version.
-- AGPL-3.0 does **not** impose a revenue royalty merely because you use LyntraNet or provide a network service.
+- Personal and commercial use is permitted.
+- Modification and redistribution are permitted subject to the MIT notice requirements.
+- No revenue royalty is charged for use of an MIT-licensed version.
+- Rights already granted for those versions are not retroactively changed.
 
-## Commercial License — Proprietary and Alternative Terms
+## Future designated releases — Proprietary License
 
-A separate commercial license may be available from the copyright holder for organizations that need permissions or terms different from those provided by AGPL-3.0, such as certain proprietary distribution or source-code confidentiality requirements.
+A future release may be designated as a Proprietary Release. The intended distribution model keeps the source code confidential and provides authorized binary deliverables, such as compiled libraries or SDKs, under a written license.
 
-A commercial license is effective only under a separate written agreement signed by the relevant parties. The agreement may include a revenue-based royalty, fixed fees, support, updates, and other negotiated terms. **No commercial royalty rate or payment obligation is created by this README or by the commercial policy page alone.**
+Use of a Proprietary Release requires the permissions and scope stated in the applicable Proprietary License and signed Commercial Agreement. The agreement may define internal use, product integration, runtime redistribution, deployment limits, modification rights, and restrictions.
 
-See [COMMERCIAL-LICENSING.md](COMMERCIAL-LICENSING.md) for the proposed commercial licensing framework and indicative royalty schedule.
+## Commercial Agreement
 
-## Hosting
+The Commercial Agreement is the separate signed contract that records the commercial terms. Depending on the project and customer, it may use:
 
-For production deployments, LyntraNet plans to recommend a managed online hosting option as the service becomes available. A managed hosting service can reduce the operational burden of provisioning, monitoring, scaling, and maintaining game servers.
+- A fixed license fee;
+- A revenue-based royalty;
+- A combination of fixed fees and royalties; or
+- Individually negotiated enterprise terms.
 
-Self-hosting on infrastructure operated by you or your cloud provider remains possible. The licensing terms depend on whether you use the AGPL Community Edition in compliance with its terms or enter into a separate commercial license. Simply renting a cloud VM or container does not, by itself, turn self-hosting into LyntraNet's managed hosting service.
+No price, royalty rate, threshold, or payment obligation is currently fixed by this proposal.
 
-## Copyright and Contributions
+Technical support, implementation assistance, and future managed hosting are separate services and must be priced and described separately from software license rights.
 
-Unless otherwise stated in a file or third-party notice, LyntraNet is © 2026 Akadals. The copyright holder may offer code for which they hold the necessary rights under both AGPL-3.0 and a separate commercial license.
-
-Third-party contributions remain subject to their contributors' rights. A contribution cannot automatically be relicensed under a separate commercial license unless the project has obtained the necessary rights from its contributor. See [COPYRIGHT](COPYRIGHT) and the contribution guidance before submitting substantial code.
-
-**Important:** AGPL-3.0 permits commercial use. The separate commercial license is an alternative licensing path for different requirements; it is not an automatic fee imposed on AGPL users.
-
----
-
-<div align="center">
-
-## LyntraNet
-
-**Build the network. Build the game.**
-
-</div>
+See [COMMERCIAL-LICENSING.md](COMMERCIAL-LICENSING.md) for the proposed framework. This policy is non-binding until final documents are approved and signed.
