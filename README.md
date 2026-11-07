@@ -554,11 +554,40 @@ For substantial changes, please review the project's architecture and design doc
 
 ---
 
-# License
+# Licensing
 
-LyntraNet is currently under development.
+LyntraNet is intended to be distributed under a **dual-licensing model**.
 
-License information will be finalized before the first stable release.
+## Community Edition — GNU AGPL v3.0
+
+The Community Edition is licensed under the **GNU Affero General Public License v3.0 only (AGPL-3.0-only)**. See [LICENSE](LICENSE) for the complete license text.
+
+- Free to use, study, modify, and redistribute under the AGPL-3.0 terms.
+- Commercial use is permitted when the applicable AGPL-3.0 requirements are followed.
+- If you modify the program and make it available for users to interact with remotely over a network, AGPL-3.0 may require you to offer those users the corresponding source code of your modified version.
+- AGPL-3.0 does **not** impose a revenue royalty merely because you use LyntraNet or provide a network service.
+
+## Commercial License — Proprietary and Alternative Terms
+
+A separate commercial license may be available from the copyright holder for organizations that need permissions or terms different from those provided by AGPL-3.0, such as certain proprietary distribution or source-code confidentiality requirements.
+
+A commercial license is effective only under a separate written agreement signed by the relevant parties. The agreement may include a revenue-based royalty, fixed fees, support, updates, and other negotiated terms. **No commercial royalty rate or payment obligation is created by this README or by the commercial policy page alone.**
+
+See [COMMERCIAL-LICENSING.md](COMMERCIAL-LICENSING.md) for the proposed commercial licensing framework and indicative royalty schedule.
+
+## Hosting
+
+For production deployments, LyntraNet plans to recommend a managed online hosting option as the service becomes available. A managed hosting service can reduce the operational burden of provisioning, monitoring, scaling, and maintaining game servers.
+
+Self-hosting on infrastructure operated by you or your cloud provider remains possible. The licensing terms depend on whether you use the AGPL Community Edition in compliance with its terms or enter into a separate commercial license. Simply renting a cloud VM or container does not, by itself, turn self-hosting into LyntraNet's managed hosting service.
+
+## Copyright and Contributions
+
+Unless otherwise stated in a file or third-party notice, LyntraNet is © 2026 Akadals. The copyright holder may offer code for which they hold the necessary rights under both AGPL-3.0 and a separate commercial license.
+
+Third-party contributions remain subject to their contributors' rights. A contribution cannot automatically be relicensed under a separate commercial license unless the project has obtained the necessary rights from its contributor. See [COPYRIGHT](COPYRIGHT) and the contribution guidance before submitting substantial code.
+
+**Important:** AGPL-3.0 permits commercial use. The separate commercial license is an alternative licensing path for different requirements; it is not an automatic fee imposed on AGPL users.
 
 ---
 
