@@ -1,4 +1,4 @@
-# LyntraNet (LT Net) - Cross-Platform Game Networking Framework
+# Latency Native Transmission Network (Lyntra Net) - Cross-Platform Game Networking Framework
 
 > **A cross-platform C++ networking framework for high-performance multiplayer games.**
 
