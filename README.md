@@ -1,8 +1,8 @@
-# LyntraNet - Cross-Platform Game Networking Framework
+# LT Net (LT Net) - Cross-Platform Game Networking Framework
 
 > **A cross-platform C++ networking framework for high-performance multiplayer games.**
 
-LyntraNet is a performance-oriented, developer-friendly C++ networking framework designed to make multiplayer networking easier to build, optimize, and deploy.
+LyntraNet (shortened to **LT Net**) is a performance-oriented, developer-friendly C++ networking framework designed to make multiplayer networking easier to build, optimize, and deploy.
 
 It aims to provide low-level networking infrastructure, reusable framework components, configurable server presets, and high-level APIs for building multiplayer games across different platforms and game engines.
 
