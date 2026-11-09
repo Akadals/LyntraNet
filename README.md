@@ -14,6 +14,18 @@ It aims to provide low-level networking infrastructure, reusable framework compo
 
 ---
 
+## Name Origin
+
+**LyntraNet** stands for **Latency Native Transmission Network**.
+
+The name reflects the project's focus on treating latency as a core design consideration, while building on native, platform-aware networking capabilities to deliver efficient and reliable communication for multiplayer games.
+
+**LyntraNet**은 **Latency Native Transmission Network**의 약자입니다.
+
+네트워크 지연 시간을 핵심 설계 요소로 고려하고, 각 플랫폼의 네이티브 네트워킹 기능을 활용해 멀티플레이 게임에 효율적이고 안정적인 통신 기반을 제공한다는 프로젝트의 방향성을 담고 있습니다.
+
+---
+
 ## Overview
 
 Building multiplayer games requires a large amount of networking infrastructure.
