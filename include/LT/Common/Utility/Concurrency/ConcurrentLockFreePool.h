@@ -90,4 +90,4 @@ namespace LT
     };
 }
 
-#endif
+#endif // __INCL_LYNTRA_LOCK_FREE_POOL_H__
