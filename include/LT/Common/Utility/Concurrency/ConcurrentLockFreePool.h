@@ -6,8 +6,9 @@
 #include <cstdint>
 #include <cstddef>
 
-namespace LT
-{
+#include <LT/Common/Utility/Concurrency/ConcurrentPolicy.h>
+
+namespace LT {
     enum class PoolObjectState : uint8_t {
         FREE,
         IN_USE
@@ -49,45 +50,66 @@ namespace LT
         void Reset();
     };
 
-    template<typename Derived>
+    template<typename Derived, typename T>
     class LockFreePoolContainer : public CRTPContainer<Derived> {
+    protected:
+        size_t m_capacity;
     public:
-        size_t Size() const noexcept {
-            return DerivedImpl().SizeImpl();
-        }
+        size_t Size() const noexcept                { return this->DerivedImpl().SizeImpl(); }
+        size_t Capacity() const noexcept            { return this->m_capacity; }
+        T* Acquire() noexcept                       { return this->DerivedImpl().AcquireImpl(); }
+        PoolLease<T> AcquireLeased() noexcept       { return this->DerivedImpl().AcquireLeasedImpl(); }
+        void Release(T* _val) noexcept              { this->DerivedImpl().ReleaseImpl(_val); }
+        void Release(PoolLease<T> _val) noexcept    { this->DerivedImpl().ReleaseImpl(_val); }
     };
 
-    template<typename T, size_t Size = 0>
+    template<typename ConcurrentPolicy, typename T, size_t Size = 0>
     class LockFreePool;
 
     template<typename T, size_t Size>
-    class LockFreePool : public LockFreePoolContainer<LockFreePool<T, Size>>
+    class LockFreePool<SPSC, T, Size> : public LockFreePoolContainer<LockFreePool<SPSC, T, Size>, T>
     {
-        static_assert(Size > 0);
-        static_assert(Size <= UINT32_MAX);
-
+        static_assert(Size > 0|| Size <= UINT32_MAX);
+        using Container = LockFreePoolContainer<
+            LockFreePool<SPSC, T, Size>, T>;
+        friend Container;
     private:
         std::unique_ptr<Node<T>[]> m_nodes;
         std::atomic<uint64_t> m_head;
-
+    private:
+        size_t SizeImpl() const noexcept { return Size; }
+        T* AcquireImpl() noexcept;
+        PoolLease<T> AcquireLeasedImpl() noexcept;
+        void ReleaseImpl(T* _val) noexcept;
+        void ReleaseImpl(PoolLease<T> _val) noexcept;
     public:
         LockFreePool();
-        SizeImpl() const noexcept { return Size; }
     };
 
     template<typename T>
-    class LockFreePool<T, 0>
+    class LockFreePool<SPSC, T, 0> : public LockFreePoolContainer<LockFreePool<SPSC, T, 0>, T>
     {
+        using Container = LockFreePoolContainer<
+            LockFreePool<SPSC, T, 0>, T>;
+        friend Container;
     private:
         size_t m_size;
-        size_t m_capacity;
-
         std::unique_ptr<Node<T>[]> m_nodes;
         std::atomic<uint64_t> m_head;
-
+    private:
+        size_t SizeImpl() const noexcept { return m_size; }
+        T* AcquireImpl() noexcept;
+        PoolLease<T> AcquireLeasedImpl() noexcept;
+        void ReleaseImpl(T* _val) noexcept;
+        void ReleaseImpl(PoolLease<T> _val) noexcept;
     public:
         explicit LockFreePool(size_t _size);
     };
 }
 
+#include <LT/Common/Utility/Concurrency/Implement/ConcurrentLockFreePool/ConcurrentLockFreePoolSPSC.inl>
+#include <LT/Common/Utility/Concurrency/Implement/ConcurrentLockFreePool/ConcurrentLockFreePoolMPSC.inl>
+#include <LT/Common/Utility/Concurrency/Implement/ConcurrentLockFreePool/ConcurrentLockFreePoolSPMC.inl>
+#include <LT/Common/Utility/Concurrency/Implement/ConcurrentLockFreePool/ConcurrentLockFreePoolMPMC.inl>
+#include <LT/Common/Utility/Concurrency/Implement/ConcurrentLockFreePool/ConcurrentLockFreePoolUnsafeSPSC.inl>
 #endif // __INCL_LYNTRA_LOCK_FREE_POOL_H__

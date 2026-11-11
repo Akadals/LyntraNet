@@ -71,10 +71,6 @@ namespace LT {
 		return {};
 	}
 
-	void LyntraServer::operator<<(const IListener& _listener) {
-		m_listeners.emplace_back(std::move(_listener));
-	}
-
 
 	template LTReturnObject LyntraServer::AddListener<ProtocolType::TCP>(const IPEndPoint& _endpoint);
 	template LTReturnObject LyntraServer::AddListener<ProtocolType::UDP>(const IPEndPoint& _endpoint);

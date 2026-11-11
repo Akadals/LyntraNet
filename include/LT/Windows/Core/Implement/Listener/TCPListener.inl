@@ -190,7 +190,7 @@ namespace LT {
         if (CICP(
             (HANDLE)remoteCtx->m_acceptSock.m_sock,
             m_backend->Handle(),
-            (ULONG_PTR)remoteCtx.get(),
+            (ULONG_PTR)remoteCtx,
             0) == INVALID_HANDLE_VALUE) {
             m_acceptContextPool.Release(std::move(remoteCtx));
             remoteCtx = nullptr;

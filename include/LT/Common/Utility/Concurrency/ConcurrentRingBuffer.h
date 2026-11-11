@@ -10,13 +10,13 @@
 
 namespace LT {
 	template <typename Derived>
-	class RingBufferContainer : public CRTPContainer {
+	class RingBufferContainer : public CRTPContainer<Derived> {
 	public:
 		size_t Size() const noexcept {
-			return DerivedImpl().SizeImpl();
+			return this->DerivedImpl().SizeImpl();
 		}
 		size_t Capacity() const noexcept {
-			return DerivedImpl().CapacityImpl();
+			return this->DerivedImpl().CapacityImpl();
 		}
 	};
 
@@ -261,6 +261,7 @@ namespace LT {
 		);
 	};
 }
+
 #include <LT/Common/Utility/Concurrency/Implement/ConcurrentRingBuffer/ConcurrentRingBufferSPSC.inl>
 #include <LT/Common/Utility/Concurrency/Implement/ConcurrentRingBuffer/ConcurrentRingBufferMPSC.inl>
 #include <LT/Common/Utility/Concurrency/Implement/ConcurrentRingBuffer/ConcurrentRingBufferSPMC.inl>

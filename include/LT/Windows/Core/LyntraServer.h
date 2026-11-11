@@ -62,8 +62,6 @@ namespace LT
 		template<ProtocolType TProtocol>
 		LTReturnObject AddListener(
 			_In_ UINT16 _port);
-
-		void operator<<(const IListener& _listener);
 	};
 }
 

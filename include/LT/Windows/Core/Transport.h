@@ -28,8 +28,8 @@ namespace LT
 		virtual DWORD StartRecv() = 0;
 		virtual DWORD StartSend() = 0;
 
-		char* RecvPtr() {}
-		char* SendPtr() {}
+		char* RecvPtr();
+		char* SendPtr();
 	};
 
 	template<ProtocolType TProtocol>

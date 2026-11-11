@@ -81,15 +81,15 @@ namespace LT
 	private:
 		static constexpr int ACPT_CTX_SIZE = 50;
 	private:
-		LPFN_ACCEPTEX					m_lpAcceptEx;
-		LPFN_GETACCEPTEXSOCKADDRS		m_lpGetAcceptExSockaddrs;
-		UINT							m_backlog;
+		LPFN_ACCEPTEX								m_lpAcceptEx;
+		LPFN_GETACCEPTEXSOCKADDRS					m_lpGetAcceptExSockaddrs;
+		UINT										m_backlog;
 
-		UINT							m_acceptContextSize;
-		LockFreePool<U_PTR<ACPTCTX>>	m_acceptContextPool;
-		VEC<U_PTR<ACPTCTX>>				m_pendingAcceptContexts;
+		UINT										m_acceptContextSize;
+		LockFreePool<SPSC, ACPTCTX, ACPT_CTX_SIZE>	m_acceptContextPool;
+		VEC<U_PTR<ACPTCTX>>							m_pendingAcceptContexts;
 
-		BOOL							m_isUseTLS;
+		BOOL										m_isUseTLS;
 	public:
 		explicit Listener<ProtocolType::TCP>(
 			_In_		const IPEndPoint&	_endpoint,
@@ -98,7 +98,6 @@ namespace LT
 			IListener				(ProtocolType::TCP, _endpoint),
 			m_backlog				(_backlog),
 			m_acceptContextSize		(_acceptContextSize),
-			m_acceptContextPool		(_acceptContextSize),
 			m_pendingAcceptContexts	(_acceptContextSize),
 			m_lpAcceptEx			(nullptr),
 			m_lpGetAcceptExSockaddrs(nullptr),
@@ -163,4 +162,9 @@ namespace LT
 		LTReturnObject Close()						override { return{}; }
 	};
 }
+
+#include <LT/Windows/Core/Implement/Listener/TCPListener.inl>
+#include <LT/Windows/Core/Implement/Listener/UDPListener.inl>
+#include <LT/Windows/Core/Implement/Listener/QUICListener.inl>
+#include <LT/Windows/Core/Implement/Listener/KCPListener.inl>
 #endif //__INCL_LYNTRA_LISTENER_H__
