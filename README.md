@@ -99,7 +99,7 @@ Clients are untrusted. Game-critical state, validation, and authoritative simula
 LyntraNet's target architecture is organized into six layers. The first layers form the networking foundation; the later layers expand the project into a complete developer and operations platform.
 
 ```mermaid
-flowchart TB
+flowchart LR
     L6["06 · Cloud Platform & Management<br/>Dashboard · Hosting · Licensing · AI-assisted LiveOps"]
     L5["05 · Game Engine SDK<br/>Unity · Unreal Engine · Godot · Native C++"]
     L4["04 · Game Server Presets<br/>MMORPG · MMOLITE · FPS · PVP · PVE · CO-OP"]
