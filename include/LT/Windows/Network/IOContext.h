@@ -50,21 +50,11 @@ namespace LT
 
 	typedef struct IOContext
 		IOCTX, * PIOCTX;
-
 	struct alignas(64) AcceptContext : public IContext
 	{
-	private:
-		static constexpr DWORD ADDRESS_LENGTH =
-			sizeof(SOCKADDR_STORAGE) + 16;
-
-		static constexpr DWORD BUFFER_LENGTH =
-			ADDRESS_LENGTH * 2;
-	public:
 		ACPTMOD		m_acceptMode;
 
 		LTSOCKET	m_acceptSock;
-
-		CHAR		m_buffer[BUFFER_LENGTH];
 		IPEndPoint	m_localAddress;		//Accept에서만 사용 PostAccept는 사용하지않음
 		IPEndPoint	m_remoteAddress;	//Accept에서만 사용 PostAccept는 사용하지않음
 		//Union 사용

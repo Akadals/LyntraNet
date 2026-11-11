@@ -9,6 +9,17 @@
 #include <algorithm>
 
 namespace LT {
+	template <typename Derived>
+	class RingBufferContainer : public CRTPContainer {
+	public:
+		size_t Size() const noexcept {
+			return DerivedImpl().SizeImpl();
+		}
+		size_t Capacity() const noexcept {
+			return DerivedImpl().CapacityImpl();
+		}
+	};
+
 	template<ConcurrentPolicy>
 	class RingBuffer;
 
@@ -55,8 +66,8 @@ namespace LT {
 
 		void Clear();
 
-		size_t Size() const noexcept;
-		size_t Capacity() const { return m_capacity; }
+		size_t SizeImpl() const noexcept;
+		size_t CapacityImpl() const { return m_capacity; }
 	};
 
 	template<>

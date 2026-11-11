@@ -9,6 +9,7 @@
 #include <atomic>
 #include <sal.h>
 
+#include <LT/Windows/DefineType.h>
 #include <LT/Common/IO/IBackendType.h>
 #include <LT/Windows/Network/ConnectionManager.h>
 #include <LT/Windows/Network/IOContext.h>
@@ -107,12 +108,12 @@ namespace LT
 		LTReturnObject Listen()	override;
 		LTReturnObject Close()	override;
 
-		LTReturnValue<BOOL>		PostAccept();
-		LTReturnObject			ReserveAccept();
+		LTReturnValue<BOOL>		PostAccept(ITransport* _transport);
+		LTReturnObject			ReserveAccept(ITransport* _transport);
 		LTReturnValue<LTSOCKET> Accept();
 
 		void GetAcceptExSockAddrs(
-			_In_ PACPTCTX		_acptCtx,
+			_In_  ITransport*	_transport,
 			_Out_ IPEndPoint*	_localAdrPtr,
 			_Out_ IPEndPoint*	_remoteAdrPtr);
 

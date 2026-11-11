@@ -55,10 +55,10 @@ namespace LT {
 			}
 
 			listener->GetAcceptExSockAddrs(
-				_acptCtx,
+				transport.get(),
 				transport->GetLocalAddress(),
 				transport->GetRemoteAddress());
-			listener->PostAccept();
+			listener->PostAccept(transport.get());
 			break;
 		case WSA_ACCEPT:
 			transport->GetLocalAddress()->Set(

@@ -1,8 +1,8 @@
 #ifndef __INCL_LYNTRA_LYNTRANET_CONNECTION_H__
 #define __INCL_LYNTRA_LYNTRANET_CONNECTION_H__
 
-#include <LT/Utility.h>
 #include <LT/Windows/Core/Transport.h>
+#include <LT/windows/DefineType.h>
 
 namespace LT
 {

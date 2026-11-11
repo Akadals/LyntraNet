@@ -9,8 +9,10 @@ using namespace LT;
 int main()
 {
 	LyntraServer server(IOBackendType::IOCP);
-	
-	server.AddListener<ProtocolType::TCP>(IPAddress::AnyIPv4(), 9000);
+	Listener<ProtocolType::TCP> listener(IPEndPoint(IPAddress::AnyIPv4(), 8000));
+
+	server << listener;
+
 
 	server.Start();
 	std::cout << "Successfully started\n";

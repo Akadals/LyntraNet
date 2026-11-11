@@ -253,7 +253,7 @@ namespace LT {
 		m_head.value.store(t, std::memory_order_relaxed);
 	}
 
-	size_t RingBuffer<SPSC>::Size() const noexcept {
+	size_t RingBuffer<SPSC>::SizeImpl() const noexcept {
 		const size_t t = m_tail.value.load(std::memory_order_relaxed);
 		const size_t h = m_head.value.load(std::memory_order_relaxed);
 		return t - h;

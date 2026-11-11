@@ -55,4 +55,16 @@ struct CacheLineCached
     alignas(CACHE_SIZE) size_t value = 0;
     size_t cachedValue = 0;
 };
+
+template<typename Derived>
+class CRTPContainer {
+protected:
+    Derived& DerivedImpl() noexcept {
+        return static_cast<Derived&>(*this);
+    }
+    const Derived& DerivedImpl() const noexcept {
+        return static_cast<const Derived&>(*this);
+    }
+};
+
 #endif

@@ -24,6 +24,7 @@
 
 namespace LT
 {
+
 	class ReturnObject
 	{
 	protected:
@@ -32,6 +33,7 @@ namespace LT
 		std::string m_message;
 	public:
 		ReturnObject() = default;
+		const bool IsSuccess() const noexcept { return m_statusCode == 200; } //юс╫ц
 		const int16_t StatusCode() const noexcept { return m_statusCode; }
 		const std::string_view Message() const { return m_message; }
 	};

@@ -1,7 +1,7 @@
 #ifndef __INCL_LYNTRA_CONNECTION_MANAGER_H__
 #define __INCL_LYNTRA_CONNECTION_MANAGER_H__
 
-#include <LT/Utility.h>
+#include <LT/windows/DefineType.h>
 #include <LT/Windows/Network/LTConnection.h>
 
 

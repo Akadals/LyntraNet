@@ -85,7 +85,7 @@ namespace LT {
         return {};
     }
 
-    LTReturnValue<BOOL> Listener<ProtocolType::TCP>::PostAccept() {
+    LTReturnValue<BOOL> Listener<ProtocolType::TCP>::PostAccept(ITransport* _transport) {
         if (m_state != LSTNR_LISTENING)
             return {
                 RETOBJ_RSN_LISTEN,
@@ -118,7 +118,7 @@ namespace LT {
         if (!m_lpAcceptEx(
             m_listenSock.m_sock,
             remoteCtx->m_acceptSock.m_sock,
-            remoteCtx->m_buffer,
+            _transport->RecvPtr(),
             0,
             dwLen,
             dwLen,
@@ -155,10 +155,10 @@ namespace LT {
         return { TRUE };
     }
 
-    LTReturnObject Listener<ProtocolType::TCP>::ReserveAccept()
+    LTReturnObject Listener<ProtocolType::TCP>::ReserveAccept(ITransport* _transport)
     {
         for (int i = 0; i < m_acceptContextSize; i++)
-            PostAccept();
+            PostAccept(_transport);
         return {};
     }
 
@@ -211,7 +211,7 @@ namespace LT {
     }
 
     void Listener<ProtocolType::TCP>::GetAcceptExSockAddrs(
-        PACPTCTX _acptCtx,
+        ITransport* _transport,
         IPEndPoint* _localAdrPtr,
         IPEndPoint* _remoteAdrPtr) {
         PSOCKADDR localAdr = nullptr;
@@ -222,7 +222,7 @@ namespace LT {
         DWORD dwLen = sizeof(SOCKADDR_STORAGE) + 16;
 
         m_lpGetAcceptExSockaddrs(
-            _acptCtx->m_buffer,
+            _transport->RecvPtr(), //수정필요
             0,
             dwLen,
             dwLen,

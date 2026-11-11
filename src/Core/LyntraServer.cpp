@@ -35,17 +35,20 @@ namespace LT {
 	}
 
 	LTReturnObject LyntraServer::Start() {
+
 		auto ret = m_backend->Startup();
 		if (ret.StatusCode() != 0)
 			return ret;
 		for (auto& listener : m_listeners) {
 			switch (listener->Protocol()) {
 			case ProtocolType::TCP: {
+				//임시 Transport
+				Transport<ProtocolType::TCP> transport;
 				auto tcpListner = dynamic_cast<Listener<ProtocolType::TCP>*>(listener.get());
 				tcpListner->SetBackend(m_backend.get());
 				std::cout << tcpListner->Bind().Message(); //출력방식 변경 필요
 				std::cout << tcpListner->Listen().Message();
-				std::cout << tcpListner->ReserveAccept().Message();
+				std::cout << tcpListner->ReserveAccept(&transport).Message(); //임시
 				break;
 			}
 			case ProtocolType::UDP: {
@@ -66,6 +69,10 @@ namespace LT {
 		}
 		std::cout << "Listener Working\n";
 		return {};
+	}
+
+	void LyntraServer::operator<<(const IListener& _listener) {
+		m_listeners.emplace_back(std::move(_listener));
 	}
 
 
