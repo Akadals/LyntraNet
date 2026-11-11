@@ -99,14 +99,15 @@ Clients are untrusted. Game-critical state, validation, and authoritative simula
 LyntraNet's target architecture is organized into six layers. The first layers form the networking foundation; the later layers expand the project into a complete developer and operations platform.
 
 ```mermaid
-flowchart LR
-    L6["06 · Cloud Platform & Management<br/>Dashboard · Hosting · Licensing · AI-assisted LiveOps"]
-    L5["05 · Game Engine SDK<br/>Unity · Unreal Engine · Godot · Native C++"]
-    L4["04 · Game Server Presets<br/>MMORPG · MMOLITE · FPS · PVP · PVE · CO-OP"]
-    L3["03 · Network Framework<br/>Sessions · RPC · Routing · Rooms · Replication"]
-    L2["02 · Transport & Security<br/>TCP · UDP · KCP · RUDP · QUIC · TLS"]
-    L1["01 · Network Core<br/>Sockets · Async I/O · Buffers · Memory · Concurrency"]
-    OS["Operating System I/O<br/>Windows IOCP · Linux epoll"]
+%%{init: {"flowchart": {"nodeSpacing": 28, "rankSpacing": 42, "padding": 22}}}%%
+flowchart TB
+    L6["&emsp;&emsp;06 · Cloud Platform & Management&emsp;&emsp;<br/>&emsp;&emsp;Dashboard · Hosting · Licensing · AI-assisted LiveOps&emsp;&emsp;"]
+    L5["&emsp;&emsp;05 · Game Engine SDK&emsp;&emsp;<br/>&emsp;&emsp;Unity · Unreal Engine · Godot · Native C++&emsp;&emsp;"]
+    L4["&emsp;&emsp;04 · Game Server Presets&emsp;&emsp;<br/>&emsp;&emsp;MMORPG · MMOLITE · FPS · PVP · PVE · CO-OP&emsp;&emsp;"]
+    L3["&emsp;&emsp;03 · Network Framework&emsp;&emsp;<br/>&emsp;&emsp;Sessions · RPC · Routing · Rooms · Replication&emsp;&emsp;"]
+    L2["&emsp;&emsp;02 · Transport & Security&emsp;&emsp;<br/>&emsp;&emsp;TCP · UDP · KCP · RUDP · QUIC · TLS&emsp;&emsp;"]
+    L1["&emsp;&emsp;01 · Network Core&emsp;&emsp;<br/>&emsp;&emsp;Sockets · Async I/O · Buffers · Memory · Concurrency&emsp;&emsp;"]
+    OS["&emsp;&emsp;Operating System I/O&emsp;&emsp;<br/>&emsp;&emsp;Windows IOCP · Linux epoll&emsp;&emsp;"]
 
     L6 --> L5 --> L4 --> L3 --> L2 --> L1 --> OS
 
