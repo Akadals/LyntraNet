@@ -98,29 +98,24 @@ Clients are untrusted. Game-critical state, validation, and authoritative simula
 
 LyntraNet's target architecture is organized into six layers. The first layers form the networking foundation; the later layers expand the project into a complete developer and operations platform.
 
-```text
-┌──────────────────────────────────────────────────────────────┐
-│  06  Cloud Platform & Management                              │
-│      Dashboard · Hosting · Licensing · AI-assisted LiveOps    │
-├──────────────────────────────────────────────────────────────┤
-│  05  Game Engine SDK                                           │
-│      Unity · Unreal Engine · Godot · Native C++                │
-├──────────────────────────────────────────────────────────────┤
-│  04  Game Server Presets                                       │
-│      MMORPG · MMOLITE · FPS · PVP · PVE · CO-OP                │
-├──────────────────────────────────────────────────────────────┤
-│  03  Network Framework                                         │
-│      Sessions · RPC · Routing · Rooms · Replication            │
-├──────────────────────────────────────────────────────────────┤
-│  02  Transport & Security                                      │
-│      TCP · UDP · KCP · RUDP · QUIC · TLS                        │
-├──────────────────────────────────────────────────────────────┤
-│  01  Network Core                                              │
-│      Sockets · Async I/O · Buffers · Memory · Concurrency      │
-└──────────────────────────────────────────────────────────────┘
-                              │
-                    Operating System I/O
-                  Windows IOCP · Linux epoll
+```mermaid
+flowchart TB
+    L6["06 · Cloud Platform & Management<br/>Dashboard · Hosting · Licensing · AI-assisted LiveOps"]
+    L5["05 · Game Engine SDK<br/>Unity · Unreal Engine · Godot · Native C++"]
+    L4["04 · Game Server Presets<br/>MMORPG · MMOLITE · FPS · PVP · PVE · CO-OP"]
+    L3["03 · Network Framework<br/>Sessions · RPC · Routing · Rooms · Replication"]
+    L2["02 · Transport & Security<br/>TCP · UDP · KCP · RUDP · QUIC · TLS"]
+    L1["01 · Network Core<br/>Sockets · Async I/O · Buffers · Memory · Concurrency"]
+    OS["Operating System I/O<br/>Windows IOCP · Linux epoll"]
+
+    L6 --> L5 --> L4 --> L3 --> L2 --> L1 --> OS
+
+    classDef platform fill:#263449,stroke:#6f91bd,color:#ffffff,stroke-width:1.5px
+    classDef framework fill:#243b35,stroke:#70aa91,color:#ffffff,stroke-width:1.5px
+    classDef core fill:#493824,stroke:#c49a62,color:#ffffff,stroke-width:1.5px
+    class L6,L5 platform
+    class L4,L3 framework
+    class L2,L1,OS core
 ```
 
 ### 01 — Network Core
