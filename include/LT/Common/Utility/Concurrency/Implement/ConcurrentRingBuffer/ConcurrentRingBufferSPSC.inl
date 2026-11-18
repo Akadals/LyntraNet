@@ -1,21 +1,19 @@
 namespace LT {
-	RingBuffer<SPSC>::RingBuffer<SPSC>(size_t _size) : 
-		m_capacity(1) {
+	RingBuffer<SPSC>::RingBuffer(size_t _size) {
 		if (_size == 0) throw;
 
-		while (m_capacity < _size)
-			m_capacity <<= 1;
+		m_capacity = 1;
+		while (m_capacity < _size) m_capacity <<= 1;
 
 		m_mask = m_capacity - 1;
 		m_buffer = std::make_unique<std::byte[]>(m_capacity);
 	}
-	RingBuffer<SPSC>::~RingBuffer() {}
 
 	template<size_t ByteSize>
-	bool RingBuffer<SPSC>::TryWrite(const std::byte* __restrict _src) {
+	bool RingBuffer<SPSC>::TryWriteImpl(const std::byte* __restrict _src) noexcept {
 		static_assert(ByteSize > 0);
 		if constexpr (ByteSize > 256)
-			return TryWrite(_src, ByteSize);
+			return TryWriteImpl(_src, ByteSize);
 		else {
 			size_t h = m_head.value.load(std::memory_order_acquire);
 			size_t t = m_tail.value.load(std::memory_order_relaxed);
@@ -41,7 +39,7 @@ namespace LT {
 		}
 	}
 
-	bool RingBuffer<SPSC>::TryWrite(const std::byte* __restrict _src, size_t _len) {
+	bool RingBuffer<SPSC>::TryWriteImpl(const std::byte* __restrict _src, size_t _len) noexcept {
 		if (_len == 0) [[unlikely]]
 			return true;
 
@@ -67,7 +65,7 @@ namespace LT {
 		return true;
 	}
 
-	bool RingBuffer<SPSC>::TryWrite(std::span<const std::byte> _src) {
+	bool RingBuffer<SPSC>::TryWriteImpl(std::span<const std::byte> _src) noexcept {
 		size_t h = m_head.value.load(std::memory_order_acquire);
 		size_t t = m_tail.value.load(std::memory_order_relaxed);
 
@@ -94,10 +92,10 @@ namespace LT {
 	}
 
 	template<size_t ByteSize>
-	bool RingBuffer<SPSC>::TryRead(std::byte* __restrict _dest) {
+	bool RingBuffer<SPSC>::TryReadImpl(std::byte* __restrict _dest) noexcept {
 		static_assert(ByteSize > 0);
 		if constexpr (ByteSize > 256)
-			return TryRead(_dest, ByteSize);
+			return TryReadImpl(_dest, ByteSize);
 		else
 		{
 			size_t h = m_head.value.load(std::memory_order_relaxed);
@@ -124,7 +122,7 @@ namespace LT {
 		}
 	}
 
-	bool RingBuffer<SPSC>::TryRead(std::byte* __restrict _dest, size_t _len) {
+	bool RingBuffer<SPSC>::TryReadImpl(std::byte* __restrict _dest, size_t _len) noexcept {
 		if (_len == 0) [[unlikely]]
 			return true;
 
@@ -150,7 +148,7 @@ namespace LT {
 		return true;
 	}
 
-	bool RingBuffer<SPSC>::TryRead(std::span<std::byte> _dest) {
+	bool RingBuffer<SPSC>::TryReadImpl(std::span<std::byte> _dest) noexcept {
 		size_t h = m_head.value.load(std::memory_order_relaxed);
 		size_t t = m_tail.value.load(std::memory_order_acquire);
 
@@ -177,10 +175,10 @@ namespace LT {
 	}
 
 	template<size_t ByteSize>
-	void RingBuffer<SPSC>::ReadPreview(std::byte* __restrict _dest) const {
+	void RingBuffer<SPSC>::ReadPreviewImpl(std::byte* __restrict _dest) noexcept {
 		static_assert(ByteSize > 0);
 		if constexpr (ByteSize > 256)
-			return ReadPreview(_dest, ByteSize);
+			return ReadPreviewImpl(_dest, ByteSize);
 		else
 		{
 
@@ -204,7 +202,7 @@ namespace LT {
 		}
 	}
 
-	void RingBuffer<SPSC>::ReadPreview(std::byte* __restrict _dest, size_t _len) const {
+	void RingBuffer<SPSC>::ReadPreviewImpl(std::byte* __restrict _dest, size_t _len) noexcept {
 		if (_len == 0) [[unlikely]]
 			return;
 
@@ -226,7 +224,7 @@ namespace LT {
 			Memory::Copy(_dest + first, buffer, _len - first);
 	}
 
-	void RingBuffer<SPSC>::ReadPreview(std::span<std::byte> _dest) const {
+	void RingBuffer<SPSC>::ReadPreviewImpl(std::span<std::byte> _dest) noexcept {
 		size_t h = m_head.value.load(std::memory_order_relaxed);
 		size_t t = m_tail.value.load(std::memory_order_acquire);
 
@@ -248,7 +246,7 @@ namespace LT {
 			Memory::Copy(dest + first, buffer, len - first);
 	}
 
-	void RingBuffer<SPSC>::Clear() {
+	void RingBuffer<SPSC>::ClearImpl() noexcept {
 		size_t t = m_tail.value.load(std::memory_order_relaxed);
 		m_head.value.store(t, std::memory_order_relaxed);
 	}

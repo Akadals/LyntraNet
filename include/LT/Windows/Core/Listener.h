@@ -61,14 +61,14 @@ namespace LT
 		virtual LTReturnObject Listen()	{ return {}; }
 		virtual LTReturnObject Close()	{ return {}; }
 
-		ProtocolType		Protocol()		const	{ return m_protocol; }
-		LTSOCKET			LTSocket()		const	{ return m_listenSock; }
-		const LTSOCKET&		LTSocket()				{ return m_listenSock; }
-		SOCKET				Socket()		const	{ return m_listenSock.m_sock; }
-		const SOCKET&		Socket()				{ return m_listenSock.m_sock; }
-		HANDLE				SocketHandle()	const	{ return reinterpret_cast<HANDLE>(m_listenSock.m_sock); }
-		LSTNRSTATE			State()			const	{ return m_state; }
-		const IPEndPoint&	LocalEndPoint() const	{ return m_localEndpoint; }
+		ProtocolType		Protocol()		const noexcept	{ return m_protocol; }
+		LTSOCKET			LTSocket()		const noexcept	{ return m_listenSock; }
+		const LTSOCKET&		LTSocket()		noexcept		{ return m_listenSock; }
+		SOCKET				Socket()		const noexcept	{ return m_listenSock.m_sock; }
+		const SOCKET&		Socket()		noexcept		{ return m_listenSock.m_sock; }
+		HANDLE				SocketHandle()	const noexcept	{ return reinterpret_cast<HANDLE>(m_listenSock.m_sock); }
+		LSTNRSTATE			State()			const noexcept	{ return m_state; }
+		const IPEndPoint&	LocalEndPoint() const noexcept	{ return m_localEndpoint; }
 
 		void				SetBackend(IBackend* _backend) { m_backend = _backend; }
 	};
@@ -138,8 +138,8 @@ namespace LT
 		explicit Listener<ProtocolType::QUIC>(
 			_In_		const IPEndPoint& _endpoint) :
 			IListener(ProtocolType::QUIC, _endpoint) {}
-		LTReturnObject Bind()						override { return{}; }
-		LTReturnObject Close()						override { return{}; }
+		LTReturnObject Bind()	override { return{}; }
+		LTReturnObject Close()	override { return{}; }
 	};
 	template<>
 	class Listener<ProtocolType::KCP> : public IListener
@@ -148,8 +148,8 @@ namespace LT
 		explicit Listener<ProtocolType::KCP>(
 			_In_		const IPEndPoint& _endpoint) :
 			IListener(ProtocolType::KCP, _endpoint) {}
-		LTReturnObject Bind()						override { return{}; }
-		LTReturnObject Close()						override { return{}; }
+		LTReturnObject Bind()	override { return{}; }
+		LTReturnObject Close()	override { return{}; }
 	};
 	template<>
 	class Listener<ProtocolType::RTP> : public IListener
@@ -158,8 +158,8 @@ namespace LT
 		explicit Listener<ProtocolType::RTP>(
 			_In_		const IPEndPoint& _endpoint) :
 			IListener(ProtocolType::RTP, _endpoint) {}
-		LTReturnObject Bind()						override { return{}; }
-		LTReturnObject Close()						override { return{}; }
+		LTReturnObject Bind()	override { return{}; }
+		LTReturnObject Close()	override { return{}; }
 	};
 }
 

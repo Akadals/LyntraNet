@@ -155,8 +155,7 @@ namespace LT {
         return { TRUE };
     }
 
-    LTReturnObject Listener<ProtocolType::TCP>::ReserveAccept(ITransport* _transport)
-    {
+    LTReturnObject Listener<ProtocolType::TCP>::ReserveAccept(ITransport* _transport) {
         for (int i = 0; i < m_acceptContextSize; i++)
             PostAccept(_transport);
         return {};

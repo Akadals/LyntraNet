@@ -7,17 +7,17 @@
 #include <mstcpip.h>
 #include <sal.h>
 
+#include <LT/Common/Utility/LTReturnObject.h>
+
 #define CICP CreateIoCompletionPort
 #define GQCS GetQueuedCompletionStatus
 #define GQCSEx GetQueuedCompletionStatusEx
 
-namespace LT
-{
+namespace LT {
 	typedef struct LTSocket
 		LTSOCKET, * PLTSOCKET;
 
-	struct LTSocket
-	{
+	struct LTSocket {
 #ifdef _WIN32
 		SOCKET m_sock;
 
@@ -27,9 +27,11 @@ namespace LT
 			m_sock(_socket) {}
 
 		BOOL IsValid() const { return m_sock != INVALID_SOCKET; }
-		BOOL operator==(const LTSOCKET& other) const noexcept
-		{
+		BOOL operator==(const LTSOCKET& other) const noexcept {
 			return m_sock == other.m_sock;
+		}
+		LTReturnObject SetSockOpt() {
+			return {};
 		}
 
 		static LTSocket INVALID() { return INVALID_SOCKET; }
@@ -40,10 +42,8 @@ namespace LT
 #endif
 	};
 
-	struct LTSocketHash
-	{
-		size_t operator()(const LTSOCKET& socket) const noexcept
-		{
+	struct LTSocketHash {
+		size_t operator()(const LTSOCKET& socket) const noexcept {
 			return std::hash<SOCKET>{}(socket.m_sock);
 		}
 	};

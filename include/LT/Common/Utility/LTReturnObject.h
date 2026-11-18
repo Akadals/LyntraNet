@@ -17,7 +17,7 @@
 
 #define RETOBJ_RSN_CICP					0x00000009
 
-#define RETOBJ_ERR_TYPE_LT				0 //커스텀 메시지 출력
+#define RETOBJ_ERR_TYPE_LT				0 //LT전용 커스텀 메시지 출력
 #define RETOBJ_ERR_TYPE_OS				1 //윈도우인경우 message는 WSAGetLastError or GetLastError출력
 
 //상수값 수정필요

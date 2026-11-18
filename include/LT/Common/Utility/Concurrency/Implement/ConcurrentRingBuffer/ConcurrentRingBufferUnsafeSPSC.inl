@@ -1,29 +1,29 @@
 namespace LT {
-	RingBuffer<SPSC_UNSAFE>::RingBuffer<SPSC_UNSAFE>(size_t _size) {
+	RingBuffer<SPSC_UNSAFE>::RingBuffer(size_t _size) {
 		if (_size == 0) throw;
 
-		size_t cap = 1;
-		while (cap < _size) cap <<= 1;
+		m_capacity = 1;
+		while (m_capacity < _size) m_capacity <<= 1;
 
-		m_mask = (m_capacity = cap) - 1;
+		m_mask = m_capacity - 1;
 		m_buffer = std::make_unique<std::byte[]>(m_capacity);
 	}
 
 	template<size_t ByteSize>
-	bool RingBuffer<SPSC_UNSAFE>::TryWrite(const std::byte* __restrict _src) {
+	bool RingBuffer<SPSC_UNSAFE>::TryWriteImpl(const std::byte* __restrict _src) noexcept {
 		static_assert(ByteSize > 0);
 		if constexpr (ByteSize > 256)
-			return TryWrite(_src, ByteSize);
+			return TryWriteImpl(_src, ByteSize);
 		else {
-			size_t t = m_producer.value;
+			size_t h = m_head.value;
 
-			if ((t + ByteSize) - m_producer.cachedValue > m_capacity) [[unlikely]] {
-				m_producer.cachedValue = m_consumer.value;
-				if ((t + ByteSize) - m_producer.cachedValue > m_capacity) [[unlikely]]
+			if ((h + ByteSize) - m_head.cachedValue > m_capacity) [[unlikely]] {
+				m_head.cachedValue = m_tail.value;
+				if ((h + ByteSize) - m_head.cachedValue > m_capacity) [[unlikely]]
 					return false;
 			}
 
-			const size_t idx = t & m_mask;
+			const size_t idx = h & m_mask;
 			const size_t remaining = m_capacity - idx;
 
 			std::byte* buffer = m_buffer.get();
@@ -35,25 +35,25 @@ namespace LT {
 				Memory::Copy(buffer, _src + remaining, ByteSize - remaining);
 			}
 
-			m_producer.value += ByteSize;
+			m_head.value += ByteSize;
 
 			return true;
 		}
 	}
 
-	bool RingBuffer<SPSC_UNSAFE>::TryWrite(const std::byte* __restrict _src, size_t _len) {
+	bool RingBuffer<SPSC_UNSAFE>::TryWriteImpl(const std::byte* __restrict _src, size_t _len) noexcept {
 		if (_len == 0) [[unlikely]]
 			return true;
 
-		size_t t = m_producer.value;
+		size_t h = m_head.value;
 
-		if ((t + _len) - m_producer.cachedValue > m_capacity) [[unlikely]] {
-			m_producer.cachedValue = m_consumer.value;
-			if ((t + _len) - m_producer.cachedValue > m_capacity) [[unlikely]]
+		if ((h + _len) - m_head.cachedValue > m_capacity) [[unlikely]] {
+			m_head.cachedValue = m_tail.value;
+			if ((h + _len) - m_head.cachedValue > m_capacity) [[unlikely]]
 				return false;
 		}
 
-		const size_t idx = t & m_mask;
+		const size_t idx = h & m_mask;
 		const size_t remaining = m_capacity - idx;
 
 		size_t first = _len < remaining ? _len : remaining;
@@ -64,23 +64,23 @@ namespace LT {
 		if (_len > remaining) [[unlikely]]
 			Memory::Copy(buffer, _src + first, _len - first);
 
-		m_producer.value += _len;
+		m_head.value += _len;
 
 		return true;
 	}
 
-	bool RingBuffer<SPSC_UNSAFE>::TryWrite(std::span<const std::byte> _src) {
+	bool RingBuffer<SPSC_UNSAFE>::TryWriteImpl(std::span<const std::byte> _src) noexcept {
 		size_t len = _src.size();
 
-		size_t t = m_producer.value;
+		size_t h = m_head.value;
 
-		if ((t + len) - m_producer.cachedValue > m_capacity) [[unlikely]] {
-			m_producer.cachedValue = m_consumer.value;
-			if ((t + len) - m_producer.cachedValue > m_capacity) [[unlikely]]
+		if ((h + len) - m_head.cachedValue > m_capacity) [[unlikely]] {
+			m_head.cachedValue = m_tail.value;
+			if ((h + len) - m_head.cachedValue > m_capacity) [[unlikely]]
 				return false;
 		}
 
-		const size_t idx = t & m_mask;
+		const size_t idx = h & m_mask;
 		const size_t remaining = m_capacity - idx;
 
 		size_t first = len < remaining ? len : remaining;
@@ -92,26 +92,26 @@ namespace LT {
 		if (len > remaining) [[unlikely]]
 			Memory::Copy(buffer, src + first, len - first);
 
-		m_producer.value += len;
+		m_head.value += len;
 
 		return true;
 	}
 
 	template<size_t ByteSize>
-	bool RingBuffer<SPSC_UNSAFE>::TryRead(std::byte* __restrict _dest) {
+	bool RingBuffer<SPSC_UNSAFE>::TryReadImpl(std::byte* __restrict _dest) noexcept {
 		static_assert(ByteSize > 0);
 		if constexpr (ByteSize > 256)
 			return TryRead(_dest, ByteSize);
 		else {
-			size_t h = m_consumer.value;
+			size_t t = m_tail.value;
 
-			if (m_consumer.cachedValue - h < ByteSize) [[unlikely]] {
-				m_consumer.cachedValue = m_producer.value;
-				if (m_consumer.cachedValue - h < ByteSize) [[unlikely]]
+			if (m_tail.cachedValue - t < ByteSize) [[unlikely]] {
+				m_tail.cachedValue = m_head.value;
+				if (m_tail.cachedValue - t < ByteSize) [[unlikely]]
 					return false;
 			}
 
-			const size_t idx = h & m_mask;
+			const size_t idx = t & m_mask;
 			const size_t remaining = m_capacity - idx;
 
 			std::byte* buffer = m_buffer.get();
@@ -123,24 +123,24 @@ namespace LT {
 				Memory::Copy(_dest + remaining, buffer, ByteSize - remaining);
 			}
 
-			m_consumer.value += ByteSize;
+			m_tail.value += ByteSize;
 			return true;
 		}
 	}
 
-	bool RingBuffer<SPSC_UNSAFE>::TryRead(std::byte* __restrict _dest, size_t _len) {
+	bool RingBuffer<SPSC_UNSAFE>::TryReadImpl(std::byte* __restrict _dest, size_t _len) noexcept {
 		if (_len == 0) [[unlikely]]
 			return true;
 
-		size_t h = m_consumer.value;
+		size_t t = m_tail.value;
 
-		if (m_consumer.cachedValue - h < _len) [[unlikely]] {
-			m_consumer.cachedValue = m_producer.value;
-			if (m_consumer.cachedValue - h < _len) [[unlikely]]
+		if (m_tail.cachedValue - t < _len) [[unlikely]] {
+			m_tail.cachedValue = m_head.value;
+			if (m_tail.cachedValue - t < _len) [[unlikely]]
 				return false;
 		}
 
-		const size_t idx = h & m_mask;
+		const size_t idx = t & m_mask;
 		const size_t remaining = m_capacity - idx;
 
 		size_t first = _len < remaining ? _len : remaining;
@@ -151,23 +151,23 @@ namespace LT {
 		if (_len > remaining) [[unlikely]]
 			Memory::Copy(_dest + first, buffer, _len - first);
 
-		m_consumer.value += _len;
+		m_tail.value += _len;
 
 		return true;
 	}
 
-	bool RingBuffer<SPSC_UNSAFE>::TryRead(std::span<std::byte> _dest) {
+	bool RingBuffer<SPSC_UNSAFE>::TryReadImpl(std::span<std::byte> _dest) noexcept {
 		size_t len = _dest.size();
 
-		size_t h = m_consumer.value;
+		size_t t = m_tail.value;
 
-		if (m_consumer.cachedValue - h < len) [[unlikely]] {
-			m_consumer.cachedValue = m_producer.value;
-			if (m_consumer.cachedValue - h < len) [[unlikely]]
+		if (m_tail.cachedValue - t < len) [[unlikely]] {
+			m_tail.cachedValue = m_head.value;
+			if (m_tail.cachedValue - t < len) [[unlikely]]
 				return false;
 		}
 
-		const size_t idx = h & m_mask;
+		const size_t idx = t & m_mask;
 		const size_t remaining = m_capacity - idx;
 
 		size_t first = len < remaining ? len : remaining;
@@ -179,26 +179,26 @@ namespace LT {
 		if (len > remaining) [[unlikely]]
 			Memory::Copy(dest + first, buffer, len - first);
 
-		m_consumer.value += len;
+		m_tail.value += len;
 
 		return true;
 	}
 
 	template<size_t ByteSize>
-	void RingBuffer<SPSC_UNSAFE>::ReadPreview(std::byte* __restrict _dest) const {
+	void RingBuffer<SPSC_UNSAFE>::ReadPreviewImpl(std::byte* __restrict _dest) noexcept {
 		static_assert(ByteSize > 0);
 		if constexpr (ByteSize > 256)
-			return ReadPreview(_dest, ByteSize);
+			return ReadPreviewImpl(_dest, ByteSize);
 		else {
-			size_t h = m_consumer.value;
+			size_t t = m_tail.value;
 
-			if (m_consumer.cachedValue - h < ByteSize) [[unlikely]] {
-				m_consumer.cachedValue = m_producer.value;
-				if (m_consumer.cachedValue - h < ByteSize) [[unlikely]]
+			if (m_tail.cachedValue - t < ByteSize) [[unlikely]] {
+				m_tail.cachedValue = m_head.value;
+				if (m_tail.cachedValue - t < ByteSize) [[unlikely]]
 					return;
 			}
 
-			const size_t idx = h & m_mask;
+			const size_t idx = t & m_mask;
 			const size_t remaining = m_capacity - idx;
 
 			std::byte* buffer = m_buffer.get();
@@ -212,19 +212,19 @@ namespace LT {
 		}
 	}
 
-	void RingBuffer<SPSC_UNSAFE>::ReadPreview(std::byte* __restrict _dest, size_t _len) const {
+	void RingBuffer<SPSC_UNSAFE>::ReadPreviewImpl(std::byte* __restrict _dest, size_t _len) noexcept {
 		if (_len == 0) [[unlikely]]
 			return;
 
-		size_t h = m_consumer.value;
+		size_t t = m_tail.value;
 
-		if (m_consumer.cachedValue - h < _len) [[unlikely]] {
-			m_consumer.cachedValue = m_producer.value;
-			if (m_consumer.cachedValue - h < _len) [[unlikely]]
+		if (m_tail.cachedValue - t < _len) [[unlikely]] {
+			m_tail.cachedValue = m_head.value;
+			if (m_tail.cachedValue - t < _len) [[unlikely]]
 				return;
 		}
 
-		const size_t idx = h & m_mask;
+		const size_t idx = t & m_mask;
 		const size_t remaining = m_capacity - idx;
 
 		size_t first = _len < remaining ? _len : remaining;
@@ -236,18 +236,18 @@ namespace LT {
 			Memory::Copy(_dest + first, buffer, _len - first);
 	}
 
-	void RingBuffer<SPSC_UNSAFE>::ReadPreview(std::span<std::byte> _dest) const {
+	void RingBuffer<SPSC_UNSAFE>::ReadPreviewImpl(std::span<std::byte> _dest) noexcept {
 		size_t len = _dest.size();
 
-		size_t h = m_consumer.value;
+		size_t t = m_tail.value;
 
-		if (m_consumer.cachedValue - h < len) [[unlikely]] {
-			m_consumer.cachedValue = m_producer.value;
-			if (m_consumer.cachedValue - h < len) [[unlikely]]
+		if (m_tail.cachedValue - t < len) [[unlikely]] {
+			m_tail.cachedValue = m_head.value;
+			if (m_tail.cachedValue - t < len) [[unlikely]]
 				return;
 		}
 
-		const size_t idx = h & m_mask;
+		const size_t idx = t & m_mask;
 		const size_t remaining = m_capacity - idx;
 
 		size_t first = len < remaining ? len : remaining;
@@ -260,14 +260,14 @@ namespace LT {
 			Memory::Copy(dest + first, buffer, len - first);
 	}
 
-	void RingBuffer<SPSC_UNSAFE>::Clear() {
-		m_consumer.value = m_producer.value;
-		m_producer.cachedValue = m_consumer.cachedValue;
+	void RingBuffer<SPSC_UNSAFE>::ClearImpl() noexcept {
+		m_tail.value = m_head.value;
+		m_head.cachedValue = m_tail.cachedValue;
 	}
 
-	size_t RingBuffer<SPSC_UNSAFE>::Size() const noexcept {
-		const size_t t = m_producer.value;
-		const size_t h = m_consumer.value;
-		return t - h;
+	size_t RingBuffer<SPSC_UNSAFE>::SizeImpl() const noexcept {
+		const size_t h = m_head.value;
+		const size_t t = m_tail.value;
+		return h - t;
 	}
 }

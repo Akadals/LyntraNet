@@ -11,63 +11,118 @@
 namespace LT {
 	template <typename Derived>
 	class RingBufferContainer : public CRTPContainer<Derived> {
+	protected:
+		size_t m_capacity;
 	public:
-		size_t Size() const noexcept {
-			return this->DerivedImpl().SizeImpl();
-		}
-		size_t Capacity() const noexcept {
-			return this->DerivedImpl().CapacityImpl();
-		}
+		size_t Size()		const noexcept { return this->DerivedImpl().SizeImpl(); }
+		size_t Capacity()	const noexcept { return m_capacity; }
+
+		template<size_t ByteSize>
+		bool TryWrite(
+			_In_reads_bytes_(ByteSize) const std::byte* __restrict _src) noexcept
+		{ return this->DerivedImpl().template TryWriteImpl<ByteSize>(_src); }
+		bool TryWrite(
+			_In_reads_bytes_(_len)	const std::byte* __restrict _src,
+			_In_					size_t _len) noexcept
+		{ return this->DerivedImpl().TryWriteImpl(_src, _len); }
+		bool TryWrite(
+			_In_ std::span<const std::byte> _src) noexcept
+		{ return this->DerivedImpl().TryWriteImpl(_src); }
+
+
+		template<size_t ByteSize>
+		bool TryRead(
+			_Out_writes_bytes_all_(ByteSize) std::byte* __restrict _dest) noexcept
+		{ return this->DerivedImpl().template TryReadImpl<ByteSize>(_dest); }
+		bool TryRead(
+			_Out_writes_bytes_all_(_len)	std::byte* __restrict _dest,
+			_In_							size_t _len) noexcept
+		{ return this->DerivedImpl().TryReadImpl(_dest, _len); }
+		bool TryRead(
+			_Out_ std::span<std::byte> _dest) noexcept
+		{ return this->DerivedImpl().TryReadImpl(_dest); }
+
+
+		template<size_t ByteSize>
+		void ReadPreview(
+			_Out_writes_bytes_all_(ByteSize) std::byte* __restrict _dest) noexcept
+		{ return this->DerivedImpl().template ReadPreviewImpl<ByteSize>(_dest); }
+		void ReadPreview(
+			_Out_writes_bytes_all_(_len)	std::byte* __restrict _dest,
+			_In_							size_t _len) noexcept
+		{ return this->DerivedImpl().ReadPreviewImpl(_dest, _len); }
+		void ReadPreview(
+			_Out_ std::span<std::byte> _dest) noexcept
+		{ return this->DerivedImpl().ReadPreviewImpl(_dest); }
+
+		void Clear() noexcept { return this->DerivedImpl().ClearImpl(); }
 	};
 
 	template<ConcurrentPolicy>
 	class RingBuffer;
 
 	template<>
-	class RingBuffer<SPSC> {
+	class RingBuffer<SPSC> : RingBufferContainer<RingBuffer<SPSC>> {
+		friend RingBufferContainer<RingBuffer<SPSC>>;
 	private:
 		std::unique_ptr<std::byte[]> m_buffer;
 
-		size_t m_capacity;
 		size_t m_mask;
 
 		mutable CacheLineAtomic m_head;
 		mutable CacheLineAtomic m_tail;
-	public:
-		RingBuffer<SPSC>(_In_ size_t _size);
-		~RingBuffer();
+	private:
+		RingBuffer(_In_ size_t _size);
 
 		template<size_t ByteSize>
-		bool TryWrite(
-			_In_reads_bytes_(ByteSize) const std::byte* __restrict _src);
-		bool TryWrite(
-			_In_reads_bytes_(_len)	const std::byte* __restrict _src,
-			_In_					size_t _len);
-		bool TryWrite(
-			_In_ std::span<const std::byte> _src);
+		bool TryWriteImpl(const std::byte* __restrict _src)					noexcept;
+		bool TryWriteImpl(const std::byte* __restrict _src, size_t _len)	noexcept;
+		bool TryWriteImpl(std::span<const std::byte> _src)					noexcept;
 
 		template<size_t ByteSize>
-		bool TryRead(
-			_Out_writes_bytes_all_(ByteSize) std::byte* __restrict _dest);
-		bool TryRead(
-			_Out_writes_bytes_all_(_len)	std::byte* __restrict _dest,
-			_In_							size_t _len);
-		bool TryRead(
-			_Out_ std::span<std::byte> _dest);
+		bool TryReadImpl(std::byte* __restrict _dest)				noexcept;
+		bool TryReadImpl(std::byte* __restrict _dest, size_t _len)	noexcept;
+		bool TryReadImpl(std::span<std::byte> _dest)				noexcept;
 
 		template<size_t ByteSize>
-		void ReadPreview(
-			_Out_writes_bytes_all_(ByteSize) std::byte* __restrict _dest) const;
-		void ReadPreview(
-			_Out_writes_bytes_all_(_len)	std::byte* __restrict _dest,
-			_In_							size_t _len) const;
-		void ReadPreview(
-			_Out_ std::span<std::byte> _dest) const;
+		void ReadPreviewImpl(std::byte* __restrict _dest)				noexcept;
+		void ReadPreviewImpl(std::byte* __restrict _dest, size_t _len)	noexcept;
+		void ReadPreviewImpl(std::span<std::byte> _dest)				noexcept;
 
-		void Clear();
+		void ClearImpl()	noexcept;
+		size_t SizeImpl()	const noexcept;
+	};
 
-		size_t SizeImpl() const noexcept;
-		size_t CapacityImpl() const { return m_capacity; }
+	template<>
+	class RingBuffer<SPSC_UNSAFE> : RingBufferContainer<RingBuffer<SPSC_UNSAFE>> {
+		friend RingBufferContainer<RingBuffer<SPSC_UNSAFE>>;
+	private:
+		std::unique_ptr<std::byte[]> m_buffer;
+
+		size_t m_mask;
+
+		mutable CacheLineCached m_head;
+		mutable CacheLineCached m_tail;
+	private:
+		RingBuffer(_In_ size_t _size);
+
+		template<size_t ByteSize>
+		bool TryWriteImpl(const std::byte* __restrict _src)					noexcept;
+		bool TryWriteImpl(const std::byte* __restrict _src, size_t _len)	noexcept;
+		bool TryWriteImpl(std::span<const std::byte> _src)					noexcept;
+
+		template<size_t ByteSize>
+		bool TryReadImpl(std::byte* __restrict _dest)				noexcept;
+		bool TryReadImpl(std::byte* __restrict _dest, size_t _len)	noexcept;
+		bool TryReadImpl(std::span<std::byte> _dest)				noexcept;
+
+		template<size_t ByteSize>
+		void ReadPreviewImpl(std::byte* __restrict _dest)				noexcept;
+		void ReadPreviewImpl(std::byte* __restrict _dest, size_t _len)	noexcept;
+		void ReadPreviewImpl(std::span<std::byte> _dest)				noexcept;
+
+		void ClearImpl()	noexcept;
+		size_t SizeImpl()	const noexcept;
 	};
 
 	template<>
@@ -122,51 +177,6 @@ namespace LT {
 		bool TryRead(
 			_Out_ std::span<std::byte> _dest);
 
-		void ReadPreview(
-			_Out_writes_bytes_all_(_len)	std::byte* __restrict _dest,
-			_In_							size_t _len) const;
-		void ReadPreview(
-			_Out_ std::span<std::byte> _dest) const;
-
-		void Clear();
-
-		size_t Size() const noexcept;
-		size_t Capacity() const { return m_capacity; }
-	};
-	template<>
-	class RingBuffer<SPSC_UNSAFE> {
-	private:
-		std::unique_ptr<std::byte[]> m_buffer;
-
-		size_t m_capacity;
-		size_t m_mask;
-
-		mutable CacheLineCached m_producer;
-		mutable CacheLineCached m_consumer;
-	public:
-		RingBuffer<SPSC_UNSAFE>(size_t _size);
-
-		template<size_t ByteSize>
-		bool TryWrite(
-			_In_reads_bytes_(ByteSize) const std::byte* __restrict _src);
-		bool TryWrite(
-			_In_reads_bytes_(_len)	const std::byte* __restrict _src,
-			_In_					size_t _len);
-		bool TryWrite(
-			_In_ std::span<const std::byte> _src);
-
-		template<size_t ByteSize>
-		bool TryRead(
-			_Out_writes_bytes_all_(ByteSize) std::byte* __restrict _dest);
-		bool TryRead(
-			_Out_writes_bytes_all_(_len)	std::byte* __restrict _dest,
-			_In_							size_t _len);
-		bool TryRead(
-			_Out_ std::span<std::byte> _dest);
-
-		template<size_t ByteSize>
-		void ReadPreview(
-			_Out_writes_bytes_all_(ByteSize) std::byte* __restrict _dest) const;
 		void ReadPreview(
 			_Out_writes_bytes_all_(_len)	std::byte* __restrict _dest,
 			_In_							size_t _len) const;
