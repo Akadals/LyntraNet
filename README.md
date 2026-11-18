@@ -7,8 +7,8 @@
 **A low-level, performance-oriented networking foundation for multiplayer games.**
 
 [![C++](https://img.shields.io/badge/C%2B%2B-20-00599C?logo=cplusplus&logoColor=white)](https://en.cppreference.com/w/cpp/20)
-[![Platform](https://img.shields.io/badge/platform-Windows%20%7C%20Linux%20(target)-0078D6)](#-platform-strategy)
-[![Build](https://img.shields.io/badge/build-CMake%20(planned%2Fverify)-064F8C?logo=cmake&logoColor=white)](#-development-status)
+[![Platform](https://img.shields.io/badge/platform-Windows%20%7C%20Linux%20%7C%20macOS%20planned-0078D6)](#-platform-strategy)
+[![Build](https://img.shields.io/badge/build-CMake%20%7C%20Docker-064F8C)](#-build--development)
 [![License](https://img.shields.io/badge/license-not%20finalized-lightgrey)](#-licensing)
 [![Status](https://img.shields.io/badge/status-early%20development-orange)](#-development-status)
 
@@ -35,11 +35,11 @@
 - [Build & development](#-build--development)
 - [Licensing](#-licensing)
 - [Contributing](#-contributing)
-- [Related projects](#-related-projects)
+
 
 ---
 
-## ??What is LyntraNet?
+## What is LyntraNet?
 
 **LyntraNet** is a C++20 cross-platform game networking framework under active development. Its long-term objective is to bring together the control of a self-hosted networking stack and the convenience of a managed multiplayer platform.
 
@@ -54,7 +54,9 @@ Rather than forcing every project into one server architecture, LyntraNet is int
 | Language & standard | C++20 |
 | Primary domain | Multiplayer game networking |
 | Initial backend focus | Windows / IOCP |
-| Cross-platform target | Windows and Linux; additional backends under consideration |
+| Server platforms | Windows and Linux supported; macOS planned |
+| Mobile game clients | Android and iOS supported as client platforms |
+| Build options | CMake and Docker |
 | Network models | Reliable and unreliable transport |
 | Integration targets | Native C++, Unity, Unreal Engine, Godot |
 | Long-term platform | Self-hosted infrastructure + managed cloud services |
@@ -62,9 +64,10 @@ Rather than forcing every project into one server architecture, LyntraNet is int
 
 > **Project maturity:** LyntraNet is not yet a production-ready networking product. The architecture below describes a combination of current implementation work and the intended long-term platform. Each item is labelled accordingly where possible.
 
+
 ---
 
-## ??Vision & design principles
+## Vision & design principles
 
 ### Performance without hiding the machine
 
@@ -92,34 +95,27 @@ A common interface should make applications portable while still allowing each o
 
 Clients are untrusted. Game-critical state, validation, and authoritative simulation belong on the server.
 
+
 ---
 
-## ?§± Architecture
+## Architecture
 
 LyntraNet's target architecture is organized into six layers. The first layers form the networking foundation; the later layers expand the project into a complete developer and operations platform.
 
-```mermaid
-%%{init: {"flowchart": {"nodeSpacing": 32, "rankSpacing": 48, "padding": 28, "wrappingWidth": 1000, "htmlLabels": true}}}%%
-flowchart TB
-    L6["06 Â· Cloud Platform & Management<br/>Dashboard Â· Hosting Â· Licensing Â· AI-assisted LiveOps"]
-    L5["05 Â· Game Engine SDK<br/>Unity Â· Unreal Engine Â· Godot Â· Native C++"]
-    L4["04 Â· Game Server Presets<br/>MMORPG Â· MMOLITE Â· FPS Â· PVP Â· PVE Â· CO-OP"]
-    L3["03 Â· Network Framework<br/>Sessions Â· RPC Â· Routing Â· Rooms Â· Replication"]
-    L2["02 Â· Transport & Security<br/>TCP Â· UDP Â· KCP Â· RUDP Â· QUIC Â· TLS"]
-    L1["01 Â· Network Core<br/>Sockets Â· Async I/O Â· Buffers Â· Memory Â· Concurrency"]
-    OS["Operating System I/O<br/>Windows IOCP Â· Linux epoll"]
-
-    L6 --> L5 --> L4 --> L3 --> L2 --> L1 --> OS
-
-    classDef platform fill:#263449,stroke:#6f91bd,color:#ffffff,stroke-width:1.5px
-    classDef framework fill:#243b35,stroke:#70aa91,color:#ffffff,stroke-width:1.5px
-    classDef core fill:#493824,stroke:#c49a62,color:#ffffff,stroke-width:1.5px
-    class L6,L5 platform
-    class L4,L3 framework
-    class L2,L1,OS core
+```text
+Cloud Platform & Management
+          |
+          v
+Game Engine SDK -> Game Server Presets -> Network Framework
+                                             |
+                                             v
+                               Transport & Security -> Network Core
+                                             |
+                                             v
+                               Windows IOCP / Linux epoll
 ```
 
-### 01 ??Network Core
+### 01 - Network Core
 
 The core is the low-level foundation. It owns operating-system interaction and the primitives required by the layers above it.
 
@@ -137,9 +133,9 @@ The core is the low-level foundation. It owns operating-system interaction and t
 
 **Implementation direction**
 
-The repository currently contains Windows-oriented socket, listener, connection, and transport code, an IOCP backend type, and concurrent ring-buffer implementations. Linux epoll and other platform backends are targets, not claims of completed support.
+The repository currently contains Windows-oriented socket, listener, connection, and transport code, an IOCP backend type, and concurrent ring-buffer implementations. Linux is a supported server platform; its backend implementation and validation are ongoing.
 
-### 02 ??Transport & Security
+### 02 - Transport & Security
 
 This layer separates delivery semantics from game-level messaging. Different games can select reliable, unreliable, or specialized transports according to their latency and delivery requirements.
 
@@ -163,7 +159,7 @@ This layer separates delivery semantics from game-level messaging. Different gam
 
 Security mechanisms will be designed per transport rather than assuming that encryption alone provides authentication, integrity, or replay protection.
 
-### 03 ??Network Framework
+### 03 - Network Framework
 
 The framework turns transport primitives into reusable multiplayer building blocks.
 
@@ -181,20 +177,20 @@ The framework turns transport primitives into reusable multiplayer building bloc
 
 The API boundaries and final module set will be refined as the Core and transport layers stabilize.
 
-### 04 ??Game Server Presets
+### 04 - Game Server Presets
 
 Presets provide starting architectures for common game-server workloads. They are intended to be configurable compositions of framework components, not rigid genre-specific engines.
 
 Examples include:
 
-- **MMORPG** ??persistent worlds, zones, channels, and inter-server coordination
-- **MMOLITE** ??smaller persistent worlds with room- and instance-based services
-- **PVP** ??matchmaking, authoritative simulation, and state synchronization
-- **PVE** ??parties, instances, and cooperative AI/world-state replication
-- **CO-OP** ??session and room management for host-based or dedicated servers
-- **FPS** ??low-latency updates, fixed ticks, snapshots, and investigation of lag compensation
+- **MMORPG** - persistent worlds, zones, channels, and inter-server coordination
+- **MMOLITE** - smaller persistent worlds with room- and instance-based services
+- **PVP** - matchmaking, authoritative simulation, and state synchronization
+- **PVE** - parties, instances, and cooperative AI/world-state replication
+- **CO-OP** -session and room management for host-based or dedicated servers
+- **FPS** - low-latency updates, fixed ticks, snapshots, and investigation of lag compensation
 
-### 05 ??Game Engine SDK
+### 05 - Game Engine SDK
 
 The networking core is intended to remain engine-agnostic. Engine-specific SDKs will expose idiomatic APIs while sharing the same underlying services.
 
@@ -205,9 +201,9 @@ The networking core is intended to remain engine-agnostic. Engine-specific SDKs 
 | Godot | GDExtension integration; GDScript-facing API under evaluation |
 | Native C++ | Direct access to the C++ framework |
 
-### 06 ??Cloud Platform & Management
+### 06 - Cloud Platform & Management
 
-The long-term platform extends beyond the networking library into deployment, operations, and service management.
+The long-term platform extends beyond the networking library into deployment, operations, and service management. A future goal is cloud-based AI Agent-driven LiveOps server management, with safeguards and operator oversight.
 
 **Web Dashboard**
 - Account, organization, and project management
@@ -236,9 +232,10 @@ The long-term platform extends beyond the networking library into deployment, op
 
 The intended rollout is conservative: begin with analysis and operator assistance, then consider limited automated actions only after safeguards and reliability have been validated.
 
+
 ---
 
-## ?Œ Transport & platform strategy
+## Transport & platform strategy
 
 LyntraNet aims to isolate operating-system-specific I/O behind a platform layer without giving up native capabilities.
 
@@ -247,13 +244,14 @@ LyntraNet aims to isolate operating-system-specific I/O behind a platform layer 
 | Windows | IOCP | Initial development target |
 | Linux | epoll | Planned |
 | Linux | io_uring | Future evaluation |
-| macOS / BSD | kqueue | Possible future backend |
+| macOS | kqueue | Planned |
 
-The repository defines backend types for IOCP, epoll, and kqueue, but the presence of an enum or abstraction is not equivalent to a finished, tested backend. Platform support will be marked complete only when implementation and validation are available.
+Windows and Linux are the supported server platforms. macOS support is planned. Android and iOS are supported as game client platforms; they are not server-host platforms. Backend implementation and validation determine platform support.
+
 
 ---
 
-## ?Ž® Game server presets
+## Game server presets
 
 The target presets map game workloads to reusable server roles:
 
@@ -268,37 +266,36 @@ The target presets map game workloads to reusable server roles:
 
 These are planned templates. Their exact composition and feature boundaries will be determined by real integration work and performance testing.
 
+
 ---
 
-## ?§© Platform & operations
+## Platform & operations
 
 The broader LyntraNet ecosystem is intended to support both teams that operate their own infrastructure and teams that prefer a managed service.
 
 ```text
 Game Client / Engine SDK
-          ??
-          ??
-     LyntraNet Core ?€?€?€?€?€?€?€??Self-hosted game servers
-          ??
-          ??
-   Network Framework
-          ??
-          ?œâ??€?€?€?€?€?€?€?€?€?€?€?€?€?€??Server presets
-          ??
-          ??
-   Management Platform
-          ??
-          ?œâ??€ Dashboard & monitoring
-          ?œâ??€ License & entitlement service
-          ?œâ??€ Deployment & cloud hosting
-          ?”â??€ AI-assisted LiveOps
+          |
+          v
+LyntraNet Core ----> Self-hosted game servers
+          |
+          v
+Network Framework ----> Server presets
+          |
+          v
+Management Platform
+  +-- Dashboard & monitoring
+  +-- License & entitlement service
+  +-- Deployment & cloud hosting
+  +-- AI-assisted LiveOps
 ```
 
 The self-hosted networking stack is the foundation. Dashboard, licensing, hosting, and AI LiveOps are separate platform initiatives and should not be interpreted as currently available services.
 
+
 ---
 
-## ?š§ Development status
+## Development status
 
 LyntraNet is in **early development**. Work is focused on low-level infrastructure, and public interfaces may change.
 
@@ -328,11 +325,12 @@ These are implementation signals, not a statement that every component is comple
 | Game networking framework | Design and implementation to follow |
 | Engine SDKs | Planned |
 | Dashboard / licensing / cloud | Long-term platform roadmap |
-| AI LiveOps | Long-term research and development direction |
+| Cloud-based AI Agent LiveOps | Long-term goal for server management |
+
 
 ---
 
-## ?—ºï¸?Roadmap
+## Roadmap
 
 The roadmap is directional. Priorities may change as implementation, profiling, and integration tests reveal new requirements.
 
@@ -350,19 +348,20 @@ The roadmap is directional. Priorities may change as implementation, profiling, 
 
 ### Phase details
 
-1. **Core Infrastructure** ??establish reliable low-level networking on the initial platform, then bring up the Linux backend.
-2. **Transport & Security** ??add transport choices and threat-appropriate security primitives.
-3. **Network Framework** ??provide the reusable services needed to build multiplayer server applications.
-4. **Game Engine SDKs** ??make the framework approachable from common game engines.
-5. **Game Server Presets** ??validate reusable server compositions against different genres and workloads.
-6. **Management Dashboard** ??give operators visibility and control over their deployments.
-7. **License & Commercial Platform** ??establish a clear, enforceable licensing and support model.
-8. **Cloud Platform** ??offer managed provisioning and operation for teams that do not want to run their own infrastructure.
-9. **AI Agent & LiveOps** ??introduce AI-assisted operations with explicit safeguards and human oversight.
+1. **Core Infrastructure** - establish reliable low-level networking on the initial platform, then bring up the Linux backend.
+2. **Transport & Security** - add transport choices and threat-appropriate security primitives.
+3. **Network Framework** - provide the reusable services needed to build multiplayer server applications.
+4. **Game Engine SDKs** - make the framework approachable from common game engines.
+5. **Game Server Presets** - validate reusable server compositions against different genres and workloads.
+6. **Management Dashboard** - give operators visibility and control over their deployments.
+7. **License & Commercial Platform** - establish a clear, enforceable licensing and support model.
+8. **Cloud Platform** - offer managed provisioning and operation for teams that do not want to run their own infrastructure.
+9. **AI Agent & LiveOps** - provide cloud-based AI Agent-driven server management with explicit safeguards and human oversight.
+
 
 ---
 
-## ?§ª Validation: Blockia
+## Validation: Blockia
 
 **Blockia** is planned as a Voxel-based MMOLITE test project and a practical integration target for LyntraNet.
 
@@ -379,26 +378,26 @@ The feedback loop is intentional:
 
 ```text
 LyntraNet implementation
-        ??
-        ??
-  Blockia integration
-        ??
-        ??
- Gameplay-driven testing
-        ??
-        ??
- Profiling & issue discovery
-        ??
-        ??
- Core / framework improvements
-        ?”â??€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€??
+          |
+          v
+Blockia integration
+          |
+          v
+Gameplay-driven testing
+          |
+          v
+Profiling & issue discovery
+          |
+          v
+Core / framework improvements
 ```
 
 Additional FPS, PVP, PVE, CO-OP, and MMORPG test scenarios may be introduced as the framework matures.
 
+
 ---
 
-## ?“Š Performance & quality
+## Performance & quality
 
 Performance work should be measurable and reproducible. LyntraNet aims to publish benchmark results with the hardware, operating system, compiler, build configuration, workload, and methodology used.
 
@@ -425,38 +424,28 @@ Performance work should be measurable and reproducible. LyntraNet aims to publis
 
 Comparisons with projects such as Photon or ENet should use clearly stated feature sets and equivalent test conditions. No performance superiority is claimed without published evidence.
 
+
 ---
 
-## ?—‚ï¸?Repository layout
+## Repository layout
 
 The repository is organized around the C++ networking implementation. The source tree is evolving; the outline below highlights observed areas rather than prescribing a fixed final structure.
 
 ```text
 LyntraNet/
-?œâ??€ include/
-??  ?”â??€ LT/
-??      ?œâ??€ Common/
-??      ??  ?œâ??€ IO/
-??      ??  ?œâ??€ Protocol/
-??      ??  ?”â??€ Utility/
-??      ??      ?”â??€ Concurrency/
-??      ?”â??€ Windows/
-??          ?œâ??€ Core/
-??          ?”â??€ Network/
-?œâ??€ src/
-??  ?œâ??€ Core/
-??  ?œâ??€ Network/
-??  ?”â??€ Utility/
-?”â??€ tests/
+  include/
+  src/
+  tests/
 ```
 
 Notable source areas include common I/O/backend definitions, concurrency utilities, Windows socket and transport code, network connection components, and test/benchmark sources. Directory names and boundaries may change as modules are consolidated.
 
+
 ---
 
-## ?› ï¸?Build & development
+## Build & development
 
-The project targets **C++20**. Build instructions are intentionally not prescribed here yet: the repository's verified build entry point, dependency setup, and platform-specific prerequisites should be documented once the build workflow is confirmed.
+The project targets **C++20** and supports **CMake** and **Docker** as build and deployment options. Build instructions are intentionally not prescribed here yet: the repository's verified build entry point, dependency setup, and platform-specific prerequisites should be documented once the build workflow is confirmed.
 
 When preparing a local development environment:
 
@@ -465,11 +454,12 @@ When preparing a local development environment:
 3. Open the project in the currently supported development environment.
 4. Check the repository's build configuration and test sources before selecting build commands.
 
-> **Contributors:** Please avoid assuming that Linux, macOS, or every listed transport is already supported. The initial implementation focus is Windows; cross-platform support is being developed incrementally.
+> **Platform status:** Windows and Linux are supported server platforms. macOS is planned. Android and iOS are supported client platforms for mobile games and are not server-host platforms. Transport support varies by implementation.
+
 
 ---
 
-## ?–ï¸ Licensing
+## Licensing
 
 The final license has **not yet been selected**.
 
@@ -487,9 +477,10 @@ A future license service may use signed entitlements, with private signing keys 
 
 Until a license is published in the repository, do not assume that the source is available under a particular open-source license or that commercial use is separately authorized.
 
+
 ---
 
-## ?¤ Contributing
+## Contributing
 
 LyntraNet is evolving rapidly, and its APIs and internal architecture may change.
 
@@ -503,17 +494,6 @@ Useful contributions include:
 - Documentation improvements
 
 For substantial changes, open an issue or discussion before starting work so that the proposed design can be aligned with the project's direction. Please include compiler, operating system, build configuration, and reproduction details when reporting platform-specific behavior.
-
----
-
-## ?”— Related projects
-
-| Project | Role |
-| :--- | :--- |
-| [LyntraNet](https://github.com/Akadals/LyntraNet) | Game networking framework and infrastructure |
-| Blockia | Planned Voxel-based MMOLITE integration and validation project |
-| HelixRHI | Graphics and rendering infrastructure |
-| AliuxOS | Operating-system and low-level systems exploration |
 
 ---
 
