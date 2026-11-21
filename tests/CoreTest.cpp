@@ -1,6 +1,7 @@
 #define LT_USE_CONSOLE_CAPTURE
 
 #include <iostream>
+#include <LT/Common/Utility/Concurrency/ConcurrentRingBuffer.h>
 #include <LT/LyntraNet.h>
 #pragma comment(lib,"ws2_32.lib")
 

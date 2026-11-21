@@ -1,5 +1,6 @@
 namespace LT {
-	RingBuffer<SPSC_UNSAFE>::RingBuffer(size_t _size) {
+	template<size_t Size>
+	RingBuffer<SPSC_UNSAFE, Size>::RingBuffer() {
 		if (_size == 0) throw;
 
 		m_capacity = 1;
@@ -9,8 +10,9 @@ namespace LT {
 		m_buffer = std::make_unique<std::byte[]>(m_capacity);
 	}
 
+	template<size_t Size>
 	template<size_t ByteSize>
-	bool RingBuffer<SPSC_UNSAFE>::TryWriteImpl(const std::byte* __restrict _src) noexcept {
+	bool RingBuffer<SPSC_UNSAFE, Size>::TryWriteImpl(const std::byte* __restrict _src) noexcept {
 		static_assert(ByteSize > 0);
 		if constexpr (ByteSize > 256)
 			return TryWriteImpl(_src, ByteSize);
@@ -41,7 +43,8 @@ namespace LT {
 		}
 	}
 
-	bool RingBuffer<SPSC_UNSAFE>::TryWriteImpl(const std::byte* __restrict _src, size_t _len) noexcept {
+	template<size_t Size>
+	bool RingBuffer<SPSC_UNSAFE, Size>::TryWriteImpl(const std::byte* __restrict _src, size_t _len) noexcept {
 		if (_len == 0) [[unlikely]]
 			return true;
 
@@ -69,7 +72,8 @@ namespace LT {
 		return true;
 	}
 
-	bool RingBuffer<SPSC_UNSAFE>::TryWriteImpl(std::span<const std::byte> _src) noexcept {
+	template<size_t Size>
+	bool RingBuffer<SPSC_UNSAFE, Size>::TryWriteImpl(std::span<const std::byte> _src) noexcept {
 		size_t len = _src.size();
 
 		size_t h = m_head.value;
@@ -97,8 +101,9 @@ namespace LT {
 		return true;
 	}
 
+	template<size_t Size>
 	template<size_t ByteSize>
-	bool RingBuffer<SPSC_UNSAFE>::TryReadImpl(std::byte* __restrict _dest) noexcept {
+	bool RingBuffer<SPSC_UNSAFE, Size>::TryReadImpl(std::byte* __restrict _dest) noexcept {
 		static_assert(ByteSize > 0);
 		if constexpr (ByteSize > 256)
 			return TryRead(_dest, ByteSize);
@@ -128,7 +133,8 @@ namespace LT {
 		}
 	}
 
-	bool RingBuffer<SPSC_UNSAFE>::TryReadImpl(std::byte* __restrict _dest, size_t _len) noexcept {
+	template<size_t Size>
+	bool RingBuffer<SPSC_UNSAFE, Size>::TryReadImpl(std::byte* __restrict _dest, size_t _len) noexcept {
 		if (_len == 0) [[unlikely]]
 			return true;
 
@@ -156,7 +162,8 @@ namespace LT {
 		return true;
 	}
 
-	bool RingBuffer<SPSC_UNSAFE>::TryReadImpl(std::span<std::byte> _dest) noexcept {
+	template<size_t Size>
+	bool RingBuffer<SPSC_UNSAFE, Size>::TryReadImpl(std::span<std::byte> _dest) noexcept {
 		size_t len = _dest.size();
 
 		size_t t = m_tail.value;
@@ -184,8 +191,9 @@ namespace LT {
 		return true;
 	}
 
+	template<size_t Size>
 	template<size_t ByteSize>
-	void RingBuffer<SPSC_UNSAFE>::ReadPreviewImpl(std::byte* __restrict _dest) noexcept {
+	void RingBuffer<SPSC_UNSAFE, Size>::ReadPreviewImpl(std::byte* __restrict _dest) noexcept {
 		static_assert(ByteSize > 0);
 		if constexpr (ByteSize > 256)
 			return ReadPreviewImpl(_dest, ByteSize);
@@ -212,7 +220,8 @@ namespace LT {
 		}
 	}
 
-	void RingBuffer<SPSC_UNSAFE>::ReadPreviewImpl(std::byte* __restrict _dest, size_t _len) noexcept {
+	template<size_t Size>
+	void RingBuffer<SPSC_UNSAFE, Size>::ReadPreviewImpl(std::byte* __restrict _dest, size_t _len) noexcept {
 		if (_len == 0) [[unlikely]]
 			return;
 
@@ -236,7 +245,8 @@ namespace LT {
 			Memory::Copy(_dest + first, buffer, _len - first);
 	}
 
-	void RingBuffer<SPSC_UNSAFE>::ReadPreviewImpl(std::span<std::byte> _dest) noexcept {
+	template<size_t Size>
+	void RingBuffer<SPSC_UNSAFE, Size>::ReadPreviewImpl(std::span<std::byte> _dest) noexcept {
 		size_t len = _dest.size();
 
 		size_t t = m_tail.value;
@@ -260,12 +270,14 @@ namespace LT {
 			Memory::Copy(dest + first, buffer, len - first);
 	}
 
-	void RingBuffer<SPSC_UNSAFE>::ClearImpl() noexcept {
+	template<size_t Size>
+	void RingBuffer<SPSC_UNSAFE, Size>::ClearImpl() noexcept {
 		m_tail.value = m_head.value;
 		m_head.cachedValue = m_tail.cachedValue;
 	}
 
-	size_t RingBuffer<SPSC_UNSAFE>::SizeImpl() const noexcept {
+	template<size_t Size>
+	size_t RingBuffer<SPSC_UNSAFE, Size>::SizeImpl() const noexcept {
 		const size_t h = m_head.value;
 		const size_t t = m_tail.value;
 		return h - t;

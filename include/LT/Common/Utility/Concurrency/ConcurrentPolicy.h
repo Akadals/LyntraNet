@@ -40,8 +40,7 @@ std::same_as<T, MPMC> ||
 std::same_as<T, SPSC_UNSAFE> ||
 std::same_as<T, ZeroCopy>;
 
-struct alignas(CACHE_SIZE) CacheLineAtomic
-{
+struct alignas(CACHE_SIZE) CacheLineAtomic {
 public:
     std::atomic<size_t> value = 0;
 private:
@@ -50,8 +49,7 @@ private:
 static_assert(sizeof(CacheLineAtomic) == CACHE_SIZE);
 static_assert(alignof(CacheLineAtomic) == CACHE_SIZE);
 
-struct CacheLineCached
-{
+struct CacheLineCached {
     alignas(CACHE_SIZE) size_t value = 0;
     size_t cachedValue = 0;
 };
@@ -67,4 +65,4 @@ protected:
     }
 };
 
-#endif
+#endif //__INCL_LYNTRA_CONCURRENT_POLICY_H__

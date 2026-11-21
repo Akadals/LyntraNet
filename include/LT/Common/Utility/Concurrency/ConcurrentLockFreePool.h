@@ -97,6 +97,108 @@ namespace LT {
     public:
         explicit LockFreePool(size_t _size);
     };
+
+    template<typename T, size_t Size>
+    class LockFreePool<MPSC, T, Size> : public LockFreePoolContainer<LockFreePool<MPSC, T, Size>, T> {
+        static_assert(Size > 0 || Size <= UINT32_MAX);
+        friend LockFreePoolContainer<LockFreePool<MPSC, T, Size>, T>;
+    private:
+        std::unique_ptr<Node<T>[]> m_nodes;
+        std::atomic<uint64_t> m_head;
+    private:
+        size_t          SizeImpl()                      const noexcept { return Size; }
+        T*              AcquireImpl()                   noexcept;
+        PoolLease<T>    AcquireLeasedImpl()             noexcept;
+        void            ReleaseImpl(T* _val)            noexcept;
+        void            ReleaseImpl(PoolLease<T> _val)  noexcept;
+    public:
+        LockFreePool();
+    };
+
+    template<typename T>
+    class LockFreePool<MPSC, T, 0> : public LockFreePoolContainer<LockFreePool<MPSC, T, 0>, T> {
+        friend LockFreePoolContainer<LockFreePool<MPSC, T, 0>, T>;
+    private:
+        size_t m_size;
+        std::unique_ptr<Node<T>[]> m_nodes;
+        std::atomic<uint64_t> m_head;
+    private:
+        size_t          SizeImpl()                      const noexcept { return m_size; }
+        T*              AcquireImpl()                   noexcept;
+        PoolLease<T>    AcquireLeasedImpl()             noexcept;
+        void            ReleaseImpl(T* _val)            noexcept;
+        void            ReleaseImpl(PoolLease<T> _val)  noexcept;
+    public:
+        explicit LockFreePool(size_t _size);
+    };
+
+    template<typename T, size_t Size>
+    class LockFreePool<SPMC, T, Size> : public LockFreePoolContainer<LockFreePool<SPMC, T, Size>, T> {
+        static_assert(Size > 0 || Size <= UINT32_MAX);
+        friend LockFreePoolContainer<LockFreePool<SPMC, T, Size>, T>;
+    private:
+        std::unique_ptr<Node<T>[]> m_nodes;
+        std::atomic<uint64_t> m_head;
+    private:
+        size_t          SizeImpl()                      const noexcept { return Size; }
+        T*              AcquireImpl()                   noexcept;
+        PoolLease<T>    AcquireLeasedImpl()             noexcept;
+        void            ReleaseImpl(T* _val)            noexcept;
+        void            ReleaseImpl(PoolLease<T> _val)  noexcept;
+    public:
+        LockFreePool();
+    };
+
+    template<typename T>
+    class LockFreePool<SPMC, T, 0> : public LockFreePoolContainer<LockFreePool<SPMC, T, 0>, T> {
+        friend LockFreePoolContainer<LockFreePool<SPMC, T, 0>, T>;
+    private:
+        size_t m_size;
+        std::unique_ptr<Node<T>[]> m_nodes;
+        std::atomic<uint64_t> m_head;
+    private:
+        size_t          SizeImpl()                      const noexcept { return m_size; }
+        T*              AcquireImpl()                   noexcept;
+        PoolLease<T>    AcquireLeasedImpl()             noexcept;
+        void            ReleaseImpl(T* _val)            noexcept;
+        void            ReleaseImpl(PoolLease<T> _val)  noexcept;
+    public:
+        explicit LockFreePool(size_t _size);
+    };
+
+    template<typename T, size_t Size>
+    class LockFreePool<MPMC, T, Size> : public LockFreePoolContainer<LockFreePool<MPMC, T, Size>, T> {
+        static_assert(Size > 0 || Size <= UINT32_MAX);
+        friend LockFreePoolContainer<LockFreePool<MPMC, T, Size>, T>;
+    private:
+        std::unique_ptr<Node<T>[]> m_nodes;
+        std::atomic<uint64_t> m_head;
+    private:
+        size_t          SizeImpl()                      const noexcept { return Size; }
+        T*              AcquireImpl()                   noexcept;
+        PoolLease<T>    AcquireLeasedImpl()             noexcept;
+        void            ReleaseImpl(T* _val)            noexcept;
+        void            ReleaseImpl(PoolLease<T> _val)  noexcept;
+    public:
+        LockFreePool();
+    };
+
+    template<typename T>
+    class LockFreePool<MPMC, T, 0> : public LockFreePoolContainer<LockFreePool<MPMC, T, 0>, T> {
+        friend LockFreePoolContainer<LockFreePool<MPMC, T, 0>, T>;
+    private:
+        size_t m_size;
+        std::unique_ptr<Node<T>[]> m_nodes;
+        std::atomic<uint64_t> m_head;
+    private:
+        size_t          SizeImpl()                      const noexcept { return m_size; }
+        T*              AcquireImpl()                   noexcept;
+        PoolLease<T>    AcquireLeasedImpl()             noexcept;
+        void            ReleaseImpl(T* _val)            noexcept;
+        void            ReleaseImpl(PoolLease<T> _val)  noexcept;
+    public:
+        explicit LockFreePool(size_t _size);
+    };
 }
 
 #include <LT/Common/Utility/Concurrency/Implement/ConcurrentLockFreePool/ConcurrentLockFreePoolSPSC.inl>

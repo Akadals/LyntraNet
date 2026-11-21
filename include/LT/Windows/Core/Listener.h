@@ -115,8 +115,6 @@ namespace LT
 			_In_  ITransport*	_transport,
 			_Out_ IPEndPoint*	_localAdrPtr,
 			_Out_ IPEndPoint*	_remoteAdrPtr);
-
-		void useTLS(BOOL _bool, UINT8 _tlsVersion = TLS_1_3);
 	private:
 		LTReturnValue<BOOL> load_accept_extensions();
 	};

@@ -234,10 +234,6 @@ namespace LT {
         _remoteAdrPtr->Set(remoteAdr, remoteAdrLen);
     }
 
-    void Listener<ProtocolType::TCP>::useTLS(BOOL _bool, UINT8 _tlsVersion) {
-
-    }
-
     LTReturnValue<BOOL> Listener<ProtocolType::TCP>::load_accept_extensions() {
         if (m_lpAcceptEx && m_lpGetAcceptExSockaddrs) [[unlikely]]
             return { TRUE };
